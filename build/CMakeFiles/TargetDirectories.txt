@@ -1,0 +1,3 @@
+/home/victor/Desktop/kuramoto-sivashinsky/build/CMakeFiles/prova_plot.dir
+/home/victor/Desktop/kuramoto-sivashinsky/build/CMakeFiles/edit_cache.dir
+/home/victor/Desktop/kuramoto-sivashinsky/build/CMakeFiles/rebuild_cache.dir

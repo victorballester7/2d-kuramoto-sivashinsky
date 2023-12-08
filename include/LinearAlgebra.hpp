@@ -43,6 +43,7 @@ class Vector {
   Vector<T> operator+(T a) const;                  // Addition of a vector filled with a
   Vector<T> operator+=(T a) const;                 // Addition of a vector filled with a
   Vector<T> operator-(const Vector<T>& v_) const;  // Vector subtraction
+  Vector<T> operator-(T a) const;                  // Vector subtraction
   Vector<T> operator-=(const Vector<T>& v_);       // Vector subtraction
   Vector<T> operator*(T a) const;                  // Scalar multiplication from the right
   Vector<T> operator*=(T a) const;                 // Scalar multiplication from the right
@@ -249,6 +250,14 @@ Vector<T> Vector<T>::operator-(const Vector<T>& v_) const {
 }
 
 template <class T>
+Vector<T> Vector<T>::operator-(T a) const {
+  Vector<T> u(n);
+  for (int i = 0; i < n; i++)
+    u.v[i] = v[i] - a;
+  return u;
+}
+
+template <class T>
 Vector<T> operator-(T a, const Vector<T>& v) {
   Vector<T> result(v.size());
   for (int i = 0; i < v.size(); i++) {
@@ -315,6 +324,15 @@ Vector<T> Vector<T>::operator/(T a) const {
   for (int i = 0; i < n; i++)
     u.v[i] = v[i] / a;
   return u;
+}
+
+template <class T>
+Vector<T> operator/(T a, const Vector<T>& v) {
+  Vector<T> result(v.size());
+  for (int i = 0; i < v.size(); i++) {
+    result[i] = a / v[i];
+  }
+  return result;
 }
 
 template <class T>

@@ -4,141 +4,159 @@
 
 #include "../include/LinearAlgebra.hpp"
 #include "../include/fft.hpp"
-#include "../include/field.hpp"
-#include "../include/rk78.h"
+#include "../include/setup.hpp"
+// #include "matplotlibcpp.h"
 
 #define UNIT_SECONDS microseconds
 #define LABEL_SECONDS "μs"
 
+#define START_TIMER() begin = chrono::steady_clock::now()
+#define END_TIMER() end = chrono::steady_clock::now()
+#define ADD_TIME_TO(x) x += chrono::duration_cast<chrono::UNIT_SECONDS>(end - begin).count()
+
+#define EPS 1e-5
+
 using namespace std;
 
-double f(double x, double y) {  // initial condition
-  // return sin(2 * x) + cos(8 * y);  // should be 2pi-periodic in x and y
-  return sin(x);
+double sample(double x, double y) {
+  if (x < 0) x += 2 * M_PI;  // periodic extension
+  if (y < 0) y += 2 * M_PI;  // periodic extension
+  return sin(98 * x);
+  //  + cos(49 * y + 32 * x) + cos(71 * x + 17 * y);
 }
 
-double write(Vector<double> &x, Vector<int> nn, double t, ofstream &file) {  // write into file
-  file << t << endl;
-  for (int i = 0; i < nn[0]; i++) {
-    for (int j = 0; j < 2 * nn[1] - 2; j += 2) {
-      file << x[2 * i * nn[1] + j] << " ";
-    }
-    file << x[2 * i * nn[1] + 2 * nn[1] - 2] << endl;
-  }
-  file << endl;
-  return 0;
+double diff_x_sample(double x, double y) {
+  if (x < 0) x += 2 * M_PI;  // periodic extension
+  if (y < 0) y += 2 * M_PI;  // periodic extension
+  return 98 * cos(98 * x);
+  //  - 32 * sin(49 * y + 32 * x) - 71 * sin(71 * x + 17 * y);
+}
+
+double diff_y_sample(double x, double y) {
+  if (x < 0) x += 2 * M_PI;  // periodic extension
+  if (y < 0) y += 2 * M_PI;  // periodic extension
+  return -49 * sin(49 * y + 32 * x) - 17 * sin(71 * x + 17 * y);
 }
 
 int main(void) {
-  const int nx = 16, ny = 16;                 // number of points in x and y (must be a power of 2)
-  const int dim = 2 * nx * ny;                // dimension of the system (the '2' is for the real and imaginary part)
-  double t = 0;                               // initial time of integration
-  const double T = 5;                         // final time of integration
-  double h = 0.1;                             // initial step size
-  const double hmin = 0.01;                   // minimum step size
-  const double hmax = 0.2;                    // maximum step size
-  const double tol = 1e-8;                    // tolerance
-  const int maxNumSteps = (int)T / hmin + 1;  // maximum number of steps
-  int numSteps = 0;                           // number of steps
-  const int maxRepetitionsRK78 = 50;          // maximum number of repetitions of the RK78 algorithm allowed before throwing an error
-  const double twoPI = 2 * M_PI;              // 2 * pi
-  Vector<double> x(dim);                      // initial condition
+  const string filename = "data/data.txt";   // name of the output file
+  const int nx = 16, ny = 16;                // number of points in x and y (must be a power of 2)
+  const int nu1 = 1, nu2 = 1;                // parameters of the system
+  const int dim = 2 * nx * ny;               // dimension of the system (the '2' is for the real and imaginary part)
+  double t = 0.;                             // initial time of integration
+  const double T = 5.;                       // final time of integration
+  const double h = 0.005;                    // initial step size
+  const int maxNumSteps = (int)(T / h) + 1;  // maximum number of steps
+  int numSteps = 0;                          // number of steps
+  Vector<double> x(dim);                     // initial condition
   Vector<double> aux(dim);
-  Args prm;  // parameters for the field function
-  prm.nu1 = 1;
-  prm.nu2 = 1;
-  prm.k1 = Vector<double>(dim);  // wave numbers for the frequency space in x as a meshgrid
-  prm.k2 = Vector<double>(dim);  // wave numbers for the frequency space in y as a meshgrid
-  // -----------------------------------------------------
-  // k1                   k2
-  // x0 x0 x0 x0 ... x0   y0 y0 y1 y1 ... ym ym
-  // x1 x1 x1 x1 ... x1   y0 y0 y1 y1 ... ym ym
-  // .  .  .  .  ... .    .  .  .  .  ... .  .
-  // .  .  .  .  ... .    .  .  .  .  ... .  .
-  // .  .  .  .  ... .    .  .  .  .  ... .  .
-  // xn xn xn xn ... xn   y0 y0 y1 y1 ... ym ym
 
-  prm.nn = Vector<int>(nx, ny);  // number of points in x and y (must be a power of 2)
-  chrono::steady_clock::time_point begin_write, end_write;
-  chrono::steady_clock::time_point begin_computations, end_computations;
+  chrono::steady_clock::time_point begin, end;
   int64_t total_write = 0, total_computations = 0;
-  begin_computations = chrono::steady_clock::now();
-  // set wave numbers
-  double a1 = twoPI / nx;
-  double a2 = twoPI / ny;
-  for (int i = 0; i < nx; i++) {
-    for (int j = 0; j < 2 * ny; j++) {
-      if (i <= nx / 2)
-        prm.k1[2 * i * ny + j] = i * a1;
-      else
-        prm.k1[2 * i * ny + j] = (i - nx) * a1;
-      if (j <= ny + 1)
-        prm.k2[2 * i * ny + j] = (j / 2) * a2;
-      else
-        prm.k2[2 * i * ny + j] = (j / 2 - ny) * a2;
-    }
-  }
+  // begin_computations = chrono::steady_clock::now();
+
+  START_TIMER();
+  Args prm(nx, ny, h, nu1, nu2);  // parameters for the system (nu1, nu2, nn, k1, k2, tmp
+  set_data(x, prm);
+  END_TIMER();
+  ADD_TIME_TO(total_computations);
 
   // file handling
+  START_TIMER();
   ofstream file;  // output file
-  file.open("data/data.txt");
-
-  // set initial condition
-  for (int i = 0; i < nx; i++) {
-    for (int j = 0; j < 2 * ny; j += 2) {
-      x[2 * i * ny + j] = f(prm.k1[2 * i * ny + j], prm.k2[2 * i * ny + j]);
-      x[2 * i * ny + j + 1] = 0;
-    }
-  }
-  end_computations = chrono::steady_clock::now();
-  total_computations += chrono::duration_cast<chrono::UNIT_SECONDS>(end_computations - begin_computations).count();
-
-  // write into file
-  begin_write = chrono::steady_clock::now();
+  file.open(filename);
   write(x, prm.nn, t, file);
-  end_write = chrono::steady_clock::now();
-  total_write += chrono::duration_cast<chrono::UNIT_SECONDS>(end_write - begin_write).count();
+  END_TIMER();
+  ADD_TIME_TO(total_write);
 
-  // compute the FFT of x (with void fft_n(Vector<double> &data, Vector<int> &nn, const int isign, const int normalize = 1);)
-
-  begin_computations = chrono::steady_clock::now();
-  fft_n(x, prm.nn, 1, 1);
-
-  prm.tmp = Vector<double>(dim);  // tmp = k1 ^ 2 + (nu2 / nu1) * k2 ^ 2
-  for (int i = 0; i < nx; i++) {
-    for (int j = 0; j < ny; j++) {
-      prm.tmp[i * ny + j] = prm.k1[i] * prm.k1[i] + prm.k2[j] * prm.k2[j] * prm.nu2 / prm.nu1;
+  Vector<double> diff_y(dim), diff_y_aux(dim), tmp(dim);
+  double a1 = 2 * M_PI / prm.nx;
+  double a2 = 2 * M_PI / prm.ny;
+  for (int i = 0; i < prm.nx; i++) {
+    for (int j = 0; j < 2 * prm.ny; j += 2) {
+      x[2 * i * prm.ny + j] = sample(prm.k1[2 * i * prm.ny + j] * a1, prm.k2[2 * i * prm.ny + j] * a2);
+      diff_y[2 * i * prm.ny + j] = diff_x_sample(prm.k1[2 * i * prm.ny + j] * a1, prm.k2[2 * i * prm.ny + j] * a2);
+      x[2 * i * prm.ny + j + 1] = 0;
+      diff_y[2 * i * prm.ny + j + 1] = 0;
     }
   }
-  end_computations = chrono::steady_clock::now();
-  total_computations += chrono::duration_cast<chrono::UNIT_SECONDS>(end_computations - begin_computations).count();
+
+  // compute the FFT of x
+  START_TIMER();
+  fft_n(x, prm.nn, 1, 1);
+  END_TIMER();
+  ADD_TIME_TO(total_computations);
+
+  // // we want to compare different methods to compute the transform of (u_x)^2
+  // int repetitions = 100, count = 0;
+  // int64_t total_real = 0, total_2 = 0, total_3 = 0;
+
+  // // while (count < repetitions) {
+  // // 1. Real solution F((u_x)^2)
+
+  // file << "k1" << endl;
+  // write(prm.k1, prm.nn, t, file, true);
+
+  // file << "F(u_y)" << endl;
+  // write(diff_y, prm.nn, t, file, true);
+  // fft_n(diff_y, prm.nn, 1, 1);
+  // write(diff_y, prm.nn, t, file, true);
+
+  // diff_y_aux = diff_y;
+  // START_TIMER();
+  // diff_y_aux *= diff_y_aux;
+  // fft_n(diff_y_aux, prm.nn, 1, 1);
+  // END_TIMER();
+  // ADD_TIME_TO(total_real);
+
+  // // 2. F([F⁻¹(i * k₁ * û)]²)
+  // START_TIMER();
+  // tmp = prm.k1 * x;
+  // double tmp1;
+  // for (int i = 0; i < dim; i += 2) {  // multiply by i
+  //   tmp1 = tmp[i];
+  //   tmp[i] = -tmp[i + 1];
+  //   tmp[i + 1] = tmp1;
+  // }
+  // file << "F(u_y) approx" << endl;
+  // write(tmp, prm.nn, t, file, true);
+  // fft_n(tmp, prm.nn, -1, 1);
+  // write(tmp, prm.nn, t, file, true);
+  // tmp *= tmp;
+  // fft_n(tmp, prm.nn, 1, 1);
+  // END_TIMER();
+  // ADD_TIME_TO(total_2);
+
+  // 3. F((u_x)^2) = F(u_x) * F(u_x) = - (k1 . û) * (k1 . û)
+  // START_TIMER();
+  // tmp = prm.k1 * x;
+  // // do the convolution
+
+  // for (int i = 0; i < nx; i++){
+  //   for (int j = 0; j < 2 * ny; j
+  // }
+  //   count++;
+  // }
+
+  // file << "diff (fourier_space): " << endl;
+  // diff_y -= tmp;
+  // write(diff_y_aux, prm.nn, t, file, true);
 
   do {
-    begin_computations = chrono::steady_clock::now();
-    if (numSteps == 178) {
-      std::cout << "hereeeeeeeeeeeeeeeeeeeeeeeeeeeee: t = " << t << std::endl;
-    }
-    if (rk78(&t, &x[0], &h, hmin, hmax, tol, maxRepetitionsRK78, dim, field, &prm)) {
-      throw std::runtime_error("Error in rk78.");
-    }
-    // rk78(&t, &x[0], &h, hmin, hmax, tol, dim, field, &prm);
-    if (numSteps == 178) {
-      std::cout << "hereeeeeeeeeeeeeeeeeeeeeeeeeeeee 2: t = " << t << std::endl;
-    }
-    // write into file (but only the antitransformed solution)
+    START_TIMER();
+    stepFiniteDiff(x, t, h, prm);
+    aux = x;                    // copy x to aux
+    fft_n(aux, prm.nn, -1, 1);  // inverse FFT to output the solution
+    END_TIMER();
+    ADD_TIME_TO(total_computations);
 
-    aux = x;  // copy x to aux
-    fft_n(aux, prm.nn, -1, 1);
-    end_computations = chrono::steady_clock::now();
-    total_computations += chrono::duration_cast<chrono::UNIT_SECONDS>(end_computations - begin_computations).count();
+    START_TIMER();
+    write(aux, prm.nn, t, file);  // write the solution into the file
+    END_TIMER();
+    ADD_TIME_TO(total_write);
 
-    begin_write = chrono::steady_clock::now();
-    write(aux, prm.nn, t, file);
-    end_write = chrono::steady_clock::now();
-    total_write += chrono::duration_cast<chrono::UNIT_SECONDS>(end_write - begin_write).count();
     numSteps++;
-    // cout << "Step: " << numSteps << endl;
-  } while (t < T || numSteps >= maxNumSteps);
+  } while (t < T - EPS && numSteps <= maxNumSteps);
 
   cout << "Total time for computations: " << total_computations << " " << LABEL_SECONDS << endl;
   cout << "Total time for writing: " << total_write << " " << LABEL_SECONDS << endl;
@@ -146,6 +164,3 @@ int main(void) {
   file.close();
   return 0;
 }
-
-// compilate with (the include files are in include/):
-// g++ -std=c++11 -I include/ src/main.cpp -o main
