@@ -56,11 +56,11 @@ void fft(double *data, const int n, const int isign, const int normalize) {
     for (i = 0; i < nn; i++) data[i] /= n;
 }
 
-void fft(Vector<double> &data, const int isign, const int normalize) {
+void fft(vector<double> &data, const int isign, const int normalize) {
   fft(&data[0], data.size() / 2, isign, normalize);
 }
 
-void fft(Vector<complex<double>> &data, const int isign, const int normalize) {
+void fft(vector<complex<double>> &data, const int isign, const int normalize) {
   fft((double *)(&data[0]), data.size(), isign, normalize);
 }
 
@@ -223,7 +223,7 @@ void fft(Vector<complex<double>> &data, const int isign, const int normalize) {
 //   }
 // }
 
-void fft_n(double *data, const Vector<int> &nn, const int isign, const int normalize) {
+void fft_n(double *data, const vector<uint> &nn, const int isign, const int normalize) {
   int idim, i1, i2, i3, i2rev, i3rev, ip1, ip2, ip3, ifp1, ifp2;
   int ibit, k1, k2, n, nprev, nrem, ntot = 1, ndim = nn.size();
   double tempi, tempr, theta, wi, wpi, wpr, wr, wtemp;
@@ -295,7 +295,7 @@ void fft_n(double *data, const Vector<int> &nn, const int isign, const int norma
     for (i1 = 0; i1 < 2 * ntot; i1++) data[i1] /= ntot;
 }
 
-void fft_n(Vector<double> &data, const Vector<int> &nn, const int isign, const int normalize) {
+void fft_n(vector<double> &data, const vector<uint> &nn, const int isign, const int normalize) {
   fft_n(&data[0], nn, isign, normalize);
 }
 
@@ -304,7 +304,7 @@ void fft_n(Vector<double> &data, const Vector<int> &nn, const int isign, const i
 //   int i1, i2, i3, j1, j2, j3, k1, k2, k3, k4;
 //   double theta, wi, wpi, wpr, wr, wtemp;
 //   double c1, c2, h1r, h1i, h2r, h2i;
-//   Vector<int> nn(3);
+//   vector<uint> nn(3);
 //   Vector<double *> spq(nn1);
 //   for (i1 = 0; i1 < nn1; i1++) spq[i1] = speq + 2 * nn2 * i1;
 //   c1 = 0.5;
@@ -370,7 +370,7 @@ void fft_n(Vector<double> &data, const Vector<int> &nn, const int isign, const i
 //   int i1, i2, i3, j1, j2, j3, k1, k2, k3, k4;
 //   double theta, wi, wpi, wpr, wr, wtemp;
 //   double c1, c2, h1r, h1i, h2r, h2i;
-//   Vector<int> nn(3);
+//   vector<uint> nn(3);
 //   Vector<double *> spq(nn1);
 //   for (i1 = 0; i1 < nn1; i1++) spq[i1] = speq + 2 * nn2 * i1;
 //   c1 = 0.5;

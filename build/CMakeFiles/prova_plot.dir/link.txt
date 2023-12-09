@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/prova_plot.dir/src/prova_plot.cpp.o -o prova_plot  /usr/lib/libpython3.11.so /usr/lib/libpython3.11.so 
