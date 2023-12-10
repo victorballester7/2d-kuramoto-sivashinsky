@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
@@ -11,10 +10,10 @@ from matplotlib.axes import Axes
 from matplotlib.text import Text
 from typing import cast
 from abc import ABC, abstractmethod
-from typing import Union, Any
-from matplotlib.cm import ScalarMappable
+from typing import Any
 from matplotlib.artist import Artist
 import sys
+import time
 
 
 class Plot(ABC):
@@ -132,6 +131,11 @@ class Plot(ABC):
         # Create the animation
         ani = FuncAnimation(self.fig, update, frames=len(self.data_blocks),
                             interval=1000/self.FPS, blit=False, init_func=init)
+
+        end_time = time.time()
+        print("Total time for plotting: ", int(
+            UNIT_TIME*(end_time - start_time)), LABEL_TIME)
+
         # Show the animation
         plt.show()
 
@@ -153,7 +157,7 @@ class Plot(ABC):
         pass
 
     @abstractmethod
-    def get_plot(self) -> Artist:
+    def get_plot(self) -> Any:
         pass
 
     @abstractmethod
@@ -197,10 +201,12 @@ class Contour(Plot):
         return {'cmap': self.color, 'levels': self.levels}
 
 
+# count time
+UNIT_TIME = 1000  # in seconds
+LABEL_TIME = "ms"
+start_time = time.time()
 arg = sys.argv[1]
 if int(arg) == 1:
     Surface()
 else:
     Contour()
-# plot_surface()
-# plot_contour()

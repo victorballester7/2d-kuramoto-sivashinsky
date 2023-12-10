@@ -6,12 +6,12 @@
 #include "../include/misc.hpp"
 #include "../include/vector.hpp"
 
-#define UNIT_SECONDS microseconds
-#define LABEL_SECONDS "μs"
+#define UNIT_SECONDS 1000  // in microseconds
+#define LABEL_SECONDS "ms"
 
 #define START_TIMER() begin = chrono::steady_clock::now()
 #define END_TIMER() end = chrono::steady_clock::now()
-#define ADD_TIME_TO(x) x += chrono::duration_cast<chrono::UNIT_SECONDS>(end - begin).count()
+#define ADD_TIME_TO(x) x += chrono::duration_cast<chrono::microseconds>(end - begin).count()
 
 #define EPS 1e-5
 using namespace std;
@@ -79,8 +79,8 @@ int main(void) {
     numSteps++;
   } while (t < T - EPS && numSteps <= maxNumSteps);
 
-  cout << "Total time for computations: " << total_computations << " " << LABEL_SECONDS << endl;
-  cout << "Total time for writing: " << total_write << " " << LABEL_SECONDS << endl;
+  cout << "Total time for computations: " << total_computations / UNIT_SECONDS << " " << LABEL_SECONDS << endl;
+  cout << "Total time for writing: " << total_write / UNIT_SECONDS << " " << LABEL_SECONDS << endl;
 
   file.close();
   return 0;
