@@ -22,13 +22,22 @@ echo -e "${GREEN}Running done!${RESET}"
 
 # do not plot if there is an extra argument to ./run.sh
 if [ $# -eq 0 ]; then
-  echo -e "${YELLOW}Plotting...${RESET}"
-  python src/plot.py
+  echo -e "${YELLOW}Plotting default...${RESET}"
+  python src/plot.py 1
   if [ $? -ne 0 ]; then
     echo -e "${RED}Plotting failed!${RESET}"
     exit 1
   fi
+else 
+  if [ $1 == "1" ]; then
+    echo -e "${YELLOW}Plotting surface plot...${RESET}"
+    python src/plot.py 1
+  elif [ $1 == "2" ]; then
+    echo -e "${YELLOW}Plotting contour plot...${RESET}"
+    python src/plot.py 2
+  else
+    echo -e "${RED}Invalid argument! Skipped plotting.${RESET}"
+    exit 1
+  fi
   echo -e "${GREEN}Plotting done!${RESET}"
-else
-  echo -e "${YELLOW}Skipped plotting.${RESET}"
 fi
