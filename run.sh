@@ -35,6 +35,9 @@ else
   elif [ $1 == "2" ]; then
     echo -e "${YELLOW}Plotting contour plot...${RESET}"
     python src/plot.py 2
+  elif [ $1 == "3" ]; then
+    echo -e "${YELLOW}Plotting surface-contour plot...${RESET}"
+    python src/plot.py 3
   else
     echo -e "${RED}Invalid argument! Skipped plotting.${RESET}"
     exit 1

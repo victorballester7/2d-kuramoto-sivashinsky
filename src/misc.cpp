@@ -100,14 +100,23 @@ void stepFiniteDiff(vector<double> &x, double &t, const Args &prm) {
   t += prm.h;
 }
 
-double mean(const vector<double> &x, const Args &prm) {
+double mean(const vector<double> &x, const Args &prm) {  // integration using the trapezoidal rule
   double sum = 0.0;
   for (uint i = 0; i < prm.nx; i++) {
     for (uint j = 0; j < 2 * prm.ny; j += 2) {
-      sum += x[2 * i * prm.ny + j];
+      if (i == 0 || i == prm.nx - 1) {
+        if (j == 0 || j == 2 * prm.ny - 2)
+          sum += x[2 * i * prm.ny + j] / 4;
+        else
+          sum += x[2 * i * prm.ny + j] / 2;
+      } else {
+        if (j == 0 || j == 2 * prm.ny - 2)
+          sum += x[2 * i * prm.ny + j] / 2;
+        else
+          sum += x[2 * i * prm.ny + j];
+      }
     }
   }
-  // mean = (sum * dx * dy) / (4 * M_PI * M_PI), where dx = 2 * M_PI / nx and dy = 2 * M_PI / ny
   return sum / (prm.nx * prm.ny);
 }
 

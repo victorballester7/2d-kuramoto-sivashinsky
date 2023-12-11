@@ -12,11 +12,26 @@ from typing import cast
 from abc import ABC, abstractmethod
 from typing import Any
 from matplotlib.artist import Artist
+from matplotlib.colors import Normalize
 import sys
 import time
 
 
 class Plot(ABC):
+    # DEFAULTS
+    TITLE = '2D Kuramoto-Sivashinsky equation'
+    X_LABEL = 'x'
+    Y_LABEL = 'y'
+    Z_LABEL = 'z'
+    FONTSIZE_TITLE = 15
+    FONTSIZE_TIME = 10
+    y_pos_text = 1.03
+    y_pos_title = y_pos_text + 0.04
+    color = cm['viridis']
+    color_extra = 'royalblue'
+    colorbar_args = {'shrink': 0.5, 'aspect': 10, 'location': 'left'}
+    FPS = 50
+
     def __init__(self):
         pass
 
@@ -74,16 +89,10 @@ class Plot(ABC):
         self.X, self.Y = np.meshgrid(self.X, self.Y, indexing='ij')
         self.Z = self.data_blocks[0]
 
-        # DEFAULTS
-        self.FONTSIZE_TITLE = 15
-        self.FONTSIZE_TIME = 10
-        self.color = cm['viridis']
-        self.FPS = 50
         self.Z_MAX = np.max(np.abs(self.data_blocks))
         self.Z_MIN = -self.Z_MAX
         self.plot_args = self.get_plot_args()
-        self.y_pos_text = 1.03
-        self.y_pos_title = self.y_pos_text + 0.04
+        self.plot_args_extra = self.get_plot_args_extra()
         if self.is_3d():
             self.y_pos_text = 0.95
         self.text_args = {'x': 0.5, 'y': self.y_pos_text, 's': '', 'transform': self.ax.transAxes,
@@ -91,21 +100,27 @@ class Plot(ABC):
         self.time_text = self.get_text()
 
         # Title
-        self.ax.set_title('2D Kuramoto-Sivashinsky equation',
+        self.ax.set_title(self.TITLE,
                           fontsize=self.FONTSIZE_TITLE, fontweight='bold', y=self.y_pos_title)
         # Axes
-        self.ax.set_xlabel('x')
-        self.ax.set_ylabel('y')
+        self.ax.set_xlabel(self.X_LABEL)
+        self.ax.set_ylabel(self.Y_LABEL)
         if self.is_3d():
             self.ax = cast(Axes3D, self.ax)
-            self.ax.set_zlabel('z')
+            self.ax.set_zlabel(self.Z_LABEL)
             self.ax.set_zlim(self.Z_MIN, self.Z_MAX)
 
         # Create plot
-        self.plot = [self.get_plot()]
+        self.plot = [i for i in self.get_plot()]
+
+        self.num_plots = len(self.plot)
+        print("num plots: ", self.num_plots)
 
         # Add a color bar which maps values to colors.
-        self.fig.colorbar(self.plot[0], shrink=0.5, aspect=10, location='left')
+        # mappable = self.plot[0] if isinstance(self.plot[0], Artist) else self.plot[0][0]
+        # self.fig.colorbar(mappable=m, shrink=0.5, aspect=10, location='left')
+
+        self.fig.colorbar(self.plot[0], **self.colorbar_args)
 
         # Animation update function
         def init():
@@ -114,7 +129,8 @@ class Plot(ABC):
         def update(frame):
             # Clear the previous frame
             # ax.clear()
-            self.plot[0].remove()
+            for plot in self.plot:
+                plot.remove()
 
             # Update the arrays
             self.Z = self.data_blocks[frame]
@@ -124,20 +140,20 @@ class Plot(ABC):
             self.time_text.set_text('t = %.2f' % self.headers[frame])
 
             # Update the plot
-            self.plot[0] = self.get_plot()
+            # self.plot[0] = self.get_plot()
+            tmp = self.get_plot()
+            for i in range(self.num_plots):
+                self.plot[i] = tmp[i]
 
             return self.plot[0], self.time_text
 
         # Create the animation
-        ani = FuncAnimation(self.fig, update, frames=len(self.data_blocks),
-                            interval=1000/self.FPS, blit=False, init_func=init)
+        self.ani = FuncAnimation(self.fig, update, frames=len(self.data_blocks),
+                                 interval=1000/self.FPS, blit=False, init_func=init)
 
         end_time = time.time()
         print("Total time for plotting: ", int(
             UNIT_TIME*(end_time - start_time)), LABEL_TIME)
-
-        # Show the animation
-        plt.show()
 
     def get_ax(self) -> Axes | Axes3D:
         if self.is_3d():
@@ -152,16 +168,23 @@ class Plot(ABC):
         else:
             return self.ax.text(**self.text_args)
 
+    def show_plot(self):
+        plt.show()
+
     @abstractmethod
     def is_3d(self) -> bool:
         pass
 
     @abstractmethod
-    def get_plot(self) -> Any:
+    def get_plot(self) -> list[Any]:
         pass
 
     @abstractmethod
     def get_plot_args(self) -> dict[str, Any]:
+        pass
+
+    @abstractmethod
+    def get_plot_args_extra(self) -> dict[str, Any]:
         pass
 
 
@@ -169,6 +192,7 @@ class Surface(Plot):
     def __init__(self):
         super().__init__()
         self.plot_setup()
+        self.show_plot()
 
     def is_3d(self) -> bool:
         return True
@@ -176,23 +200,43 @@ class Surface(Plot):
     def get_plot(self):
         # assume self.ax is Axes3D
         self.ax = cast(Axes3D, self.ax)
-        return self.ax.plot_surface(self.X, self.Y, self.Z, **self.plot_args)
+        return [self.ax.plot_surface(self.X, self.Y, self.Z, **self.plot_args)]
 
     def get_plot_args(self) -> dict[str, Any]:
         return {'rstride': 1, 'cstride': 1, 'cmap': self.color, 'linewidth': 0.01,
                 'antialiased': True, 'color': 'w', 'shade': True, 'vmin': self.Z_MIN, 'vmax': self.Z_MAX}
+
+    def get_plot_args_extra(self):
+        pass
 
 
 class Contour(Plot):
     def __init__(self):
         super().__init__()
         self.plot_setup()
+        # self.custom_colorbar()
+        self.show_plot()
+
+    # def custom_colorbar(self):
+    #     # remove the previous colorbar
+    #     self.fig.delaxes(self.fig.axes[1])
+
+    #     # create a new colorbar with self.levels
+    #     norm = Normalize(vmin=self.Z_MIN, vmax=self.Z_MAX)
+    #     # a previous version of this used
+    #     # norm= matplotlib.colors.Normalize(vmin=cs.vmin, vmax=cs.vmax)
+    #     # which does not work any more
+    #     sm = plt.cm.ScalarMappable(norm=norm, cmap=self.color)
+    #     sm.set_array([])
+    #     self.fig.colorbar(sm, ax=self.ax, **self.colorbar_args)
+    #     plt.subplots_adjust(wspace=0.05)
+        # center the plot in the figure
 
     def is_3d(self) -> bool:
         return False
 
     def get_plot(self):
-        return self.ax.contourf(self.X, self.Y, self.Z, **self.plot_args)
+        return [self.ax.contourf(self.X, self.Y, self.Z, **self.plot_args)]
 
     def get_plot_args(self) -> dict[str, Any]:
         plt.style.use('_mpl-gallery-nogrid')
@@ -200,13 +244,62 @@ class Contour(Plot):
         self.levels = np.linspace(self.Z_MIN, self.Z_MAX, self.num_levels)
         return {'cmap': self.color, 'levels': self.levels}
 
+    def get_plot_args_extra(self):
+        pass
+
+
+class SurfaceContour(Plot):
+    def __init__(self):
+        super().__init__()
+        self.offset_rate = 2
+        self.plot_setup()
+        # self.plot.pop()
+        # self.num_plots -= 1
+        self.ax.set_zlim(self.offset_rate*self.Z_MIN, self.Z_MAX)
+        # self.custom_colorbar()
+        self.show_plot()
+
+    # def custom_colorbar(self):
+    #     # remove the previous colorbar
+    #     self.fig.delaxes(self.fig.axes[1])
+
+    #     # create a new colorbar with self.levels
+    #     norm = Normalize(vmin=self.Z_MIN, vmax=self.Z_MAX)
+    #     # a previous version of this used
+    #     # norm= matplotlib.colors.Normalize(vmin=cs.vmin, vmax=cs.vmax)
+    #     # which does not work any more
+    #     sm = plt.cm.ScalarMappable(norm=norm, cmap=self.color)
+    #     sm.set_array([])
+    #     self.fig.colorbar(sm, ax=self.ax, **self.colorbar_args)
+
+    def is_3d(self) -> bool:
+        return True
+
+    def get_plot(self):
+        # assume self.ax is Axes3D
+        self.ax = cast(Axes3D, self.ax)
+        return [self.ax.contour(self.X, self.Y, self.Z, **self.plot_args_extra), self.ax.plot_surface(self.X, self.Y, self.Z, **self.plot_args)]
+
+    def get_plot_args(self) -> dict[str, Any]:
+        return {'rstride': 1, 'cstride': 1, 'facecolor': self.color_extra, 'linewidth': 0.01,
+                'antialiased': True, 'color': 'w', 'shade': True, 'vmin': self.Z_MIN, 'vmax': self.Z_MAX, 'alpha': 0.9}
+
+    def get_plot_args_extra(self):
+        plt.style.use('_mpl-gallery-nogrid')
+        self.num_levels = 20
+        self.levels = np.linspace(self.Z_MIN, self.Z_MAX, self.num_levels)
+        return {'zdir': 'z', 'offset': self.offset_rate * self.Z_MIN, 'cmap': self.color, 'levels': self.levels}
+
 
 # count time
 UNIT_TIME = 1000  # in seconds
 LABEL_TIME = "ms"
 start_time = time.time()
-arg = sys.argv[1]
-if int(arg) == 1:
+arg = int(sys.argv[1])
+print("arg: ", arg)
+if arg == 1:
     Surface()
-else:
+elif arg == 2:
     Contour()
+else:
+    SurfaceContour()
