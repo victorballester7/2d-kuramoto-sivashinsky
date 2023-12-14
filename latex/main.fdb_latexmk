@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber main"] 0 "main.bcf" "main.bbl" "main" 1702234948 -1
+["biber main"] 0 "main.bcf" "main.bbl" "main" 1702584280 -1
   "./references.bib" 1702229725 341 30fa01d2ebdb560969069b42e787fa22 ""
-  "main.bcf" 1702234947 107771 86434f2434d648e9295d3ff38db8121a "pdflatex"
+  "main.bcf" 1702584280 107771 86434f2434d648e9295d3ff38db8121a "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1702234946 "/home/victor/Desktop/kuramoto-sivashinsky/latex/main.tex" "main.pdf" "main" 1702234948 0
-  "/home/victor/Desktop/kuramoto-sivashinsky/latex/main.tex" 1702234944 2600 8e6612638c775de1d714db3f84e24504 ""
+["pdflatex"] 1702584278 "/home/victor/Desktop/kuramoto-sivashinsky/latex/main.tex" "main.pdf" "main" 1702584280 0
+  "/home/victor/Desktop/kuramoto-sivashinsky/latex/main.tex" 1702584278 2802 eb4ff7e6554b71b8b03675290d05d1eb ""
   "/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1699549338 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1699549338 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1699549338 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -371,11 +371,11 @@
   "/opt/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1699549338 8213566 5801e63f020951ac378838f448db4736 ""
   "/opt/texlive/2023/texmf.cnf" 1699549338 585 cbdac2c540e67e6925735bc924caa885 ""
   "bibliography.sty" 1702227048 838 def2978610f051653e7f8601de89f504 ""
-  "main.aux" 1702234947 1186 ca68282caeacdae39e540392d7703cc9 "pdflatex"
+  "main.aux" 1702584280 1186 5cee067466660f3070f7880d8602a6d5 "pdflatex"
   "main.bbl" 1702229727 2156 104acb9b196967892e6ee6f8d5d1056b "biber main"
-  "main.run.xml" 1702234947 2376 3f99cf17c9219d8cb1a788da2b54d37f "pdflatex"
-  "main.tex" 1702234944 2600 8e6612638c775de1d714db3f84e24504 ""
-  "main.toc" 1702234947 152 ce05af37c88ed09e23233ebe7607c00c "pdflatex"
+  "main.run.xml" 1702584280 2376 3f99cf17c9219d8cb1a788da2b54d37f "pdflatex"
+  "main.tex" 1702584278 2802 eb4ff7e6554b71b8b03675290d05d1eb ""
+  "main.toc" 1702584280 152 ce05af37c88ed09e23233ebe7607c00c "pdflatex"
   "preamble.sty" 1702228876 15704 e1e55c442bf8470ce54cd1a6e09b671c ""
   "preamble_style.sty" 1702227048 767 3e26813407f4ae6e4e6dd97ca5ca2f14 ""
   (generated)

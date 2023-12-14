@@ -39,14 +39,14 @@ If we rescale the spatial domain to $[0, 2\pi)^2$ and the time domain using the 
 \end{equation}
 we get the following equation
 \begin{equation}
-  u_t=-\frac{1}{2}\abs{\grad_\nu u}^2-\laplacian_\nu u-{\laplacian_\nu}^2 u
+  u_t=-\frac{1}{2}\abs{\grad_\nu u}^2-\laplacian_\nu u-\nu_1{\laplacian_\nu}^2 u
 \end{equation}
 where we used a slightly-modified notation from the one in \cite{Kalogirou2015}
-\begin{equation}
-  \grad_\nu = \left(\partial_x , \sqrt{\frac{\nu_2}{\nu_1}} \partial_y
-  \right) \qquad \div_\nu = \partial_x + \sqrt{\frac{\nu_1}{\nu_2}} \partial_y
-  \qquad \laplacian_\nu = \div_\nu(\grad_\nu) = \partial_{xx} + \frac{\nu_2}{\nu_1} \partial_{yy}
-\end{equation}
+\begin{align}
+  \grad_\nu & = \left(\partial_x , \sqrt{\frac{\nu_2}{\nu_1}} \partial_y
+  \right)   & \div_\nu                                                   & = \partial_x + \sqrt{\frac{\nu_1}{\nu_2}} \partial_y
+  \\ \laplacian_\nu &= \div_\nu(\grad_\nu) = \partial_{xx} + \frac{\nu_2}{\nu_1} \partial_{yy} & {\laplacian_\nu}^2 &= \laplacian_\nu(\laplacian_\nu) = \partial_{xxxx} + 2 \frac{\nu_2}{\nu_1} \partial_{xxyy} + \frac{\nu_2^2}{\nu_1^2} \partial_{yyyy}
+\end{align}
 and $\displaystyle\nu_1 ={\left( \frac{L_x}{2\pi} \right)}^2$, $\displaystyle\nu_2 = {\left( \frac{L_y}{2\pi} \right)}^2$ and we have dropped the subindices \emph{new} for simplicity.
 
 Note that the equation is invariant under the transformation $(t,x,y, \nu_1, \nu_2) \mapsto \left( \frac{\nu_2}{\nu_1} t, y, x, \nu_2, \nu_1 \right)$. That is, if $u(t,x,y)$ is a solution of the equation with parameters $(\nu_1, \nu_2)$, then $u\left( \frac{\nu_2}{\nu_1} t, y, x \right)$ is the solution of the equation for the parameters $(\nu_2, \nu_1)$.

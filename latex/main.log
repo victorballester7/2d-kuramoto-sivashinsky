@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.9)  10 DEC 2023 20:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.9)  14 DEC 2023 21:04
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -3129,7 +3129,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 28.
  [1
 
-{/opt/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-rmsc.enc}] (./main.aux)
+{/opt/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [2{/opt/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-rmsc.enc}] (./main.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-01>
@@ -3139,18 +3139,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 58148 strings out of 474272
- 1270624 string characters out of 5723878
- 2210531 words of memory out of 5000000
- 79409 multiletter control sequences out of 15000+600000
+ 58152 strings out of 474272
+ 1270696 string characters out of 5723878
+ 2212531 words of memory out of 5000000
+ 79411 multiletter control sequences out of 15000+600000
  616489 words of font info for 95 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  140i,15n,135p,1241b,1845s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmex10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr12.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr17.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr5.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr7.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr9.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></opt/texlive/2023/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb>
-Output written on main.pdf (1 page, 290012 bytes).
+Output written on main.pdf (2 pages, 290751 bytes).
 PDF statistics:
- 136 PDF objects out of 1000 (max. 8388607)
- 94 compressed objects within 1 object stream
- 9 named destinations out of 1000 (max. 500000)
+ 141 PDF objects out of 1000 (max. 8388607)
+ 98 compressed objects within 1 object stream
+ 11 named destinations out of 1000 (max. 500000)
  29 words of extra memory for PDF output out of 10000 (max. 10000000)
 

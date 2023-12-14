@@ -16,16 +16,18 @@
 #define EPS 1e-5
 using namespace std;
 
-int main(void) {
+int main(int argc, char const *argv[]) {
   // -----------------------------------------------
   // ----------------- PARAMETERS ------------------
   // -----------------------------------------------
   const bool averaged_solution = true;      // 1 if we want to average the solution, 0 otherwise
   const string filename = "data/data.txt";  // name of the output file
   const uint nx = 32, ny = 32;              // number of points in x and y (must be a power of 2)
-  const double nu1 = 0.05, nu2 = 0.05;      // parameters of the system
   const double T = 5.;                      // final time of integration
   const double h = 0.005;                   // initial step size
+  double nu1 = 0.05, nu2 = 0.05;            // parameters of the system (by default)
+  if (argc > 1) nu1 = atof(argv[1]);        // if the user specifies the parameters, we use them
+  if (argc > 2) nu2 = atof(argv[2]);
   // -----------------------------------------------
   // -----------------------------------------------
   // -----------------------------------------------
