@@ -42,8 +42,9 @@ def read_data(filename: str) -> np.ndarray:
 
 def plot_energy(filename: str) -> None:
     data = read_data(filename)
-    # get index of t = 100
-    idx = np.where(data[:, 0] == 100)[0][0]
+    # get the first index of t such that t > 100
+    # idx = np.where(data[:, 0] > 100)[0][0]
+    idx = 0
     t, E, dE = data[idx:, 0], data[idx:, 1], data[idx:, 2]
     # plot t-E and next to it E-dE
     fig, ax = plt.subplots(1, 2, figsize=(12, 6))

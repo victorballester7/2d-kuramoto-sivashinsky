@@ -14,9 +14,9 @@ const double betaE[4] = {0.0, -251352885992.0 / 790610919619.0, -383714262797.0 
 // @param x: the data to be updated. At the beginning it is the data at the previous time step and at the end it is the data at the next time step.
 // @param t: time at which the data is written
 // @param prm: parameters of the system
-void stepFiniteDiff(vector<double> &x, double &t, const Args &prm);
+// void stepFiniteDiff(vector<double> &x, double &t, const Args &prm);
 
-void stepIMEXRK4(vector<double> &x, double &t, const Args &prm);
-vector<double> N(vector<double> &x, const Args &prm);
+// void stepIMEXRK4(vector<double> &x, double &t, const Args &prm);
+// vector<double> N(vector<double> &x, const Args &prm);
 
 #endif  // SCHEME_FD_HPP

@@ -31,7 +31,7 @@ class Plot(ABC):
     color_extra = 'royalblue'
     colorbar_args = {'shrink': 0.5, 'aspect': 10, 'location': 'left'}
     FPS = 50
-    speed = 5
+    speed = 1
 
     def __init__(self):
         pass
@@ -71,17 +71,15 @@ class Plot(ABC):
 
         return headers_array, data_blocks_array
 
-    def plot_setup(self, nu1, nu2):
+    def plot_setup(self):
         # Create a figure
         self.fig = plt.figure()
         self.ax = self.get_ax()
 
-        self.nu1 = nu1
-        self.nu2 = nu2
-
         # Read data
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = script_dir + '/../data/data.txt'  # Replace with the actual file path
+        # Replace with the actual file path
+        file_path = script_dir + '/../data/solution.txt'
         self.headers, self.data_blocks = self.read_data_file(file_path)
 
         # Create data
@@ -104,14 +102,14 @@ class Plot(ABC):
         self.time_text = self.get_text()
 
         # Title
-        plt.title(self.TITLE,
-                  fontsize=self.FONTSIZE_TITLE, fontweight='bold', y=self.y_pos_title)
+        # plt.title(self.TITLE,
+        # fontsize=self.FONTSIZE_TITLE, fontweight='bold', y=self.y_pos_title)
 
         # subtitle
-        self.subtitle = r'$\nu_1 = ' + \
-            str(self.nu1) + r'$, $\nu_2 = ' + str(self.nu2) + r'$'
-        self.subtitle_args = {'x': 0.5, 'y': self.y_pos_title - 0.14, 's': self.subtitle, 'transform': self.ax.transAxes,
-                              'fontsize': self.FONTSIZE_TITLE - 4, 'horizontalalignment': 'center'}
+        # self.subtitle = r'$\nu_1 = ' + \
+        #     str(self.nu1) + r'$, $\nu_2 = ' + str(self.nu2) + r'$'
+        # self.subtitle_args = {'x': 0.5, 'y': self.y_pos_title - 0.14, 's': self.subtitle, 'transform': self.ax.transAxes,
+        #                       'fontsize': self.FONTSIZE_TITLE - 4, 'horizontalalignment': 'center'}
         # plt.title(
         #     subtitle, fontsize=self.FONTSIZE_TITLE - 2, y=self.y_pos_title - 0.05)
 
@@ -122,9 +120,9 @@ class Plot(ABC):
             self.ax = cast(Axes3D, self.ax)
             self.ax.set_zlabel(self.Z_LABEL)
             self.ax.set_zlim(self.Z_MIN, self.Z_MAX)
-            self.ax.text2D(**self.subtitle_args)
-        else:
-            self.ax.text(**self.subtitle_args)
+            # self.ax.text2D(**self.subtitle_args)
+        # else:
+            # self.ax.text(**self.subtitle_args)
 
         # Create plot
         self.plot = [i for i in self.get_plot()]
@@ -135,7 +133,7 @@ class Plot(ABC):
         # mappable = self.plot[0] if isinstance(self.plot[0], Artist) else self.plot[0][0]
         # self.fig.colorbar(mappable=m, shrink=0.5, aspect=10, location='left')
 
-        self.fig.colorbar(self.plot[0], **self.colorbar_args)
+        # self.fig.colorbar(self.plot[0], **self.colorbar_args)
 
         # Animation update function
         def init():
@@ -205,9 +203,9 @@ class Plot(ABC):
 
 
 class Surface(Plot):
-    def __init__(self, nu1, nu2):
+    def __init__(self):
         super().__init__()
-        self.plot_setup(nu1, nu2)
+        self.plot_setup()
         self.show_plot()
 
     def is_3d(self) -> bool:
@@ -227,9 +225,9 @@ class Surface(Plot):
 
 
 class Contour(Plot):
-    def __init__(self, nu1, nu2):
+    def __init__(self):
         super().__init__()
-        self.plot_setup(nu1, nu2)
+        self.plot_setup()
         # self.custom_colorbar()
         self.show_plot()
 
@@ -265,10 +263,10 @@ class Contour(Plot):
 
 
 class SurfaceContour(Plot):
-    def __init__(self, nu1, nu2):
+    def __init__(self):
         super().__init__()
         self.offset_rate = 2
-        self.plot_setup(nu1, nu2)
+        self.plot_setup()
         # self.plot.pop()
         # self.num_plots -= 1
         self.ax.set_zlim(self.offset_rate*self.Z_MIN, self.Z_MAX)
@@ -294,11 +292,13 @@ class SurfaceContour(Plot):
     def get_plot(self):
         # assume self.ax is Axes3D
         self.ax = cast(Axes3D, self.ax)
-        return [self.ax.contourf(self.X, self.Y, self.Z, visible=False, **self.plot_args_extra), self.ax.plot_surface(self.X, self.Y, self.Z, **self.plot_args)]
+        return [self.ax.contour(self.X, self.Y, self.Z, **self.plot_args_extra), self.ax.plot_surface(self.X, self.Y, self.Z, **self.plot_args)]
 
     def get_plot_args(self) -> dict[str, Any]:
-        return {'rstride': 1, 'cstride': 1, 'facecolor': self.color_extra, 'linewidth': 0.01,
-                'antialiased': True, 'color': 'w', 'shade': True, 'vmin': self.Z_MIN, 'vmax': self.Z_MAX, 'alpha': 0.9}
+        # return {'rstride': 1, 'cstride': 1, 'facecolor': self.color_extra, 'linewidth': 0.01,
+        #         'antialiased': True, 'color': 'w', 'shade': True, 'vmin': self.Z_MIN, 'vmax': self.Z_MAX, 'alpha': 0.9}
+        return {'rstride': 1, 'cstride': 1, 'cmap': self.color, 'linewidth': 0.01,
+                'antialiased': True, 'color': 'w', 'shade': True, 'vmin': self.Z_MIN, 'vmax': self.Z_MAX}
 
     def get_plot_args_extra(self):
         plt.style.use('_mpl-gallery-nogrid')
@@ -311,12 +311,11 @@ class SurfaceContour(Plot):
 UNIT_TIME = 1000  # in seconds
 LABEL_TIME = "ms"
 start_time = time.time()
-nu1 = float(sys.argv[1])
-nu2 = float(sys.argv[2])
-arg = int(sys.argv[3])
-if arg == 1:
-    Surface(nu1, nu2)
-elif arg == 2:
-    Contour(nu1, nu2)
-else:
-    SurfaceContour(nu1, nu2)
+# nu1 = float(sys.argv[1])
+# nu2 = float(sys.argv[2])
+# arg = int(sys.argv[3])
+# Surface()
+# elif arg == 2:
+#     Contour(nu1, nu2)
+# else:
+SurfaceContour()
