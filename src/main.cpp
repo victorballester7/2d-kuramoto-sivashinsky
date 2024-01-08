@@ -18,6 +18,9 @@
 #define ADD_TIME_TO(x) x += chrono::duration_cast<chrono::microseconds>(end - begin).count()
 #define FFTW_FLAG FFTW_ESTIMATE  // options: FFTW_ESTIMATE, FFTW_MEASURE.
 // FFTW_MEASURE instructs FFTW to run and measure the execution time of several FFTs in order to find the best way to compute the transform of size n.This process takes some time(usually a few seconds), depending on your machine and on the size of the transform.FFTW_ESTIMATE, on the contrary, does not run any computation and just builds a reasonable plan that is probably sub - optimal.In short, if your program performs many transforms of the same size and initialization time is not important, use FFTW_MEASURE; otherwise use the estimate.
+#define PLOT() ((write_solution) && (numSteps % freq_plot_sol == 0))
+#define WRITE() ((write_energy) && (numSteps % freq_plot_e == 0))
+
 #define EPS 1e-5
 using namespace std;
 
@@ -54,9 +57,9 @@ int main(void) {
     file_input >> tmp >> nu2;
     file_input >> tmp >> T;
     file_input >> tmp >> dt;
-    file_input >> tmp >> averaged_solution;
     file_input >> tmp >> write_solution;
     file_input >> tmp >> write_energy;
+    file_input >> tmp >> averaged_solution;
     file_input >> tmp >> freq_plot_sol;
     file_input >> tmp >> freq_plot_e;
   }
@@ -125,22 +128,22 @@ int main(void) {
 
   // file handling
   START_TIMER();
-  ofstream file_sol, file_E;  // output files
-  if (averaged_solution) {    // Fu[0], the fourier coefficient with k_1 = k_2 = 0, is the mean of the solution
+  ofstream file_sol, file_E;                       // output files
+  if (averaged_solution && (PLOT() || WRITE())) {  // Fu[0], the fourier coefficient with k_1 = k_2 = 0, is the mean of the solution
     for (uint i = 0; i < dim; i++) u[i] -= Fu[0][0];
   }
-  if (write_solution) {
+  if (PLOT()) {
     file_sol.open(filename_solution);
     write(u, nx, ny, t, file_sol);  // write the solution into the file
   }
-  if (write_energy) {  // write the energy into the file
+  if (WRITE()) {  // write the energy into the file
     file_E.open(filename_energy);
     // in the 4th column plot u(pi, pi)
     file_E << t << " " << energy << " 0.0 " << u[(ny / 2) * (nx + 1)] << endl;  // write the energy into the file
   }
   END_TIMER();
   ADD_TIME_TO(total_write);
-
+  numSteps++;
   do {
     START_TIMER();
     // stepIMEXRK4(x, t, prm);
@@ -184,7 +187,7 @@ int main(void) {
     }
     // normalize the inverse DFT. We first substract the mean of the solution and then we normalize it
     // for (uint i = 0; i < dim; i++) u[i] /= dim;
-    if (write_solution || write_energy) {
+    if (PLOT() || WRITE()) {
       // we would lose the information of Fu, so we save it in Fu_aux and now we will lose the information of Fu_aux
       memcpy(Fu_aux, Fu, dim_f * sizeof(fftw_complex));
       fftw_execute(p_back_u);                                           // Now u contains the inverse DFT of Fu, which is the new iterate of the solution in the physical space
@@ -194,7 +197,7 @@ int main(void) {
         for (uint i = 0; i < dim; i++) u[i] /= dim;  // we need to normalize Fu accordingly in order to be the mean of the solution
       }
     }
-    if (write_energy) {
+    if (WRITE()) {
       energy2 = energy;
       energy = E(u, nx, ny);
     }
@@ -202,9 +205,9 @@ int main(void) {
     ADD_TIME_TO(total_computations);
 
     START_TIMER();
-    if (write_solution && numSteps % freq_plot_sol == 0)
-      write(u, nx, ny, t, file_sol);                  // write the solution into the file
-    if (write_energy && numSteps % freq_plot_e == 0)  // write the energy into the file
+    if (PLOT())
+      write(u, nx, ny, t, file_sol);  // write the solution into the file
+    if (WRITE())                      // write the energy into the file
       file_E << t << " " << energy << " " << (energy - energy2) / dt << " " << u[(ny / 2) * (nx + 1)] << endl;
     if (t > fraction_completed * count - EPS) {
       cout << count << "%" << endl;
@@ -214,7 +217,7 @@ int main(void) {
     ADD_TIME_TO(total_write);
 
     numSteps++;
-  } while (t < T - EPS && numSteps <= maxNumSteps);
+  } while (t < T - EPS && numSteps <= maxNumSteps + 1);  // We add 1 because we count the initial condition as a step
 
   // creation of tmp files to comunicate with bash scripts in order to plot or not the solution and the energy
   START_TIMER();

@@ -55,7 +55,7 @@ def plot_energy(filename: str) -> None:
     ax[1].set_xlabel(r"$E$")
     # label dE as \dot{E}
     ax[1].set_ylabel(r'$\dot{E}$')
-    ax[1].set_aspect('equal')
+    # ax[1].set_aspect('equal')
     # add space between subplots
     fig.subplots_adjust(wspace=0.3)
     end_time = time.time()

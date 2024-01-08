@@ -1,11 +1,11 @@
-Nx 32
-Ny 32
+Nx 64
+Ny 64
 nu_1 0.8
 nu_2 0.2
 Tfinal 500
 dt 5.e-3
-average_solution 1
 plot_animation 0
-plot_energy 1
+plot_energy 0
+average_solution 1
 freq_plot_anim 50
 freq_plot_e 10
