@@ -46,6 +46,16 @@
 //   t += prm.h;
 // }
 
+// void N(double *x, double *tmp, double *k1, double *k2, int nx, int ny_complex, double nu1, double nu2) {
+//   // nonlinear part of the equation
+//   double aux1, aux2;
+//   for (int i = 0; i < nx * ny_complex; i++) {
+//     aux1 = k1[i] * x[i];
+//     aux2 = k2[i] * x[i];
+//     tmp[i] = -0.5 * (aux1 * aux1 + ((nu2 / nu1) * aux2 * aux2));
+//   }
+// }
+
 // // vector<double> N(vector<double> &x, const Args &prm) {
 // //   // nonlinear part of the equation
 // //   vector<double> aux1, aux2;
@@ -70,32 +80,32 @@
 // //   return -0.5 * (aux1 + ((prm.nu2 / prm.nu1) * aux2));
 // // }
 
-// void stepIMEXRK4(vector<double> &x, double &t, const Args &prm) {
-//   // IMEXRK4 scheme for the 2D Kuramoto - Sivashinsky equation
-//   // suppose we have the equation:
-//   //  ∂ₜu = L * u + N(u)
-//   // where L is the linear part and N(u) is the nonlinear part
-//   // The 4-steps schemes writes as:
-//   //  û⁽¹⁾ = ûⁿ + h * (ɑ_1I * L * û⁽¹⁾ + β_1I * L * ûⁿ + ɑ_1E * N(ûⁿ) + 0)
-//   //  û⁽²⁾ = û⁽¹⁾ + h * (ɑ_2I * L * û⁽²⁾ + β_2I * L * û⁽¹⁾ + ɑ_2E * N(û⁽¹⁾) + β_2E * N(ûⁿ))
-//   //  û⁽³⁾ = û⁽²⁾ + h * (ɑ_3I * L * û⁽³⁾ + β_3I * L * û⁽²⁾ + ɑ_3E * N(û⁽²⁾) + β_3E * N(û⁽¹⁾))
-//   //  û⁽⁴⁾ = û⁽³⁾ + h * (ɑ_4I * L * û⁽⁴⁾ + β_4I * L * û⁽³⁾ + ɑ_4E * N(û⁽³⁾) + β_4E * N(û⁽²⁾))
+void stepIMEXRK4(vector<double> &x, double &t, const Args &prm) {
+  // IMEXRK4 scheme for the 2D Kuramoto - Sivashinsky equation
+  // suppose we have the equation:
+  //  ∂ₜu = L * u + N(u)
+  // where L is the linear part and N(u) is the nonlinear part
+  // The 4-steps schemes writes as:
+  //  û⁽¹⁾ = ûⁿ + h * (ɑ_1I * L * û⁽¹⁾ + β_1I * L * ûⁿ + ɑ_1E * N(ûⁿ) + 0)
+  //  û⁽²⁾ = û⁽¹⁾ + h * (ɑ_2I * L * û⁽²⁾ + β_2I * L * û⁽¹⁾ + ɑ_2E * N(û⁽¹⁾) + β_2E * N(ûⁿ))
+  //  û⁽³⁾ = û⁽²⁾ + h * (ɑ_3I * L * û⁽³⁾ + β_3I * L * û⁽²⁾ + ɑ_3E * N(û⁽²⁾) + β_3E * N(û⁽¹⁾))
+  //  û⁽⁴⁾ = û⁽³⁾ + h * (ɑ_4I * L * û⁽⁴⁾ + β_4I * L * û⁽³⁾ + ɑ_4E * N(û⁽³⁾) + β_4E * N(û⁽²⁾))
 
-//   // Hence we have the following equations for the intermediate steps:
-//   //  û⁽¹⁾ = (1 - h * ɑ_1I * L)^-1 * (ûⁿ + h * (β_1I * L * ûⁿ + ɑ_1E * N(ûⁿ)))
-//   //  û⁽²⁾ = (1 - h * ɑ_2I * L)^-1 * (û⁽¹⁾ + h * (β_2I * L * û⁽¹⁾ + ɑ_2E * N(û⁽¹⁾) + β_2E * N(ûⁿ)))
-//   //  û⁽³⁾ = (1 - h * ɑ_3I * L)^-1 * (û⁽²⁾ + h * (β_3I * L * û⁽²⁾ + ɑ_3E * N(û⁽²⁾) + β_3E * N(û⁽¹⁾)))
-//   //  û⁽⁴⁾ = (1 - h * ɑ_4I * L)^-1 * (û⁽³⁾ + h * (β_4I * L * û⁽³⁾ + ɑ_4E * N(û⁽³⁾) + β_4E * N(û⁽²⁾)))
+  // Hence we have the following equations for the intermediate steps:
+  //  û⁽¹⁾ = (1 - h * ɑ_1I * L)^-1 * (ûⁿ + h * (β_1I * L * ûⁿ + ɑ_1E * N(ûⁿ)))
+  //  û⁽²⁾ = (1 - h * ɑ_2I * L)^-1 * (û⁽¹⁾ + h * (β_2I * L * û⁽¹⁾ + ɑ_2E * N(û⁽¹⁾) + β_2E * N(ûⁿ)))
+  //  û⁽³⁾ = (1 - h * ɑ_3I * L)^-1 * (û⁽²⁾ + h * (β_3I * L * û⁽²⁾ + ɑ_3E * N(û⁽²⁾) + β_3E * N(û⁽¹⁾)))
+  //  û⁽⁴⁾ = (1 - h * ɑ_4I * L)^-1 * (û⁽³⁾ + h * (β_4I * L * û⁽³⁾ + ɑ_4E * N(û⁽³⁾) + β_4E * N(û⁽²⁾)))
 
-//   vector<double> u1, u2, u3, u4;
-//   vector<double> denom[4];
-//   for (int i = 0; i < 4; i++) {
-//     denom[i] = 1. - ((prm.h * alphaI[i]) * prm.L);
-//   }
-//   u1 = 1. / denom[0] * (x + prm.h * ((betaI[0] * prm.L * x) + (alphaE[0] * N(x, prm))));
-//   u2 = 1. / denom[1] * (u1 + prm.h * ((betaI[1] * prm.L * u1) + (alphaE[1] * N(u1, prm)) + (betaE[1] * N(x, prm))));
-//   u3 = 1. / denom[2] * (u2 + prm.h * ((betaI[2] * prm.L * u2) + (alphaE[2] * N(u2, prm)) + (betaE[2] * N(u1, prm))));
-//   u4 = 1. / denom[3] * (u3 + prm.h * ((betaI[3] * prm.L * u3) + (alphaE[3] * N(u3, prm)) + (betaE[3] * N(u2, prm))));
-//   x = u4;
-//   t += prm.h;
-// }
+  vector<double> u1, u2, u3, u4;
+  vector<double> denom[4];
+  for (int i = 0; i < 4; i++) {
+    denom[i] = 1. - ((prm.h * alphaI[i]) * prm.L);
+  }
+  u1 = 1. / denom[0] * (x + prm.h * ((betaI[0] * prm.L * x) + (alphaE[0] * N(x, prm))));
+  u2 = 1. / denom[1] * (u1 + prm.h * ((betaI[1] * prm.L * u1) + (alphaE[1] * N(u1, prm)) + (betaE[1] * N(x, prm))));
+  u3 = 1. / denom[2] * (u2 + prm.h * ((betaI[2] * prm.L * u2) + (alphaE[2] * N(u2, prm)) + (betaE[2] * N(u1, prm))));
+  u4 = 1. / denom[3] * (u3 + prm.h * ((betaI[3] * prm.L * u3) + (alphaE[3] * N(u3, prm)) + (betaE[3] * N(u2, prm))));
+  x = u4;
+  t += prm.h;
+}

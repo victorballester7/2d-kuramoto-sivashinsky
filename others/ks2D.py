@@ -133,21 +133,23 @@ def kssol(u0):  # Solves Kuramoto-Sivashinsky equation in 2-D Fourier space
     en = np.zeros((nt+1))					# Energy calculation
     wt = weights(x, y)
     ur2 = ur[:, :, 0]*ur[:, :, 0]
-    en = 0  # created by Victor, I don't care about energy
-    # en[0] = np.dot(wt.flatten(), ur2.flatten())
+    # en = 0  # created by Victor, I don't care about energy
+    en[0] = np.dot(wt.flatten(), ur2.flatten())
     nlin = np.zeros((nt+1))
 
     for i in range(nt):
-        if i % 1000 == 0:
+        if i % 10000 == 0:
             print(i)
         if i == 0:
             u[:, :, i+1] = (u[:, :, i] + (dt*(nlinspecx[:, :, i] +
                             nlinspecy[:, :, i] + (c*A*u[:, :, i]))))/(A + (dt*(k2+(c*A))))
             ur[:, :, i+1] = np.fft.ifft2(u[:, :, i+1]).real
-            # ur[:,:,i+1] = ur[:,:,i+1] - ((1./(4.*(np.pi**2)))*np.dot(wt.flatten(), ur[:,:,i+1].flatten())*A)
+            ur[:, :, i+1] = ur[:, :, i+1] - \
+                ((1./(4.*(np.pi**2))) *
+                 np.dot(wt.flatten(), ur[:, :, i+1].flatten())*A)
             ui[:, :, i+1] = np.fft.ifft2(u[:, :, i+1]).imag
             ur2 = ur[:, :, i+1]*ur[:, :, i+1]
-            # en[i+1] = np.dot(wt.flatten(), ur2.flatten())
+            en[i+1] = np.dot(wt.flatten(), ur2.flatten())
         else:
             u[:, :, i] = np.fft.fft2(ur[:, :, i])
             if NONLINEAR_PART:
@@ -159,27 +161,29 @@ def kssol(u0):  # Solves Kuramoto-Sivashinsky equation in 2-D Fourier space
                 2.*dt*(nlinspecx[:, :, i-1] + nlinspecy[:, :, i-1] + (c*A*u[:, :, i-1]))))/((3.*A) + (2.*dt*(k2+(c*np.ones_like(k2)))))
             ur[:, :, i+1] = np.fft.ifft2(u[:, :, i+1]).real
             ui[:, :, i+1] = np.fft.ifft2(u[:, :, i+1]).imag
-            # ur[:,:,i+1] = ur[:,:,i+1] - ((1./(4.*(np.pi**2)))*np.dot(wt.flatten(), ur[:,:,i+1].flatten())*A)
+            ur[:, :, i+1] = ur[:, :, i+1] - \
+                ((1./(4.*(np.pi**2))) *
+                 np.dot(wt.flatten(), ur[:, :, i+1].flatten())*A)
             ur2 = ur[:, :, i+1]*ur[:, :, i+1]
-            # en[i+1] = np.dot(wt.flatten(), ur2.flatten())
+            en[i+1] = np.dot(wt.flatten(), ur2.flatten())
 
     return ur, ui, en
 
 
 # Bifurcation parameters
-nu1 = 0.07             							# nu1 = (pi/Lx)^2
-nu2 = 0.07								# nu2 = (pi/Ly)^2
+nu1 = 0.8             							# nu1 = (pi/Lx)^2
+nu2 = 0.2								# nu2 = (pi/Ly)^2
 
 # Number of modes
-Mx = 16                            					# Number of modes in x
-My = 16                            					# Number of modes in y
+Mx = 32                            					# Number of modes in x
+My = 32                            					# Number of modes in y
 
 # Coefficient to ensure the positive definiteness of linear matrix A
 c = 100.
 
 # Run time
-Tf = 5.                          					# Final time
-nt = 1000                         					# Number of time steps
+Tf = 500.                          					# Final time
+nt = 100000                         					# Number of time steps
 
 Lx = np.pi/np.sqrt(nu1)                     				# Size of domain in x
 Ly = np.pi/np.sqrt(nu2)	                     				# Size of domain in y
@@ -204,9 +208,10 @@ u0 = initc(x, y)
 ur, ui, en = kssol(u0)
 
 # print ur completelly
-print(ur[:, :, -1])
-print("------------------")
-print(ui[:, :, -1])
+# print(ur[:, :, -1])
+# print("------------------")
+# print(ui[:, :, -1])
+print(en)
 
 # Surface plot of the solution
 
