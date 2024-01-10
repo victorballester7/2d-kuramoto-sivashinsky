@@ -14,6 +14,8 @@
 #include "../include/energy.hpp"
 #include "../include/misc.hpp"
 
+using namespace std;
+
 #define UNIT_SECONDS 1000  // in microseconds
 #define LABEL_SECONDS "ms"
 
@@ -190,8 +192,6 @@ const double alphaI[4] = {343038331393.0 / 1130875731271.0, 288176579239.0 / 114
 const double betaI[4] = {35965327958.0 / 140127563663.0, 19632212512.0 / 2700543775099.0, -173747147147.0 / 351772688865.0, 91958533623.0 / 727726057489.0};
 const double alphaE[4] = {14.0 / 25.0, 777974228744.0 / 1346157007247.0, 251277807242.0 / 1103637129625.0, 113091689455.0 / 220187950967.0};
 const double betaE[4] = {0.0, -251352885992.0 / 790610919619.0, -383714262797.0 / 1103637129625.0, -403360439203.0 / 1888264787188.0};
-
-using namespace std;
 
 // -------------------------------------------------
 // -------------------------------------------------
@@ -374,8 +374,8 @@ int main(void) {
     dE_1 = dE;
     dE = (energy - energy2) / dt;
     if (dE * dE_1 < 0 && dE * dE_1 < -EPS) {  // then we have a zero in the derivative between t and t - dt
-      tn = root_dE_Lagrange(t, dt, dE_2, dE_1, dE);
-      En = E_Lagrange(tn, t, dt, energy3, energy2, energy);
+      tn = lagrange_root(t, dt, dE_2, dE_1, dE);
+      En = lagrange_eval(tn, t, dt, energy3, energy2, energy);
       En_changed = true;
     } else
       En_changed = false;

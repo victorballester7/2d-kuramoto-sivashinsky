@@ -1,8 +1,8 @@
 Nx 32
 Ny 32
-nu_1 0.8
+nu_1 0.75
 nu_2 0.2
-Tfinal 500
+Tfinal 1200
 dt 5.e-3
 plot_animation 0
 plot_energy 1

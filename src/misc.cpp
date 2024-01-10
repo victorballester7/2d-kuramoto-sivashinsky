@@ -2,14 +2,14 @@
 
 #include <fstream>
 
-double u0(double x, double y) {  // initial condition
-  if (x < 0) x += 2 * M_PI;      // periodic extension
-  if (y < 0) y += 2 * M_PI;      // periodic extension
+double u0(double x, double y) {
+  if (x < 0) x += 2 * M_PI;  // periodic extension
+  if (y < 0) y += 2 * M_PI;  // periodic extension
 
   return sin(x) + sin(y) + sin(x + y);
 }
 
-void write(double *x, int nx, int ny, double t, ofstream &file) {  // write into file
+void write(double *x, int nx, int ny, double t, ofstream &file) {
   file << t << endl;
   for (int i = 0; i < nx; i++) {
     for (int j = 0; j < ny - 1; j++) {
@@ -18,14 +18,6 @@ void write(double *x, int nx, int ny, double t, ofstream &file) {  // write into
     file << x[i * ny + ny - 1] << endl;
   }
   file << endl;
-}
-
-double mean(double *x, int nx, int ny) {
-  double sum = 0.0;
-  for (int i = 0; i < nx * ny; i++) {
-    sum += x[i];
-  }
-  return sum / (nx * ny);  // = 1 / (2 * M_PI) ^ 2 * sum * (2 * M_PI / prm.nx) * (2 * M_PI / prm.ny)
 }
 
 void set_data(double *x, int nx, int ny) {
@@ -37,6 +29,7 @@ void set_data(double *x, int nx, int ny) {
     }
   }
 }
+
 void set_wave_numbers(double *kx, double *ky, int nx, int ny_complex) {
   for (int i = 0; i < nx; i++) {
     for (int j = 0; j < ny_complex; j++) {
@@ -49,15 +42,15 @@ void set_wave_numbers(double *kx, double *ky, int nx, int ny_complex) {
   }
 }
 
-void set_C(double *tmp, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2) {
+void set_C(double *C, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2) {
   double aux;
   for (int i = 0; i < nx * ny_complex; i++) {
     aux = kx[i] * kx[i] + (nu2 / nu1) * ky[i] * ky[i];
-    tmp[i] = 1.0 / (1.0 - dt * aux * (1.0 - nu1 * aux));
+    C[i] = 1.0 / (1.0 - dt * aux * (1.0 - nu1 * aux));
   }
 }
 
-double root_dE_Lagrange(double x2, double dt, double y0, double y1, double y2) {
+double lagrange_root(double x2, double dt, double y0, double y1, double y2) {
   // The Lagrange polynomial of degree 2 that passes through the points (x0, y0), (x0 + dt, y1), (x0 + 2 * dt, y2) is:
   // p(x) = 1 / (2 * dt ^ 2) * [ x ^ 2 * (y0 - 2 * y1 + y2) - x * (y0 * (x1 + x2) - 2 * y1 * (x0 + x2) + y2 * (x0 + x1)) + y0 * x1 * x2 - 2 * y1 * x0 * x2 + y2 * x0 * x1 ]
   double x0 = x2 - 2 * dt;
@@ -78,7 +71,7 @@ double root_dE_Lagrange(double x2, double dt, double y0, double y1, double y2) {
     return root_2;
 }
 
-double E_Lagrange(double t, double x2, double dt, double y0, double y1, double y2) {
+double lagrange_eval(double t, double x2, double dt, double y0, double y1, double y2) {
   double x0 = x2 - 2 * dt;
   double x1 = x2 - dt;
   double a = y0 - 2 * y1 + y2;

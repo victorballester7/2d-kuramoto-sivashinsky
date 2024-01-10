@@ -61,8 +61,12 @@ def plot_energy(filename_E: str, filename_E_return: str, t_min: float) -> None:
     data_E_return = read_data_energy_return(filename_E_return)
 
     # get the first index of t such that t > 100
-    idx_1 = np.where(data_E[:, 0] > t_min)[0][0]
-    idx_2 = np.where(data_E_return[:, 0] > t_min)[0][0]
+    try:
+        idx_1 = np.where(data_E[:, 0] > t_min)[0][0]
+        idx_2 = np.where(data_E_return[:, 0] > t_min)[0][0]
+    except IndexError:
+        idx_1 = 0
+        idx_2 = 0
     En = data_E_return[idx_2:-1, 1]
     En_1 = data_E_return[idx_2 + 1:, 1]
 
