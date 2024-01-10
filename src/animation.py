@@ -27,7 +27,7 @@ class Plot(ABC):
     FONTSIZE_TIME = 10
     y_pos_text = 1.03
     y_pos_title = y_pos_text + 0.14
-    color = cm['viridis']
+    color = cm['inferno']
     color_extra = 'royalblue'
     colorbar_args = {'shrink': 0.5, 'aspect': 10, 'location': 'left'}
     FPS = 50

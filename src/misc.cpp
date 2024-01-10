@@ -9,6 +9,20 @@ double u0(double x, double y) {
   return sin(x) + sin(y) + sin(x + y);
 }
 
+double U(double x, double y, double t) {
+  if (x < 0) x += 2 * M_PI;  // periodic extension
+  if (y < 0) y += 2 * M_PI;  // periodic extension
+
+  return sin(x + y) + sin(x) + sin(y) + sin(t);
+}
+
+double g(double x, double y, double t) {
+  if (x < 0) x += 2 * M_PI;  // periodic extension
+  if (y < 0) y += 2 * M_PI;  // periodic extension
+
+  return 1 / 2 + cos(2 * x + 2 * y) / 4 + cos(2 * x) / 4 + cos(2 * x + y) / 2 + cos(y) / 2 + 2 * sin(x + y) + cos(t);
+}
+
 void write(double *x, int nx, int ny, double t, ofstream &file) {
   file << t << endl;
   for (int i = 0; i < nx; i++) {
@@ -42,11 +56,19 @@ void set_wave_numbers(double *kx, double *ky, int nx, int ny_complex) {
   }
 }
 
-void set_C(double *C, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2) {
+void set_C_1(double *C, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2) {
   double aux;
   for (int i = 0; i < nx * ny_complex; i++) {
     aux = kx[i] * kx[i] + (nu2 / nu1) * ky[i] * ky[i];
-    C[i] = 1.0 / (1.0 - dt * aux * (1.0 - nu1 * aux));
+    C[i] = 1.0 / (1.0 + dt * aux * (nu1 * aux - 1.0));
+  }
+}
+
+void set_C_3(double *C, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2, double c) {
+  double aux;
+  for (int i = 0; i < nx * ny_complex; i++) {
+    aux = kx[i] * kx[i] + (nu2 / nu1) * ky[i] * ky[i];
+    C[i] = 1.0 / (1.5 + dt * (aux * (nu1 * aux - 1.0) + c));
   }
 }
 

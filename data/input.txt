@@ -1,12 +1,13 @@
 Nx 32
 Ny 32
-nu_1 0.75
+nu_1 0.8
 nu_2 0.2
-Tfinal 1200
-dt 5.e-3
+dt 1.e-3
+Tfinal 500
+cutoff_time 100
 plot_animation 0
 plot_energy 1
 average_solution 1
 freq_plot_anim 50
 freq_plot_e 1
-method 1
+method 3

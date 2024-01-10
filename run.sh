@@ -28,7 +28,7 @@ if [ ! -f "data/tmp_write_sol.txt" ]; then
 else
   rm data/tmp_write_sol.txt # remove the tmp file
   echo -e "${YELLOW}Animating...${RESET}"
-  python src/animation.py $nu_1 $nu_2 $plot_type
+  python src/animation.py
   if [ $? -ne 0 ]; then
     echo -e "${RED}Animating failed!${RESET}"
     exit 1
@@ -41,9 +41,10 @@ if [ ! -f "data/tmp_write_E.txt" ]; then
   echo -e "${BLUE}Plotting energy skipped.${RESET}"
   exit 1
 else
+  cutoff_time=$(cat data/tmp_write_E.txt)
   rm data/tmp_write_E.txt # remove the tmp file
   echo -e "${YELLOW}Plotting energy...${RESET}"
-  python src/plot_energy.py $nu_1 $nu_2
+  python src/plot_energy.py $cutoff_time
   if [ $? -ne 0 ]; then
     echo -e "${RED}Plotting energy failed!${RESET}"
     exit 1

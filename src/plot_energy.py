@@ -101,5 +101,8 @@ LABEL_TIME = "ms"
 start_time = time.time()
 filename_E = "data/energy.txt"
 filename_E_return = "data/energy_return.txt"
-t_min = 200.
+try:
+    t_min = float(sys.argv[1])
+except IndexError:
+    t_min = 200.0
 plot_energy(filename_E, filename_E_return, t_min)

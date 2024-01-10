@@ -28,6 +28,7 @@ using namespace std;
 #define WRITE_E() ((write_energy) && (numSteps % freq_plot_e == 0))
 #define IMEXEULER 1
 #define IMEXRK4 2
+#define IMEXBDF2 3
 
 #define NONLINEAR_COMPUTATIONS()                                           \
   {                                                                        \
@@ -54,117 +55,141 @@ using namespace std;
       aux_y[i] *= aux_y[i];                                                \
     }                                                                      \
     /* Compute the DFT of (u_x)^2 and store the result in aux_x_fourier */ \
-    /* Compute the DFT of (u_y)^2 and store the result in aux_y_fourier */ \
     fftw_execute(p_for_aux_x);                                             \
+    /* Compute the DFT of (u_y)^2 and store the result in aux_y_fourier */ \
     fftw_execute(p_for_aux_y);                                             \
+  }
+
+#define NONLINEAR_COMPUTATIONS_2()                                         \
+  {                                                                        \
+    /* Step in finite differences */                                       \
+    /* Multiply Fu by i * kx and store the result in aux_x_fourier */      \
+    /* Multiply Fu by i * ky and store the result in aux_y_fourier */      \
+    for (uint i = 0; i < dim_f; i++) {                                     \
+      aux_x_fourier_2[i][0] = -Fu_2[i][1] * kx[i];                         \
+      aux_x_fourier_2[i][1] = Fu_2[i][0] * kx[i];                          \
+      aux_y_fourier_2[i][0] = -Fu_2[i][1] * ky[i];                         \
+      aux_y_fourier_2[i][1] = Fu_2[i][0] * ky[i];                          \
+    }                                                                      \
+    /* Perform inverse discrete Fourier transform (DFT) */                 \
+    fftw_execute(p_back_aux_x_2);                                          \
+    fftw_execute(p_back_aux_y_2);                                          \
+    /* Normalize the inverse DFT */                                        \
+    for (uint i = 0; i < dim; i++) {                                       \
+      aux_x[i] /= dim;                                                     \
+      aux_y[i] /= dim;                                                     \
+    }                                                                      \
+    /* Compute (u_x)^2 and (u_y)^2 */                                      \
+    for (uint i = 0; i < dim; i++) {                                       \
+      aux_x[i] *= aux_x[i];                                                \
+      aux_y[i] *= aux_y[i];                                                \
+    }                                                                      \
+    /* Compute the DFT of (u_x)^2 and store the result in aux_x_fourier */ \
+    fftw_execute(p_for_aux_x_2);                                           \
+    /* Compute the DFT of (u_y)^2 and store the result in aux_y_fourier */ \
+    fftw_execute(p_for_aux_y_2);                                           \
   }
 
 #define NONLINEAR_TERM(i, c) (-0.5 * (aux_x_fourier[(i)][(c)] + nu2 / nu1 * aux_y_fourier[(i)][(c)]))
 #define NONLINEAR_TERM_2(i, c) (-0.5 * (aux_x_fourier_2[(i)][(c)] + nu2 / nu1 * aux_y_fourier_2[(i)][(c)]))
+
+#define STEP_IMEXEULER()                                                                      \
+  {                                                                                           \
+    /* Create the nonlinear term */                                                           \
+    NONLINEAR_COMPUTATIONS();                                                                 \
+    /* Update the iterate of the finite differences scheme */                                 \
+    for (uint i = 0; i < dim_f; i++) {                                                        \
+      Fu[i][0] = C1[i] * (Fu[i][0] + dt * NONLINEAR_TERM(i, 0) + dt * aux_x_fourier_2[i][0]); \
+      Fu[i][1] = C1[i] * (Fu[i][1] + dt * NONLINEAR_TERM(i, 1) + dt * aux_x_fourier_2[i][1]); \
+    }                                                                                         \
+    /* Increase the time */                                                                   \
+    t += dt;                                                                                  \
+  }
+// /* Non-homogeneous term */
+// memcpy(aux_y_fourier_2, aux_x_fourier, dim_f * sizeof(fftw_complex));
+// for (uint i = 0; i < dim; i++) aux_x[i] /= dim;
+// for (int i = 0; i < nx; i++) {
+//   for (int j = 0; j < ny; j++) {
+//     aux_x[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
+//   }
+// }                          /* Compute the DFT of the non-homogeneous term */
+// fftw_execute(p_for_aux_x); /* Normalize*/
+// for (uint i = 0; i < dim_f; i++) {
+//   aux_x_fourier[i][0] /= dim;
+//   aux_x_fourier[i][1] /= dim;
+// }
+// file_E << t << " " << endl;
+// memcpy(aux_x_fourier_2, aux_x_fourier, dim_f * sizeof(fftw_complex));
+// memcpy(aux_x_fourier, aux_y_fourier_2, dim_f * sizeof(fftw_complex));  // for (int i = 0; i < nx; i++) {
+//   for (int j = 0; j < ny_complex; j++) {
+//     file_E << aux_x_fourier_2[i * ny_complex + j][0] << " " << aux_x_fourier_2[i * ny_complex + j][1] << " | ";
+//   }
+//   file_E << endl;
+// }
 
 #define STEP_IMEXRK4()                                                                                                                                              \
   {                                                                                                                                                                 \
     /*computation of the 1st stage*/                                                                                                                                \
     NONLINEAR_COMPUTATIONS();                                                                                                                                       \
     for (uint i = 0; i < dim_f; i++) {                                                                                                                              \
-      Fu_aux[i][0] = 1. / denom[i * 4] * (Fu[i][0] + dt * (betaI[0] * L[i] * Fu[i][0] + alphaE[0] * NONLINEAR_TERM(i, 0)));                                         \
-      Fu_aux[i][1] = 1. / denom[i * 4] * (Fu[i][1] + dt * (betaI[0] * L[i] * Fu[i][1] + alphaE[0] * NONLINEAR_TERM(i, 1)));                                         \
+      Fu_2[i][0] = 1. / denom[i * 4] * (Fu[i][0] + dt * (betaI[0] * L[i] * Fu[i][0] + alphaE[0] * NONLINEAR_TERM(i, 0)));                                           \
+      Fu_2[i][1] = 1. / denom[i * 4] * (Fu[i][1] + dt * (betaI[0] * L[i] * Fu[i][1] + alphaE[0] * NONLINEAR_TERM(i, 1)));                                           \
     }                                                                                                                                                               \
                                                                                                                                                                     \
     /*computation of the 2nd stage*/                                                                                                                                \
-    /* we copy the data in aux_x_fourier and aux_y_fourier to be able to do another NONLINEAR_COMPUTATIONS() */                                                     \
-    memcpy(aux_x_fourier_2, aux_x_fourier, dim_f * sizeof(fftw_complex));                                                                                           \
-    memcpy(aux_y_fourier_2, aux_y_fourier, dim_f * sizeof(fftw_complex));                                                                                           \
-                                                                                                                                                                    \
-    /* we copy the data of Fu_aux to Fu, as we need it for NONLINEAR_COMPUTATIONS() and Fu will be overwritten (we don't need the data of Fu anymore) */            \
-    memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex));                                                                                                               \
-    NONLINEAR_COMPUTATIONS();                                                                                                                                       \
-    /* here Fu = Fu_aux*/                                                                                                                                           \
+    NONLINEAR_COMPUTATIONS_2();                                                                                                                                     \
     for (uint i = 0; i < dim_f; i++) {                                                                                                                              \
-      Fu_aux[i][0] = 1. / denom[i * 4 + 1] * (Fu[i][0] + dt * (betaI[1] * L[i] * Fu[i][0] + alphaE[1] * NONLINEAR_TERM(i, 0) + betaE[1] * NONLINEAR_TERM_2(i, 0))); \
-      Fu_aux[i][1] = 1. / denom[i * 4 + 1] * (Fu[i][1] + dt * (betaI[1] * L[i] * Fu[i][1] + alphaE[1] * NONLINEAR_TERM(i, 1) + betaE[1] * NONLINEAR_TERM_2(i, 1))); \
+      Fu[i][0] = 1. / denom[i * 4 + 1] * (Fu_2[i][0] + dt * (betaI[1] * L[i] * Fu_2[i][0] + alphaE[1] * NONLINEAR_TERM_2(i, 0) + betaE[1] * NONLINEAR_TERM(i, 0))); \
+      Fu[i][1] = 1. / denom[i * 4 + 1] * (Fu_2[i][1] + dt * (betaI[1] * L[i] * Fu_2[i][1] + alphaE[1] * NONLINEAR_TERM_2(i, 1) + betaE[1] * NONLINEAR_TERM(i, 1))); \
     }                                                                                                                                                               \
                                                                                                                                                                     \
     /*computation of the 3rd stage*/                                                                                                                                \
-    /* we copy the data in aux_x_fourier and aux_y_fourier to be able to do another NONLINEAR_COMPUTATIONS() */                                                     \
-    memcpy(aux_x_fourier_2, aux_x_fourier, dim_f * sizeof(fftw_complex));                                                                                           \
-    memcpy(aux_y_fourier_2, aux_y_fourier, dim_f * sizeof(fftw_complex));                                                                                           \
-                                                                                                                                                                    \
-    /* we copy the data of Fu_aux to Fu, as we need it for NONLINEAR_COMPUTATIONS() and Fu will be overwritten (we don't need the data of Fu anymore) */            \
-    memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex));                                                                                                               \
     NONLINEAR_COMPUTATIONS();                                                                                                                                       \
-    /* here Fu = Fu_aux*/                                                                                                                                           \
     for (uint i = 0; i < dim_f; i++) {                                                                                                                              \
-      Fu_aux[i][0] = 1. / denom[i * 4 + 2] * (Fu[i][0] + dt * (betaI[2] * L[i] * Fu[i][0] + alphaE[2] * NONLINEAR_TERM(i, 0) + betaE[2] * NONLINEAR_TERM_2(i, 0))); \
-      Fu_aux[i][1] = 1. / denom[i * 4 + 2] * (Fu[i][1] + dt * (betaI[2] * L[i] * Fu[i][1] + alphaE[2] * NONLINEAR_TERM(i, 1) + betaE[2] * NONLINEAR_TERM_2(i, 1))); \
+      Fu_2[i][0] = 1. / denom[i * 4 + 2] * (Fu[i][0] + dt * (betaI[2] * L[i] * Fu[i][0] + alphaE[2] * NONLINEAR_TERM(i, 0) + betaE[2] * NONLINEAR_TERM_2(i, 0)));   \
+      Fu_2[i][1] = 1. / denom[i * 4 + 2] * (Fu[i][1] + dt * (betaI[2] * L[i] * Fu[i][1] + alphaE[2] * NONLINEAR_TERM(i, 1) + betaE[2] * NONLINEAR_TERM_2(i, 1)));   \
     }                                                                                                                                                               \
                                                                                                                                                                     \
     /*computation of the 4th stage*/                                                                                                                                \
-    /* we copy the data in aux_x_fourier and aux_y_fourier to be able to do another NONLINEAR_COMPUTATIONS() */                                                     \
-    memcpy(aux_x_fourier_2, aux_x_fourier, dim_f * sizeof(fftw_complex));                                                                                           \
-    memcpy(aux_y_fourier_2, aux_y_fourier, dim_f * sizeof(fftw_complex));                                                                                           \
-                                                                                                                                                                    \
-    /* we copy the data of Fu_aux to Fu, as we need it for NONLINEAR_COMPUTATIONS() and Fu will be overwritten (we don't need the data of Fu anymore) */            \
-    memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex));                                                                                                               \
-    NONLINEAR_COMPUTATIONS();                                                                                                                                       \
-    /* here Fu = Fu_aux*/                                                                                                                                           \
+    NONLINEAR_COMPUTATIONS_2();                                                                                                                                     \
+    /* here Fu = Fu_2*/                                                                                                                                             \
     for (uint i = 0; i < dim_f; i++) {                                                                                                                              \
-      Fu_aux[i][0] = 1. / denom[i * 4 + 3] * (Fu[i][0] + dt * (betaI[3] * L[i] * Fu[i][0] + alphaE[3] * NONLINEAR_TERM(i, 0) + betaE[3] * NONLINEAR_TERM_2(i, 0))); \
-      Fu_aux[i][1] = 1. / denom[i * 4 + 3] * (Fu[i][1] + dt * (betaI[3] * L[i] * Fu[i][1] + alphaE[3] * NONLINEAR_TERM(i, 1) + betaE[3] * NONLINEAR_TERM_2(i, 1))); \
+      Fu[i][0] = 1. / denom[i * 4 + 3] * (Fu_2[i][0] + dt * (betaI[3] * L[i] * Fu_2[i][0] + alphaE[3] * NONLINEAR_TERM_2(i, 0) + betaE[3] * NONLINEAR_TERM(i, 0))); \
+      Fu[i][1] = 1. / denom[i * 4 + 3] * (Fu_2[i][1] + dt * (betaI[3] * L[i] * Fu_2[i][1] + alphaE[3] * NONLINEAR_TERM_2(i, 1) + betaE[3] * NONLINEAR_TERM(i, 1))); \
     }                                                                                                                                                               \
-                                                                                                                                                                    \
-    /* we copy the data of Fu_aux to Fu, as we need it for the next iteration */                                                                                    \
-    memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex));                                                                                                               \
     /* Increase the time */                                                                                                                                         \
     t += dt;                                                                                                                                                        \
   }
 
-#define STEP_IMEXEULER()                                        \
-  {                                                             \
-    /* Create the nonlinear term */                             \
-    NONLINEAR_COMPUTATIONS();                                   \
-    /* Update the iterate of the finite differences scheme */   \
-    for (uint i = 0; i < dim_f; i++) {                          \
-      Fu[i][0] = C[i] * (Fu[i][0] + dt * NONLINEAR_TERM(i, 0)); \
-      Fu[i][1] = C[i] * (Fu[i][1] + dt * NONLINEAR_TERM(i, 1)); \
-    }                                                           \
-    /* Increase the time */                                     \
-    t += dt;                                                    \
+#define STEP_IMEXBDF2()                                                                                                                                 \
+  {                                                                                                                                                     \
+    /* Fu_2 contains the n-th iterate of the finite differences scheme */                                                                               \
+    /* Fu contains the (n+1)-th iterate of the finite differences scheme */                                                                             \
+    /* We want to compute the (n+2)-th iterate of the finite differences scheme */                                                                      \
+                                                                                                                                                        \
+    /* Create the nonlinear term */                                                                                                                     \
+    NONLINEAR_COMPUTATIONS();                                                                                                                           \
+    NONLINEAR_COMPUTATIONS_2();                                                                                                                         \
+    /* Update the iterate of the finite differences scheme */                                                                                           \
+    for (uint i = 0; i < dim_f; i++) {                                                                                                                  \
+      Fu_aux[i][0] = C3[i] * (Fu[i][0] * 2 * (1 + dt * c) - Fu_2[i][0] * (0.5 + dt * c) + 2 * dt * NONLINEAR_TERM(i, 0) - dt * NONLINEAR_TERM_2(i, 0)); \
+      Fu_aux[i][1] = C3[i] * (Fu[i][1] * 2 * (1 + dt * c) - Fu_2[i][1] * (0.5 + dt * c) + 2 * dt * NONLINEAR_TERM(i, 1) - dt * NONLINEAR_TERM_2(i, 1)); \
+    }                                                                                                                                                   \
+    memcpy(Fu_2, Fu, dim_f * sizeof(fftw_complex));                                                                                                     \
+    memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex));                                                                                                   \
+    /* Increase the time */                                                                                                                             \
+    t += dt;                                                                                                                                            \
   }
 
-#define CLEANUP_IMEXEULER()               \
+#define CLEANUP()                         \
   {                                       \
     if (write_solution) file_sol.close(); \
     if (write_energy) file_E.close();     \
     /* Clean variables */                 \
     free(kx);                             \
     free(ky);                             \
-    free(C);                              \
-    /* FFT Cleanup */                     \
-    fftw_destroy_plan(p_for_u);           \
-    fftw_destroy_plan(p_back_u);          \
-    fftw_destroy_plan(p_for_aux_x);       \
-    fftw_destroy_plan(p_for_aux_y);       \
-    fftw_destroy_plan(p_back_aux_x);      \
-    fftw_destroy_plan(p_back_aux_y);      \
-    fftw_free(u);                         \
-    fftw_free(aux_x);                     \
-    fftw_free(aux_y);                     \
-    fftw_free(Fu);                        \
-    fftw_free(Fu_aux);                    \
-    fftw_free(aux_x_fourier);             \
-    fftw_free(aux_y_fourier);             \
-    fftw_cleanup();                       \
-  }
-
-#define CLEANUP_IMEXRK4()                 \
-  {                                       \
-    if (write_solution) file_sol.close(); \
-    if (write_energy) file_E.close();     \
-    /* Clean variables */                 \
-    free(kx);                             \
-    free(ky);                             \
-    free(C);                              \
+    free(C1);                             \
+    free(C3);                             \
     free(denom);                          \
     free(L);                              \
     /* FFT Cleanup */                     \
@@ -174,10 +199,15 @@ using namespace std;
     fftw_destroy_plan(p_for_aux_y);       \
     fftw_destroy_plan(p_back_aux_x);      \
     fftw_destroy_plan(p_back_aux_y);      \
+    fftw_destroy_plan(p_for_aux_x_2);     \
+    fftw_destroy_plan(p_for_aux_y_2);     \
+    fftw_destroy_plan(p_back_aux_x_2);    \
+    fftw_destroy_plan(p_back_aux_y_2);    \
     fftw_free(u);                         \
     fftw_free(aux_x);                     \
     fftw_free(aux_y);                     \
     fftw_free(Fu);                        \
+    fftw_free(Fu_2);                      \
     fftw_free(Fu_aux);                    \
     fftw_free(aux_x_fourier);             \
     fftw_free(aux_y_fourier);             \
@@ -210,10 +240,11 @@ int main(void) {
   uint count = per;
   chrono::steady_clock::time_point begin, end;  // variables to measure the time
   int64_t total_write = 0, total_computations = 0, total_fft_precomputation = 0;
-  int nx, ny;       // number of points in x and y (must be a power of 2), do NOT use uint fftw uses int
-  double T;         // final time of integration
-  double dt;        // initial step size
-  double nu1, nu2;  // parameters of the system (by default)
+  int nx, ny;          // number of points in x and y (must be a power of 2), do NOT use uint fftw uses int
+  double nu1, nu2;     // parameters of the system (by default)
+  double dt;           // initial step size
+  double T;            // final time of integration
+  double cutoff_time;  // time at which it starts the stationary regime
   // DO NOT DECREASE THE NU'S BELOW 0.2 BECAUSE THE SOLUTION WILL START TO EXPLODE
   bool averaged_solution;  // 1 if we want to average the solution, 0 otherwise
   bool write_energy;       // whether to write the energy to a file or not
@@ -234,8 +265,9 @@ int main(void) {
     file_input >> tmp >> ny;
     file_input >> tmp >> nu1;
     file_input >> tmp >> nu2;
-    file_input >> tmp >> T;
     file_input >> tmp >> dt;
+    file_input >> tmp >> T;
+    file_input >> tmp >> cutoff_time;
     file_input >> tmp >> write_solution;
     file_input >> tmp >> write_energy;
     file_input >> tmp >> averaged_solution;
@@ -248,6 +280,8 @@ int main(void) {
     method_name = "IMEX-RK4";
   } else if (method == IMEXEULER) {
     method_name = "IMEX-Euler";
+  } else if (method == IMEXBDF2) {
+    method_name = "IMEX-BDF2";
   } else {
     cout << "Method not recognized" << endl;
     return 1;
@@ -278,9 +312,11 @@ int main(void) {
   // vector to store all the solutions
   double energy = 0, energy2 = 0, energy3 = 0, dE = 0, dE_1 = 0, dE_2 = 0, tn, En;  // energy of the system
   bool En_changed = false;
+  double c = 1.0 + 1.0 / (2 * nu1);  // constant term to ensure stability of the scheme (see: p227 in Nonlinear dynamics of surfactant–laden multilayer shear flows and related systems)
   double *kx = (double *)malloc(dim_f * sizeof(double));
   double *ky = (double *)malloc(dim_f * sizeof(double));
-  double *C = (double *)malloc(dim_f * sizeof(double));
+  double *C1 = (double *)malloc(dim_f * sizeof(double));
+  double *C3 = (double *)malloc(dim_f * sizeof(double));
   // -----------------------------------------------
 
   // ----------------- FFT SETUP -------------------
@@ -288,25 +324,32 @@ int main(void) {
   double *aux_x = fftw_alloc_real(dim);
   double *aux_y = fftw_alloc_real(dim);
   fftw_complex *Fu = fftw_alloc_complex(dim_f);  // Fu is the DFT of u
+  fftw_complex *Fu_2 = fftw_alloc_complex(dim_f);
   fftw_complex *Fu_aux = fftw_alloc_complex(dim_f);
   fftw_complex *aux_x_fourier = fftw_alloc_complex(dim_f);
   fftw_complex *aux_y_fourier = fftw_alloc_complex(dim_f);
-  // only needed for method == IMEXRK4 ------
   fftw_complex *aux_x_fourier_2 = fftw_alloc_complex(dim_f);
   fftw_complex *aux_y_fourier_2 = fftw_alloc_complex(dim_f);
   // ----------------------------------------
 
-  fftw_plan p_for_u, p_back_u, p_for_aux_x, p_for_aux_y, p_back_aux_x, p_back_aux_y;
+  fftw_plan p_for_u, p_back_u, p_for_aux_x, p_for_aux_y, p_back_aux_x, p_back_aux_y, p_back_aux_x_2, p_back_aux_y_2, p_for_aux_x_2, p_for_aux_y_2;
 
   START_TIMER();
   // Remember that for inverse transforms, that is for _c2r_ transforms, the input array is overwritten, so you should copy it before if you want to preserve the input data.
   // Also remember that the fftw computes unnormalized transforms, so doing a forward transform followed by a backward transform will multiply the input by n.
-  p_for_u = fftw_plan_dft_r2c_2d(nx, ny, u, Fu, FFTW_FLAG);                      // forward
-  p_back_u = fftw_plan_dft_c2r_2d(nx, ny, Fu_aux, u, FFTW_FLAG);                 // backward
+  p_for_u = fftw_plan_dft_r2c_2d(nx, ny, u, Fu, FFTW_FLAG);       // forward
+  p_back_u = fftw_plan_dft_c2r_2d(nx, ny, Fu_aux, u, FFTW_FLAG);  // backward
+
   p_for_aux_x = fftw_plan_dft_r2c_2d(nx, ny, aux_x, aux_x_fourier, FFTW_FLAG);   // forward
   p_for_aux_y = fftw_plan_dft_r2c_2d(nx, ny, aux_y, aux_y_fourier, FFTW_FLAG);   // forward
   p_back_aux_x = fftw_plan_dft_c2r_2d(nx, ny, aux_x_fourier, aux_x, FFTW_FLAG);  // backward
   p_back_aux_y = fftw_plan_dft_c2r_2d(nx, ny, aux_y_fourier, aux_y, FFTW_FLAG);  // backward
+
+  p_for_aux_x_2 = fftw_plan_dft_r2c_2d(nx, ny, aux_x, aux_x_fourier_2, FFTW_FLAG);   // forward
+  p_for_aux_y_2 = fftw_plan_dft_r2c_2d(nx, ny, aux_y, aux_y_fourier_2, FFTW_FLAG);   // forward
+  p_back_aux_x_2 = fftw_plan_dft_c2r_2d(nx, ny, aux_x_fourier_2, aux_x, FFTW_FLAG);  // backward
+  p_back_aux_y_2 = fftw_plan_dft_c2r_2d(nx, ny, aux_y_fourier_2, aux_y, FFTW_FLAG);  // backward
+
   END_TIMER();
   ADD_TIME_TO(total_fft_precomputation);
   // -----------------------------------------------
@@ -314,8 +357,12 @@ int main(void) {
   START_TIMER();
   set_data(u, nx, ny);
   set_wave_numbers(kx, ky, nx, ny_complex);
-  set_C(C, kx, ky, nx, ny_complex, dt, nu1, nu2);
+  set_C_1(C1, kx, ky, nx, ny_complex, dt, nu1, nu2);
+  set_C_3(C3, kx, ky, nx, ny_complex, dt, nu1, nu2, c);
   fftw_execute(p_for_u);  // Now Fu contains the DFT of u
+  if (method == IMEXBDF2) {
+    memcpy(Fu_2, Fu, dim_f * sizeof(fftw_complex));
+  }
   energy = E(u, nx, ny);
   // ---------------- SCHEME SETUP -----------------
   // only needed for method == IMEXRK4
@@ -356,12 +403,23 @@ int main(void) {
       STEP_IMEXRK4();
     } else if (method == IMEXEULER) {
       STEP_IMEXEULER();
+    } else if (method == IMEXBDF2) {
+      if (numSteps == 1) {
+        STEP_IMEXEULER();
+      } else {
+        STEP_IMEXBDF2();
+      }
     }
     // normalize the inverse DFT. We first substract the mean of the solution and then we normalize it
     // we would lose the information of Fu, so we save it in Fu_aux and now we will lose the information of Fu_aux
     memcpy(Fu_aux, Fu, dim_f * sizeof(fftw_complex));
-    fftw_execute(p_back_u);                                           // Now u contains the inverse DFT of Fu, which is the new iterate of the solution in the physical space
-    if (averaged_solution) {                                          // Fu[0], the fourier coefficient with k_1 = k_2 = 0, is the mean of the solution
+    fftw_execute(p_back_u);   // Now u contains the inverse DFT of Fu, which is the new iterate of the solution in the physical space
+    if (averaged_solution) {  // Fu[0], the fourier coefficient with k_1 = k_2 = 0, is the mean of the solution
+      // for (int i = 0; i < nx; i++) {
+      //   for (int j = 0; j < ny; j++) {
+      //     u[i * ny + j] = (u[i * ny + j] - Fu[0][0]) / dim - U(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
+      //   }
+      // }
       for (uint i = 0; i < dim; i++) u[i] = (u[i] - Fu[0][0]) / dim;  // we need to normalize Fu accordingly in order to be the mean of the solution
     } else {
       for (uint i = 0; i < dim; i++) u[i] /= dim;  // we need to normalize Fu accordingly in order to be the mean of the solution
@@ -384,9 +442,9 @@ int main(void) {
 
     START_TIMER();
     if (WRITE_SOL())
-      write(u, nx, ny, t, file_sol);  // write the solution into the file
-    if (WRITE_E()) {                  // write the energy into the file
-      file_E << t << " " << energy << " " << dE << " " << u[(ny / 2) * (nx + 1)] << endl;
+      write(u, nx, ny, t, file_sol);                                                       // write the solution into the file
+    if (WRITE_E()) {                                                                       // write the energy into the file
+      file_E << t << " " << energy << " " << dE << " " << u[(ny / 2) * (nx + 1)] << endl;  // energy, derivative of the energy, u(pi, pi)
       if (En_changed) file_En << tn << " " << En << endl;
     }
     if (t > fraction_completed * count - EPS) {
@@ -408,6 +466,7 @@ int main(void) {
   }
   if (write_energy) {
     file_tmp.open("data/tmp_write_E.txt");
+    file_tmp << cutoff_time << endl;  // we do this to pass the cutoff time to the bash scriptand then to the python script
     file_tmp.close();
   }
 
@@ -415,11 +474,7 @@ int main(void) {
   cout << "Total time for computations: " << total_computations / UNIT_SECONDS << " " << LABEL_SECONDS << endl;
   cout << "Total time for read/write: " << total_write / UNIT_SECONDS << " " << LABEL_SECONDS << endl;
 
-  if (method == IMEXRK4) {
-    CLEANUP_IMEXRK4();
-  } else if (method == IMEXEULER) {
-    CLEANUP_IMEXEULER();
-  }
+  CLEANUP();
 
   return 0;
 }

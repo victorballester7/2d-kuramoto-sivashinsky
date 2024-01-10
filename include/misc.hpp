@@ -14,6 +14,8 @@ using namespace std;
 // @return: the value of the initial condition at (x, y)
 double u0(double x, double y);
 
+double U(double x, double y, double t);
+double g(double x, double y, double t);
 // @brief: writes the data to a file
 // @param x: the data to be written
 // @param nn: number of points in each direction
@@ -42,7 +44,18 @@ void set_wave_numbers(double *kx, double *ky, int nx, int ny_complex);
 // @param dt: time step
 // @param nu1: parameter nu1 of the pde
 // @param nu2: parameter nu2 of the pde
-void set_C(double *C, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2);
+void set_C_1(double *C1, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2);
+
+// @brief: computes the coefficients of the factor C multiplying each time the IMEX-Euler scheme
+// @param C: coefficients of the factor C
+// @param kx: wave numbers in the x-direction
+// @param ky: wave numbers in the y-direction
+// @param nx: number of points in the x-direction
+// @param ny_complex: number of points in the y-direction (ny_complex = ny / 2 + 1)
+// @param dt: time step
+// @param nu1: parameter nu1 of the pde
+// @param nu2: parameter nu2 of the pde
+void set_C_3(double *C3, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2, double c);
 
 // @brief: computes the root of the Lagrange polynomial of degree 2 that passes through the points (x2 - 2 * dt, y0), (x2 - dt, y1), (x2, y2) assuming there is a root in the interval (x2 - 2 * dt, x2). Be aware that this function should not be used if you have not previously checked that there is a root in the interval (x2 - 2 * dt, x2).
 // @param x2: x-coordinate of the last point
