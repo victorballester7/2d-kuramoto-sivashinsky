@@ -67,8 +67,12 @@ def plot_energy(filename_E: str, filename_E_return: str, t_min: float) -> None:
     except IndexError:
         idx_1 = 0
         idx_2 = 0
-    En = data_E_return[idx_2:-1, 1]
-    En_1 = data_E_return[idx_2 + 1:, 1]
+    try:
+        En = data_E_return[idx_2:-1, 1]
+        En_1 = data_E_return[idx_2 + 1:, 1]
+    except IndexError:
+        En = []
+        En_1 = []
 
     # idx = 0
     t, E, dE = data_E[idx_1:, 0], data_E[idx_1:, 1], data_E[idx_1:, 2]

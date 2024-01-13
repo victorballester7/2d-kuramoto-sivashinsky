@@ -1,5 +1,8 @@
 #include "../include/misc.hpp"
 
+#include <fftw3.h>
+#include <math.h>
+
 #include <fstream>
 
 double u0(double x, double y) {
@@ -13,14 +16,14 @@ double U(double x, double y, double t) {
   if (x < 0) x += 2 * M_PI;  // periodic extension
   if (y < 0) y += 2 * M_PI;  // periodic extension
 
-  return sin(x + y) + sin(x) + sin(y) + sin(t);
+  return sin(x) + sin(y) + sin(x + y) + sin(t);
 }
 
 double g(double x, double y, double t) {
   if (x < 0) x += 2 * M_PI;  // periodic extension
   if (y < 0) y += 2 * M_PI;  // periodic extension
 
-  return 1 / 2 + cos(2 * x + 2 * y) / 4 + cos(2 * x) / 4 + cos(2 * x + y) / 2 + cos(y) / 2 + 2 * sin(x + y) + cos(t);
+  return 1 + cos(2 * x + 2 * y) / 2 + cos(2 * x) / 4 + cos(2 * y) / 4 + cos(y + 2 * x) / 2 + cos(y) / 2 + cos(x + 2 * y) / 2 + cos(x) / 2 + 2 * sin(x + y) + cos(t);
 }
 
 void write(double *x, int nx, int ny, double t, ofstream &file) {
@@ -32,6 +35,19 @@ void write(double *x, int nx, int ny, double t, ofstream &file) {
     file << x[i * ny + ny - 1] << endl;
   }
   file << endl;
+}
+
+void write_bis(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file) {
+#define round_to_zero(y) (fabs(y) < 1e-10 ? 0 : y)
+  file << t << endl;
+  for (int i = 0; i < nx; i++) {
+    for (int j = 0; j < ny_complex - 1; j++) {
+      file << round_to_zero(x[i * ny_complex + j][0]) << " " << round_to_zero(x[i * ny_complex + j][1]) << " | ";
+    }
+    file << round_to_zero(x[i * ny_complex + ny_complex - 1][0]) << " " << round_to_zero(x[i * ny_complex + ny_complex - 1][1]) << endl;
+  }
+  file << endl;
+#undef round_to_zero
 }
 
 void set_data(double *x, int nx, int ny) {
@@ -56,19 +72,19 @@ void set_wave_numbers(double *kx, double *ky, int nx, int ny_complex) {
   }
 }
 
-void set_C_1(double *C, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2) {
+void set_C1(double *C1, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2) {
   double aux;
   for (int i = 0; i < nx * ny_complex; i++) {
     aux = kx[i] * kx[i] + (nu2 / nu1) * ky[i] * ky[i];
-    C[i] = 1.0 / (1.0 + dt * aux * (nu1 * aux - 1.0));
+    C1[i] = 1.0 / (1.0 + dt * aux * (nu1 * aux - 1.0));
   }
 }
 
-void set_C_3(double *C, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2, double c) {
+void set_C2(double *C2, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2, double c) {
   double aux;
   for (int i = 0; i < nx * ny_complex; i++) {
     aux = kx[i] * kx[i] + (nu2 / nu1) * ky[i] * ky[i];
-    C[i] = 1.0 / (1.5 + dt * (aux * (nu1 * aux - 1.0) + c));
+    C2[i] = 1.0 / (1.5 + dt * (aux * (nu1 * aux - 1.0) + c));
   }
 }
 

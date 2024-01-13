@@ -24,7 +24,6 @@ using namespace std;
 #define ADD_TIME_TO(x) x += chrono::duration_cast<chrono::microseconds>(end - begin).count()
 #define FFTW_FLAG FFTW_ESTIMATE  // options: FFTW_ESTIMATE, FFTW_MEASURE.
 // FFTW_MEASURE instructs FFTW to run and measure the execution time of several FFTs in order to find the best way to compute the transform of size n.This process takes some time(usually a few seconds), depending on your machine and on the size of the transform.FFTW_ESTIMATE, on the contrary, does not run any computation and just builds a reasonable plan that is probably sub - optimal.In short, if your program performs many transforms of the same size and initialization time is not important, use FFTW_MEASURE; otherwise use the estimate.
-
 #define WRITE_SOL() ((write_solution) && (numSteps % freq_plot_sol == 0))
 #define WRITE_E() ((write_energy) && (numSteps % freq_plot_e == 0))
 #define IMEXEULER 1
@@ -86,74 +85,75 @@ using namespace std;
 #define INTEGRAL_NONLINEAR_TERM (0.5 * (aux_x_fourier[0][0] + nu2 / nu1 * aux_y_fourier[0][0]))
 #define INTEGRAL_NONLINEAR_TERM_2 (0.5 * (aux_x_fourier_2[0][0] + nu2 / nu1 * aux_y_fourier_2[0][0]))
 
-#define STEP_IMEXEULER()                                                                      \
-  {                                                                                           \
-    /* Create the nonlinear term */                                                           \
-    NONLINEAR_COMPUTATIONS();                                                                 \
-    /* Non-homogeneous term */                                                                \
-    for (int i = 0; i < nx; i++) {                                                            \
-      for (int j = 0; j < ny; j++) {                                                          \
-        aux_x[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);                       \
-      }                                                                                       \
-    }                                                                                         \
-    /* Compute the DFT of the non-homogeneous term */                                         \
-    fftw_execute(p_for_aux_x_2);                                                              \
-    /* Update the iterate of the finite differences scheme */                                 \
-    for (uint i = 0; i < dim_f; i++) {                                                        \
-      Fu[i][0] = C1[i] * (Fu[i][0] + dt * NONLINEAR_TERM(i, 0) + dt * aux_x_fourier_2[i][0]); \
-      Fu[i][1] = C1[i] * (Fu[i][1] + dt * NONLINEAR_TERM(i, 1) + dt * aux_x_fourier_2[i][1]); \
-    }                                                                                         \
-    write_bis(Fu, nx, ny_complex, t, file_E);                                                 \
-    /* Increase the time */                                                                   \
-    t += dt;                                                                                  \
+// #define STEP_IMEXEULER()
+//   {
+//     /* Create the nonlinear term */
+//     NONLINEAR_COMPUTATIONS();
+//     /* Update the iterate of the finite differences scheme */
+//     for (uint i = 0; i < dim_f; i++) {
+//       if (i == 0 && averaged_solution) {
+//         /* We subtract the mean (integral term) */
+//         Fu[i][0] = C1[i] * (Fu[i][0] + dt * (NONLINEAR_TERM(i, 0) + INTEGRAL_NONLINEAR_TERM));
+//       } else
+//         Fu[i][0] = C1[i] * (Fu[i][0] + dt * NONLINEAR_TERM(i, 0));
+//       Fu[i][1] = C1[i] * (Fu[i][1] + dt * NONLINEAR_TERM(i, 1));
+//     }
+//     /* Increase the time */
+//     t += dt;
+//   }
+
+#define STEP_IMEXEULER()                                                \
+  {                                                                     \
+    /* Create the nonlinear term */                                     \
+    NONLINEAR_COMPUTATIONS();                                           \
+    /* Non-homogeneous term */                                          \
+    for (int i = 0; i < nx; i++) {                                      \
+      for (int j = 0; j < ny; j++) {                                    \
+        aux_x[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t); \
+      }                                                                 \
+    }                                                                   \
+    /* Compute the DFT of the non-homogeneous term */                   \
+    fftw_execute(p_for_aux_x_2);                                        \
+    /* Update the iterate of the finite differences scheme */           \
+    for (uint i = 0; i < dim_f; i++) {                                  \
+      Fu[i][0] = C1[i] * (Fu[i][0] + dt * (aux_x_fourier_2[i][0]));     \
+      Fu[i][1] = C1[i] * (Fu[i][1] + dt * (aux_x_fourier_2[i][1]));     \
+    }                                                                   \
+    /* Increase the time */                                             \
+    t += dt;                                                            \
   }
 
-#define STEP_IMEXBDF2()                                                                                                                                 \
-  {                                                                                                                                                     \
-    /* Fu_2 contains the n-th iterate of the finite differences scheme */                                                                               \
-    /* Fu contains the (n+1)-th iterate of the finite differences scheme */                                                                             \
-    /* We want to compute the (n+2)-th iterate of the finite differences scheme */                                                                      \
-                                                                                                                                                        \
-    /* Create the nonlinear term */                                                                                                                     \
-    NONLINEAR_COMPUTATIONS();                                                                                                                           \
-    NONLINEAR_COMPUTATIONS_2();                                                                                                                         \
-    /* Update the iterate of the finite differences scheme */                                                                                           \
-    for (uint i = 0; i < dim_f; i++) {                                                                                                                  \
-      Fu_aux[i][0] = C2[i] * (Fu[i][0] * 2 * (1 + dt * c) - Fu_2[i][0] * (0.5 + dt * c) + 2 * dt * NONLINEAR_TERM(i, 0) - dt * NONLINEAR_TERM_2(i, 0)); \
-      Fu_aux[i][1] = C2[i] * (Fu[i][1] * 2 * (1 + dt * c) - Fu_2[i][1] * (0.5 + dt * c) + 2 * dt * NONLINEAR_TERM(i, 1) - dt * NONLINEAR_TERM_2(i, 1)); \
-    }                                                                                                                                                   \
-    memcpy(Fu_2, Fu, dim_f * sizeof(fftw_complex));                                                                                                     \
-    memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex));                                                                                                   \
-    /* Increase the time */                                                                                                                             \
-    t += dt;                                                                                                                                            \
-  }
+// file_E << t << " " << endl;
+// memcpy(aux_x_fourier_2, aux_x_fourier, dim_f * sizeof(fftw_complex));
+// memcpy(aux_x_fourier, aux_y_fourier_2, dim_f * sizeof(fftw_complex));  // for (int i = 0; i < nx; i++) {
+//   for (int j = 0; j < ny_complex; j++) {
+//     file_E << aux_x_fourier_2[i * ny_complex + j][0] << " " << aux_x_fourier_2[i * ny_complex + j][1] << " | ";
+//   }
+//   file_E << endl;
+// }
 
-#define STEP_IMEXBDF2_NONHOMO()                                                                                                                                                    \
-  {                                                                                                                                                                                \
-    /* Fu_2 contains the n-th iterate of the finite differences scheme */                                                                                                          \
-    /* Fu contains the (n+1)-th iterate of the finite differences scheme */                                                                                                        \
-    /* We want to compute the (n+2)-th iterate of the finite differences scheme */                                                                                                 \
-                                                                                                                                                                                   \
-    /* Create the nonlinear term */                                                                                                                                                \
-    NONLINEAR_COMPUTATIONS();                                                                                                                                                      \
-    NONLINEAR_COMPUTATIONS_2();                                                                                                                                                    \
-    /* Update the iterate of the finite differences scheme */                                                                                                                      \
-    for (int i = 0; i < nx; i++) {                                                                                                                                                 \
-      for (int j = 0; j < ny; j++) {                                                                                                                                               \
-        w[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t - dt);                                                                                                           \
-        ww[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);                                                                                                               \
-      }                                                                                                                                                                            \
-    }                       /* Compute the DFT of the non-homogeneous term */                                                                                                      \
-    fftw_execute(p_for_w);  /* Update the iterate of the finite differences scheme */                                                                                              \
-    fftw_execute(p_for_ww); /* Update the iterate of the finite differences scheme */                                                                                              \
-    for (uint i = 0; i < dim_f; i++) {                                                                                                                                             \
-      Fu_aux[i][0] = C2[i] * (Fu[i][0] * 2 * (1 + dt * c) - Fu_2[i][0] * (0.5 + dt * c) + 2 * dt * (NONLINEAR_TERM(i, 0) + Fww[i][0]) - dt * (NONLINEAR_TERM_2(i, 0) + Fw[i][0])); \
-      Fu_aux[i][1] = C2[i] * (Fu[i][1] * 2 * (1 + dt * c) - Fu_2[i][1] * (0.5 + dt * c) + 2 * dt * (NONLINEAR_TERM(i, 1) + Fww[i][1]) - dt * (NONLINEAR_TERM_2(i, 1) + Fw[i][1])); \
-    }                                                                                                                                                                              \
-    memcpy(Fu_2, Fu, dim_f * sizeof(fftw_complex));                                                                                                                                \
-    memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex));                                                                                                                              \
-    /* Increase the time */                                                                                                                                                        \
-    t += dt;                                                                                                                                                                       \
+#define STEP_IMEXBDF2()                                                                                                                                                                                             \
+  {                                                                                                                                                                                                                 \
+    /* Fu_2 contains the n-th iterate of the finite differences scheme */                                                                                                                                           \
+    /* Fu contains the (n+1)-th iterate of the finite differences scheme */                                                                                                                                         \
+    /* We want to compute the (n+2)-th iterate of the finite differences scheme */                                                                                                                                  \
+                                                                                                                                                                                                                    \
+    /* Create the nonlinear term */                                                                                                                                                                                 \
+    NONLINEAR_COMPUTATIONS();                                                                                                                                                                                       \
+    NONLINEAR_COMPUTATIONS_2();                                                                                                                                                                                     \
+    /* Update the iterate of the finite differences scheme */                                                                                                                                                       \
+    for (uint i = 0; i < dim_f; i++) {                                                                                                                                                                              \
+      if (i == 0 && averaged_solution) {                                                                                                                                                                            \
+        /* We subtract the mean (integral term) */                                                                                                                                                                  \
+        Fu_aux[i][0] = C2[i] * (Fu[i][0] * 2 * (1 + dt * c) - Fu_2[i][0] * (0.5 + dt * c) + 2 * dt * (NONLINEAR_TERM(i, 0) + INTEGRAL_NONLINEAR_TERM) - dt * (NONLINEAR_TERM_2(i, 0) + INTEGRAL_NONLINEAR_TERM_2)); \
+      } else                                                                                                                                                                                                        \
+        Fu_aux[i][0] = C2[i] * (Fu[i][0] * 2 * (1 + dt * c) - Fu_2[i][0] * (0.5 + dt * c) + 2 * dt * NONLINEAR_TERM(i, 0) - dt * NONLINEAR_TERM_2(i, 0));                                                           \
+      Fu_aux[i][1] = C2[i] * (Fu[i][1] * 2 * (1 + dt * c) - Fu_2[i][1] * (0.5 + dt * c) + 2 * dt * NONLINEAR_TERM(i, 1) - dt * NONLINEAR_TERM_2(i, 1));                                                             \
+    }                                                                                                                                                                                                               \
+    memcpy(Fu_2, Fu, dim_f * sizeof(fftw_complex));                                                                                                                                                                 \
+    memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex));                                                                                                                                                               \
+    /* Increase the time */                                                                                                                                                                                         \
+    t += dt;                                                                                                                                                                                                        \
   }
 
 #define STEP_IMEXRK4()                                                                                                                                                                                                          \
@@ -359,16 +359,13 @@ int main(void) {
   // -----------------------------------------------
 
   // ----------------- FFT SETUP -------------------
-  double *u = fftw_alloc_real(dim);   // u is the solution,
-  double *v = fftw_alloc_real(dim);   // v is the solution,
-  double *w = fftw_alloc_real(dim);   // w is the solution,
-  double *ww = fftw_alloc_real(dim);  // w is the solution,
+  double *u = fftw_alloc_real(dim);  // u is the solution,
+  double *v = fftw_alloc_real(dim);  // v is the solution,
   double *aux_x = fftw_alloc_real(dim);
   double *aux_y = fftw_alloc_real(dim);
-  fftw_complex *Fu = fftw_alloc_complex(dim_f);   // Fu is the DFT of u
-  fftw_complex *Fv = fftw_alloc_complex(dim_f);   // Fv is the DFT of v
-  fftw_complex *Fw = fftw_alloc_complex(dim_f);   // Fw is the DFT of w
-  fftw_complex *Fww = fftw_alloc_complex(dim_f);  // FU is the DFT of u
+  fftw_complex *Fu = fftw_alloc_complex(dim_f);  // Fu is the DFT of u
+  fftw_complex *Fv = fftw_alloc_complex(dim_f);  // Fv is the DFT of v
+  fftw_complex *FU = fftw_alloc_complex(dim_f);  // FU is the DFT of u
   fftw_complex *Fu_2 = fftw_alloc_complex(dim_f);
   fftw_complex *Fu_aux = fftw_alloc_complex(dim_f);
   fftw_complex *aux_x_fourier = fftw_alloc_complex(dim_f);
@@ -377,17 +374,13 @@ int main(void) {
   fftw_complex *aux_y_fourier_2 = fftw_alloc_complex(dim_f);
   // ----------------------------------------
 
-  fftw_plan p_for_u, p_back_u, p_for_aux_x, p_for_aux_y, p_back_aux_x, p_back_aux_y, p_back_aux_x_2, p_back_aux_y_2, p_for_aux_x_2, p_for_aux_y_2, p_for_w, p_for_ww;
+  fftw_plan p_for_u, p_back_u, p_for_aux_x, p_for_aux_y, p_back_aux_x, p_back_aux_y, p_back_aux_x_2, p_back_aux_y_2, p_for_aux_x_2, p_for_aux_y_2;
 
   START_TIMER();
   // Remember that for inverse transforms, that is for _c2r_ transforms, the input array is overwritten, so you should copy it before if you want to preserve the input data.
   // Also remember that the fftw computes unnormalized transforms, so doing a forward transform followed by a backward transform will multiply the input by n.
   p_for_u = fftw_plan_dft_r2c_2d(nx, ny, u, Fu, FFTW_FLAG);       // forward
   p_back_u = fftw_plan_dft_c2r_2d(nx, ny, Fu_aux, u, FFTW_FLAG);  // backward
-
-  // auxiliar
-  p_for_w = fftw_plan_dft_r2c_2d(nx, ny, w, Fw, FFTW_FLAG);     // forward
-  p_for_ww = fftw_plan_dft_r2c_2d(nx, ny, ww, Fww, FFTW_FLAG);  // forward
 
   p_for_aux_x = fftw_plan_dft_r2c_2d(nx, ny, aux_x, aux_x_fourier, FFTW_FLAG);   // forward
   p_for_aux_y = fftw_plan_dft_r2c_2d(nx, ny, aux_y, aux_y_fourier, FFTW_FLAG);   // forward
@@ -455,19 +448,10 @@ int main(void) {
   ADD_TIME_TO(total_write);
   numSteps++;
   dt = 0.1;
-  int numDt = 10;
+  int numDt = 8;
   double anterior = 0;
-
-  // normalize fft
-  // for (uint i = 0; i < dim_f; i++) {
-  //   Fu[i][0] /= dim;
-  //   Fu[i][1] /= dim;
-  // }
-  file_E.open(filename_energy);
-  write_bis(Fu, nx, ny_complex, t, file_E);
   memcpy(Fv, Fu, dim_f * sizeof(fftw_complex));
   memcpy(v, u, dim * sizeof(double));
-
   for (int i = 0; i < numDt; i++) {
     memcpy(u, v, dim * sizeof(double));
     memcpy(Fu, Fv, dim_f * sizeof(fftw_complex));
@@ -486,111 +470,167 @@ int main(void) {
     numSteps = 1;
     anterior = energy;
     do {
+      START_TIMER();
       if (method == IMEXEULER) {
-        STEP_IMEXEULER();
+        // NONLINEAR_COMPUTATIONS(); /* Non-homogeneous term */
+        for (int i = 0; i < nx; i++) {
+          for (int j = 0; j < ny; j++) {
+            aux_x[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
+          }
+        }                            /* Compute the DFT of the non-homogeneous term */
+        fftw_execute(p_for_aux_x_2); /* Update the iterate of the finite differences scheme */
+        for (uint i = 0; i < dim_f; i++) {
+          Fu[i][0] = C1[i] * (Fu[i][0] + dt * (aux_x_fourier_2[i][0]));
+          Fu[i][1] = C1[i] * (Fu[i][1] + dt * (aux_x_fourier_2[i][1]));
+        } /* Increase the time */
+        t += dt;
       } else if (method == IMEXBDF2) {
         if (numSteps == 1) {
-          STEP_IMEXEULER();
+          // NONLINEAR_COMPUTATIONS(); /* Non-homogeneous term */
+          for (int i = 0; i < nx; i++) {
+            for (int j = 0; j < ny; j++) {
+              aux_x[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
+            }
+          }                            /* Compute the DFT of the non-homogeneous term */
+          fftw_execute(p_for_aux_x_2); /* Update the iterate of the finite differences scheme */
+          for (uint i = 0; i < dim_f; i++) {
+            Fu[i][0] = C1[i] * (Fu[i][0] + dt * (aux_x_fourier_2[i][0]));
+            Fu[i][1] = C1[i] * (Fu[i][1] + dt * (aux_x_fourier_2[i][1]));
+          } /* Increase the time */
+          t += dt;
         } else {
-          STEP_IMEXBDF2_NONHOMO();
+          { /* Fu_2 contains the n-th iterate of the finite differences scheme */ /* Fu contains the (n+1)-th iterate of the finite differences scheme */ /* We want to compute the (n+2)-th iterate of the finite differences scheme */
+
+            /* Create the nonlinear term */
+            // NONLINEAR_COMPUTATIONS();
+            // NONLINEAR_COMPUTATIONS_2(); /* Update the iterate of the finite differences scheme */
+            for (int i = 0; i < nx; i++) {
+              for (int j = 0; j < ny; j++) {
+                aux_x[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t - dt);
+                aux_y[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
+              }
+            }                            /* Compute the DFT of the non-homogeneous term */
+            fftw_execute(p_for_aux_x_2); /* Update the iterate of the finite differences scheme */
+            fftw_execute(p_for_aux_y_2); /* Update the iterate of the finite differences scheme */
+            for (uint i = 0; i < dim_f; i++) {
+              Fu_aux[i][0] = C2[i] * (Fu[i][0] * 2 * (1 + dt * c) - Fu_2[i][0] * (0.5 + dt * c) + 2 * dt * aux_y_fourier_2[i][0] - dt * aux_x_fourier_2[i][0]);
+              Fu_aux[i][1] = C2[i] * (Fu[i][1] * 2 * (1 + dt * c) - Fu_2[i][1] * (0.5 + dt * c) + 2 * dt * aux_y_fourier_2[i][1] - dt * aux_x_fourier_2[i][1]);
+            }
+            memcpy(Fu_2, Fu, dim_f * sizeof(fftw_complex));
+            memcpy(Fu, Fu_aux, dim_f * sizeof(fftw_complex)); /* Increase the time */
+            t += dt;
+          }
         }
       } else if (method == IMEXRK4) {
-        // for (int i = 0; i < nx; i++) {
-        //   for (int j = 0; j < ny; j++) {
-        //     aux_x[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
-        //   }
-        // }                            /* Compute the DFT of the non-homogeneous term */
-        // fftw_execute(p_for_aux_x_2); /* Update the iterate of the finite differences scheme */
+        for (int i = 0; i < nx; i++) {
+          for (int j = 0; j < ny; j++) {
+            aux_x[i * ny + j] = g(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
+          }
+        }                            /* Compute the DFT of the non-homogeneous term */
+        fftw_execute(p_for_aux_x_2); /* Update the iterate of the finite differences scheme */
         /*computation of the 1st stage*/
         // NONLINEAR_COMPUTATIONS();
-        // for (uint i = 0; i < dim_f; i++) {
-        //   Fu_2[i][0] = 1. / denom[i * 4] * (Fu[i][0] + dt * (betaI[0] * L[i] * Fu[i][0] + alphaE[0] * aux_x_fourier_2[i][0]));
-        //   Fu_2[i][1] = 1. / denom[i * 4] * (Fu[i][1] + dt * (betaI[0] * L[i] * Fu[i][1] + alphaE[0] * aux_x_fourier_2[i][1]));
-        // }
-
-        // /*computation of the 2nd stage*/
-        // // NONLINEAR_COMPUTATIONS_2();
-        // for (uint i = 0; i < dim_f; i++) {
-        //   Fu[i][0] = 1. / denom[i * 4 + 1] * (Fu_2[i][0] + dt * (betaI[1] * L[i] * Fu_2[i][0] + alphaE[1] * aux_x_fourier_2[i][0] + betaE[1] * aux_x_fourier_2[i][0]));
-        //   Fu[i][1] = 1. / denom[i * 4 + 1] * (Fu_2[i][1] + dt * (betaI[1] * L[i] * Fu_2[i][1] + alphaE[1] * aux_x_fourier_2[i][1] + betaE[1] * aux_x_fourier_2[i][1]));
-        // }
-
-        // /*computation of the 3rd stage*/
-        // // NONLINEAR_COMPUTATIONS();
-        // for (uint i = 0; i < dim_f; i++) {
-        //   Fu_2[i][0] = 1. / denom[i * 4 + 2] * (Fu[i][0] + dt * (betaI[2] * L[i] * Fu[i][0] + alphaE[2] * aux_x_fourier_2[i][0] + betaE[2] * aux_x_fourier_2[i][0]));
-        //   Fu_2[i][1] = 1. / denom[i * 4 + 2] * (Fu[i][1] + dt * (betaI[2] * L[i] * Fu[i][1] + alphaE[2] * aux_x_fourier_2[i][1] + betaE[2] * aux_x_fourier_2[i][1]));
-        // }
-
-        // /*computation of the 4th stage*/
-        // // NONLINEAR_COMPUTATIONS_2(); /* here Fu = Fu_2*/
-        // for (uint i = 0; i < dim_f; i++) {
-        //   Fu[i][0] = 1. / denom[i * 4 + 3] * (Fu_2[i][0] + dt * (betaI[3] * L[i] * Fu_2[i][0] + alphaE[3] * aux_x_fourier_2[i][0] + betaE[3] * aux_x_fourier_2[i][0]));
-        //   Fu[i][1] = 1. / denom[i * 4 + 3] * (Fu_2[i][1] + dt * (betaI[3] * L[i] * Fu_2[i][1] + alphaE[3] * aux_x_fourier_2[i][1] + betaE[3] * aux_x_fourier_2[i][1]));
-        // } /* Increase the time */
         for (uint i = 0; i < dim_f; i++) {
-          Fu_2[i][0] = 1. / denom[i * 4] * (Fu[i][0] + dt * (betaI[0] * L[i] * Fu[i][0]));
-          Fu_2[i][1] = 1. / denom[i * 4] * (Fu[i][1] + dt * (betaI[0] * L[i] * Fu[i][1]));
+          Fu_2[i][0] = 1. / denom[i * 4] * (Fu[i][0] + dt * (betaI[0] * L[i] * Fu[i][0] + alphaE[0] * aux_x_fourier_2[i][0]));
+          Fu_2[i][1] = 1. / denom[i * 4] * (Fu[i][1] + dt * (betaI[0] * L[i] * Fu[i][1] + alphaE[0] * aux_x_fourier_2[i][1]));
         }
 
         /*computation of the 2nd stage*/
         // NONLINEAR_COMPUTATIONS_2();
         for (uint i = 0; i < dim_f; i++) {
-          Fu[i][0] = 1. / denom[i * 4 + 1] * (Fu_2[i][0] + dt * (betaI[1] * L[i] * Fu_2[i][0]));
-          Fu[i][1] = 1. / denom[i * 4 + 1] * (Fu_2[i][1] + dt * (betaI[1] * L[i] * Fu_2[i][1]));
+          Fu[i][0] = 1. / denom[i * 4 + 1] * (Fu_2[i][0] + dt * (betaI[1] * L[i] * Fu_2[i][0] + alphaE[1] * aux_x_fourier_2[i][0] + betaE[1] * aux_x_fourier_2[i][0]));
+          Fu[i][1] = 1. / denom[i * 4 + 1] * (Fu_2[i][1] + dt * (betaI[1] * L[i] * Fu_2[i][1] + alphaE[1] * aux_x_fourier_2[i][1] + betaE[1] * aux_x_fourier_2[i][1]));
         }
 
         /*computation of the 3rd stage*/
         // NONLINEAR_COMPUTATIONS();
         for (uint i = 0; i < dim_f; i++) {
-          Fu_2[i][0] = 1. / denom[i * 4 + 2] * (Fu[i][0] + dt * (betaI[2] * L[i] * Fu[i][0]));
-          Fu_2[i][1] = 1. / denom[i * 4 + 2] * (Fu[i][1] + dt * (betaI[2] * L[i] * Fu[i][1]));
+          Fu_2[i][0] = 1. / denom[i * 4 + 2] * (Fu[i][0] + dt * (betaI[2] * L[i] * Fu[i][0] + alphaE[2] * aux_x_fourier_2[i][0] + betaE[2] * aux_x_fourier_2[i][0]));
+          Fu_2[i][1] = 1. / denom[i * 4 + 2] * (Fu[i][1] + dt * (betaI[2] * L[i] * Fu[i][1] + alphaE[2] * aux_x_fourier_2[i][1] + betaE[2] * aux_x_fourier_2[i][1]));
         }
 
         /*computation of the 4th stage*/
         // NONLINEAR_COMPUTATIONS_2(); /* here Fu = Fu_2*/
         for (uint i = 0; i < dim_f; i++) {
-          Fu[i][0] = 1. / denom[i * 4 + 3] * (Fu_2[i][0] + dt * (betaI[3] * L[i] * Fu_2[i][0]));
-          Fu[i][1] = 1. / denom[i * 4 + 3] * (Fu_2[i][1] + dt * (betaI[3] * L[i] * Fu_2[i][1]));
+          Fu[i][0] = 1. / denom[i * 4 + 3] * (Fu_2[i][0] + dt * (betaI[3] * L[i] * Fu_2[i][0] + alphaE[3] * aux_x_fourier_2[i][0] + betaE[3] * aux_x_fourier_2[i][0]));
+          Fu[i][1] = 1. / denom[i * 4 + 3] * (Fu_2[i][1] + dt * (betaI[3] * L[i] * Fu_2[i][1] + alphaE[3] * aux_x_fourier_2[i][1] + betaE[3] * aux_x_fourier_2[i][1]));
         } /* Increase the time */
         t += dt;
       }  // normalize the inverse DFT. We first substract the mean of the solution and then we normalize it
       // we would lose the information of Fu, so we save it in Fu_aux and now we will lose the information of Fu_aux
+      memcpy(Fu_aux, Fu, dim_f * sizeof(fftw_complex));
+      fftw_execute(p_back_u);  // Now u contains the inverse DFT of Fu, which is the new iterate of the solution in the physical space
+                               // if (averaged_solution) {  // Fu[0], the fourier coefficient with k_1 = k_2 = 0, is the mean of the solution
+      // if (numSteps % 100000 == 1) cout << Fu[0][0] << endl;
+      if (averaged_solution)
+        for (uint i = 0; i < dim; i++) u[i] = (u[i] - Fu[0][0]) / dim;  // we need to normalize Fu accordingly in order to be the mean of the solution
+      else
+        for (uint i = 0; i < dim; i++) u[i] /= dim;  // we need to normalize Fu accordingly in order to be the mean of the solution
+      // }
+
+      // compute the energy (we have to do it each time because if not we would get strange derivatives of the energy, we would be a wrong 'energy2' when writing the derivative)
+
+      for (uint i = 0; i < nx; i++) {
+        for (uint j = 0; j < ny; j++) {
+          u[i * ny + j] -= U(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
+        }
+      }
+
+      energy3 = energy2;
+      energy2 = energy;
+      energy = E(u, nx, ny);
+      energy = sqrt(energy);
+      // energy with L^oo norm
+      // energy = 0;
+      // for (uint i = 0; i < dim; i++) {
+      //   if (fabs(u[i]) > energy) energy = fabs(u[i]);
+      // }
+      dE_2 = dE_1;
+      dE_1 = dE;
+      dE = (energy - energy2) / dt;
+      // if (dE * dE_1 < 0 && dE * dE_1 < -EPS) {  // then we have a zero in the derivative between t and t - dt
+      //   tn = lagrange_root(t, dt, dE_2, dE_1, dE);
+      //   En = lagrange_eval(tn, t, dt, energy3, energy2, energy);
+      //   En_changed = true;
+      // } else
+      //   En_changed = false;
+      END_TIMER();
+      ADD_TIME_TO(total_computations);
+
+      START_TIMER();
+      if (WRITE_SOL())
+        write(u, nx, ny, t, file_sol);  // write the solution into the file
+      // we plot the energy En at each time independently of freq_plot_e
+      if (write_energy && En_changed) file_En << tn << " " << En << endl;  // write the energy into the file
+
+      if (WRITE_E()) {                                                                       // write the energy into the file
+        file_E << t << " " << energy << " " << dE << " " << u[(ny / 2) * (nx + 1)] << endl;  // energy, derivative of the energy, u(pi, pi)
+      }
+      // if (t > fraction_completed * count - EPS) {
+      //   cout << count << "%" << endl;
+      //   count += per;
+      // }
+      END_TIMER();
+      ADD_TIME_TO(total_write);
 
       numSteps++;
-    } while (t < T - EPS);  // We add 1 because we count the initial condition as a step
+    } while (t < T - EPS && numSteps <= maxNumSteps + 1);  // We add 1 because we count the initial condition as a step
 
     // compute the fft of U
-    // for (uint i = 0; i < nx; i++) {
-    //   for (uint j = 0; j < ny; j++) {
-    //     aux_x[i * ny + j] = U(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
-    //   }
-    // }
-    // fftw_execute(p_for_aux_x_2);
-
-    // normalize fft
-    // for (uint i = 0; i < dim_f; i++) {
-    //   aux_x_fourier_2[i][0] /= dim;
-    //   aux_x_fourier_2[i][1] /= dim;
-    // }
-
-    // inverse fft
-    memcpy(Fu_aux, Fu, dim_f * sizeof(fftw_complex));
-    fftw_execute(p_back_u);
-
-    // normalize fft
-    for (uint i = 0; i < dim; i++)
-      u[i] /= dim;
-
     for (uint i = 0; i < nx; i++) {
       for (uint j = 0; j < ny; j++) {
-        u[i * ny + j] -= U(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
+        aux_x[i * ny + j] = U(i * 2 * M_PI / nx, j * 2 * M_PI / ny, t);
       }
     }
+    fftw_execute(p_for_aux_x_2);
 
-    write(u, nx, ny, t, file_E);
+    for (uint i = 0; i < nx * ny_complex; i++) {
+      FU[i][0] = Fu[i][0] - aux_x_fourier_2[i][0];
+      FU[i][1] = Fu[i][1] - aux_x_fourier_2[i][1];
+    }
 
-    energy = l2(u, nx, ny);
+    energy = E_cplx(FU, nx, ny_complex);
+
     cout << "dt = " << dt << " L2_error = " << energy;
     if (i > 0) {
       if (method == IMEXEULER)
@@ -604,9 +644,6 @@ int main(void) {
     }
     dt /= 2.;
   }
-
-  double uu[4] = {1., 2., 3., 4.};
-  cout << "energy = " << l2(uu, 2, 2) << endl;
 
   // creation of tmp files to comunicate with bash scripts in order to plot or not the solution and the energy
   START_TIMER();

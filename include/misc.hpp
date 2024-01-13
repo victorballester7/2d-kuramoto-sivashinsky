@@ -23,6 +23,8 @@ double g(double x, double y, double t);
 // @param file: file to write the data to
 void write(double *x, int nx, int ny, double t, ofstream &file);
 
+void write_bis(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file);
+
 // @brief: computes the initial condition on the whole vector
 // @param x: the vector to be updated
 // @param prm: parameters of the system
@@ -44,7 +46,7 @@ void set_wave_numbers(double *kx, double *ky, int nx, int ny_complex);
 // @param dt: time step
 // @param nu1: parameter nu1 of the pde
 // @param nu2: parameter nu2 of the pde
-void set_C_1(double *C1, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2);
+void set_C1(double *C1, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2);
 
 // @brief: computes the coefficients of the factor C multiplying each time the IMEX-Euler scheme
 // @param C: coefficients of the factor C
@@ -55,7 +57,7 @@ void set_C_1(double *C1, double *kx, double *ky, int nx, int ny_complex, double 
 // @param dt: time step
 // @param nu1: parameter nu1 of the pde
 // @param nu2: parameter nu2 of the pde
-void set_C_3(double *C3, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2, double c);
+void set_C2(double *C2, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2, double c);
 
 // @brief: computes the root of the Lagrange polynomial of degree 2 that passes through the points (x2 - 2 * dt, y0), (x2 - dt, y1), (x2, y2) assuming there is a root in the interval (x2 - 2 * dt, x2). Be aware that this function should not be used if you have not previously checked that there is a root in the interval (x2 - 2 * dt, x2).
 // @param x2: x-coordinate of the last point
