@@ -5,6 +5,9 @@
 
 #include <cmath>
 #include <iostream>
+#include <stdfloat>
+
+#include "../include/energy.hpp"
 
 using namespace std;
 
@@ -46,7 +49,7 @@ void set_wave_numbers(double *kx, double *ky, int nx, int ny_complex);
 // @param dt: time step
 // @param nu1: parameter nu1 of the pde
 // @param nu2: parameter nu2 of the pde
-void set_C1(double *C1, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2);
+void set_C1(double *C1, double *kx, double *ky, int nx, int ny_complex, double dt, double nu1, double nu2, double c);
 
 // @brief: computes the coefficients of the factor C multiplying each time the IMEX-Euler scheme
 // @param C: coefficients of the factor C
@@ -78,4 +81,23 @@ double lagrange_root(double x2, double dt, double y0, double y1, double y2);
 // @return: the value at x = t of the Lagrange polynomial of degree 2 that passes through the points (x2 - 2 * dt, y0), (x2 - dt, y1), (x2, y2)
 double lagrange_eval(double t, double x2, double dt, double y0, double y1, double y2);
 
+// @brief: computes the root of the Lagrange polynomial of degree 2 that passes through the points (x2 - 2 * dt, y0), (x2 - dt, y1), (x2, y2) assuming there is a root in the interval (x2 - 2 * dt, x2). Be aware that this function should not be used if you have not previously checked that there is a root in the interval (x2 - 2 * dt, x2).
+// @param x2: x-coordinate of the last point
+// @param dt: time step
+// @param y0: value of the function at x2 - 2 * dt
+// @param y1: value of the function at x2 - dt
+// @param y2: value of the function at x2
+// @return: the root of the Lagrange polynomial of degree 2 that passes through the points (x2 - 2 * dt, y0), (x2 - dt, y1), (x2, y2)
+double lagrange_root(double x2, double dt, My_double y0, My_double y1, My_double y2);
+
+// @brief: computes the value at x = t of the Lagrange polynomial of degree 2 that passes through the points (x2 - 2 * dt, y0), (x2 - dt, y1), (x2, y2).
+// @param t: x-coordinate at which we want to evaluate the Lagrange polynomial
+// @param x2: x-coordinate of the last point
+// @param dt: time step
+// @param y0: value of the function at x2 - 2 * dt
+// @param y1: value of the function at x2 - dt
+// @param y2: value of the function at x2
+// @return: the value at x = t of the Lagrange polynomial of degree 2 that passes through the points (x2 - 2 * dt, y0), (x2 - dt, y1), (x2, y2)
+double lagrange_eval(double t, double x2, double dt, My_double y0, My_double y1, My_double y2);
+void print(string str, int64_t time);
 #endif  // MISC_HPP

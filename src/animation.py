@@ -31,7 +31,8 @@ class Plot(ABC):
     color_extra = 'royalblue'
     colorbar_args = {'shrink': 0.5, 'aspect': 10, 'location': 'left'}
     FPS = 50
-    speed = 1
+    interval = 1000/FPS  # interval between frames in milliseconds
+    duration = 10  # duration of the animation in seconds
 
     def __init__(self):
         pass
@@ -81,6 +82,24 @@ class Plot(ABC):
         # Replace with the actual file path
         file_path = script_dir + '/../data/solution.txt'
         self.headers, self.data_blocks = self.read_data_file(file_path)
+
+        # in practice it takes more time to animate, so we divide the duration by 2 to keep the seconds more or less the same
+        self.duration /= 2
+
+        # frames to be animated
+        self.num_frames = int(self.duration * 1000 / self.interval)
+
+        if self.num_frames > len(self.data_blocks):
+            self.num_frames = len(self.data_blocks)
+
+        # Speed of the animation
+        self.speed = len(self.data_blocks) // self.num_frames
+
+        print("Number of frames: ", self.num_frames)
+        print("Speed: ", self.speed)
+        print("Interval: ", self.interval)
+        print("Duration: ", self.duration)
+        print("len(self.data_blocks): ", len(self.data_blocks))
 
         # Create data
         self.nx = self.data_blocks.shape[1]
@@ -162,8 +181,8 @@ class Plot(ABC):
             return self.plot[0], self.time_text
 
         # Create the animation
-        self.ani = FuncAnimation(self.fig, update, frames=len(self.data_blocks) // self.speed,
-                                 interval=1000/self.FPS, blit=False, init_func=init)
+        self.ani = FuncAnimation(self.fig, update, frames=self.num_frames,
+                                 interval=self.interval, blit=False, init_func=init)
 
         end_time = time.time()
         print("Total time for animating: ", int(

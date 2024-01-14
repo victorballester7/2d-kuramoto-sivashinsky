@@ -3,7 +3,7 @@
 # Compiler and flags
 CXX := g++
 CC := gcc
-CXXFLAGS := -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -Ofast -std=c++17
+CXXFLAGS := -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -g3 -Ofast -std=c++23
 CFLAGS := -Wall -Wextra -pedantic -Ofast -std=c11
 
 # Libraries

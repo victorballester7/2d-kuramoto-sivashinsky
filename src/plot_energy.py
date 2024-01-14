@@ -74,8 +74,8 @@ def plot_energy(filename_E: str, filename_E_return: str, t_min: float) -> None:
         En = []
         En_1 = []
 
-    # idx = 0
     t, E, dE = data_E[idx_1:, 0], data_E[idx_1:, 1], data_E[idx_1:, 2]
+
     # plot t-E and next to it E-dE
     fig, ax = plt.subplots(1, 3, figsize=(12, 6))
     ax[0].plot(t, E, '-')
