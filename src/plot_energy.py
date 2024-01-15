@@ -1,21 +1,8 @@
 import matplotlib.pyplot as plt
 from matplotlib import pyplot as plt
-from matplotlib.animation import FuncAnimation
 import numpy as np
-from matplotlib import colormaps as cm
-from matplotlib.ticker import LinearLocator
-import os
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.axes import Axes
-from matplotlib.text import Text
-from typing import cast
-from abc import ABC, abstractmethod
-from typing import Any
-from matplotlib.artist import Artist
-from matplotlib.colors import Normalize
 import sys
 import time
-# incl
 
 plt.rcParams.update({
     "text.usetex": True,

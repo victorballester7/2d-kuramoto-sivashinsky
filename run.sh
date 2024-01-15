@@ -26,9 +26,11 @@ echo -e "${GREEN}Running done!${RESET}"
 if [ ! -f "data/tmp_write_sol.txt" ]; then
   echo -e "${BLUE}Animation skipped.${RESET}"
 else
+  type_anim=$(cat data/tmp_write_sol.txt)
+  echo $type_anim
   rm data/tmp_write_sol.txt # remove the tmp file
   echo -e "${YELLOW}Animating...${RESET}"
-  python src/animation.py
+  python src/animation.py $type_anim
   if [ $? -ne 0 ]; then
     echo -e "${RED}Animating failed!${RESET}"
     exit 1

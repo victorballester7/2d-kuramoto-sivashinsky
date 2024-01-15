@@ -23,8 +23,10 @@ using namespace std;
 #define FFTW_FLAG FFTW_ESTIMATE  // options: FFTW_ESTIMATE, FFTW_MEASURE.
 // FFTW_MEASURE instructs FFTW to run and measure the execution time of several FFTs in order to find the best way to compute the transform of size n.This process takes some time(usually a few seconds), depending on your machine and on the size of the transform.FFTW_ESTIMATE, on the contrary, does not run any computation and just builds a reasonable plan that is probably sub - optimal.In short, if your program performs many transforms of the same size and initialization time is not important, use FFTW_MEASURE; otherwise use the estimate.
 
-#define WRITE_SOL() ((write_solution) && (numSteps % freq_plot_sol == 0))
+#define WRITE_SOL() ((write_solution) && (numSteps % freq_anim_sol == 0))
+#define WRITE_FREQ() ((write_freq) && (numSteps % freq_anim_freq == 0))
 #define WRITE_E() ((write_energy) && (numSteps % freq_plot_e == 0))
+
 #define IMEXEULER 1
 #define IMEXBDF2 2
 #define IMEXRK4 3
@@ -97,11 +99,6 @@ using namespace std;
     /* Increase the time */                                                     \
     t += dt;                                                                    \
   }
-
-// for (uint i = 0; i < dim_f; i++) {
-//   Fu[i][0] = C1[i] * (Fu[i][0] + dt * NONLINEAR_TERM(i, 0));
-//   Fu[i][1] = C1[i] * (Fu[i][1] + dt * NONLINEAR_TERM(i, 1));
-// }
 
 #define STEP_IMEXEULER_NONHOMO()                                                                \
   {                                                                                             \
@@ -284,6 +281,7 @@ int main(void) {
   const string filename_energy = "data/energy.txt";                // name of the output file to write the energy
   const string filename_energy_return = "data/energy_return.txt";  // name of the output file to write the return map of the energy
   const string filename_input = "data/input.txt";                  // name of the input file
+  const string filename_freq = "data/freq.txt";                    // name of the output file to write the frequency of the energy
   const string space = "    ";                                     // space to print
   const uint per = 10;                                             // progress percentage interval to print (each count%)
   uint count = per;
@@ -296,10 +294,12 @@ int main(void) {
   double cutoff_time;                                                                                                                               // time at which it starts the stationary regime
   // DO NOT DECREASE THE NU'S BELOW 0.2 BECAUSE THE SOLUTION WILL START TO EXPLODE
   bool averaged_solution;  // 1 if we want to average the solution, 0 otherwise
-  bool write_energy;       // whether to write the energy to a file or not
   bool write_solution;     // whether to write the solution to a file or not
-  uint freq_plot_sol;      // frequency of the plot of the solution
+  bool write_energy;       // whether to write the energy to a file or not
+  bool write_freq;         // whether to write the frequency of the energy to a file or not
+  uint freq_anim_sol;      // frequency of the plot of the solution
   uint freq_plot_e;        // frequency of the plot of the energy
+  uint freq_anim_freq;     // frequency of the plot of the frequency of the energy
   uint method;
   string method_name;
   // -----------------------------------------------
@@ -318,9 +318,11 @@ int main(void) {
     file_input >> tmp >> T;
     file_input >> tmp >> cutoff_time;
     file_input >> tmp >> write_solution;
+    file_input >> tmp >> write_freq;
     file_input >> tmp >> write_energy;
     file_input >> tmp >> averaged_solution;
-    file_input >> tmp >> freq_plot_sol;
+    file_input >> tmp >> freq_anim_sol;
+    file_input >> tmp >> freq_anim_freq;
     file_input >> tmp >> freq_plot_e;
     file_input >> tmp >> method;
   }
@@ -352,15 +354,16 @@ int main(void) {
   // -----------------------------------------------
 
   // plot the parameters
-  cout << "Size of the grid:      " << space << nx << " x " << ny << endl;
-  cout << "Parameters:            " << space << "nu1 = " << nu1 << endl;
-  cout << "                       " << space << "nu2 = " << nu2 << endl;
-  cout << "Final time:            " << space << T << endl;
-  cout << "Step size:             " << space << dt << endl;
-  cout << "Use averaged solution? " << space << (averaged_solution ? "yes" : "no") << endl;
-  cout << "Write solution to file?" << space << (write_solution ? "yes" : "no") << endl;
-  cout << "Write energy to file?  " << space << (write_energy ? "yes" : "no") << endl;
-  cout << "Method:                " << space << method_name << endl;
+  cout << "Size of the grid:               " << space << nx << " x " << ny << endl;
+  cout << "Parameters:                     " << space << "nu1 = " << nu1 << endl;
+  cout << "                                " << space << "nu2 = " << nu2 << endl;
+  cout << "Final time:                     " << space << T << endl;
+  cout << "Step size:                      " << space << dt << endl;
+  cout << "Use averaged solution?          " << space << (averaged_solution ? "yes" : "no") << endl;
+  cout << "Write physical solution to file?" << space << (write_solution ? "yes" : "no") << endl;
+  cout << "Write Fourier solution to file? " << space << (write_freq ? "yes" : "no") << endl;
+  cout << "Write energy to file?           " << space << (write_energy ? "yes" : "no") << endl;
+  cout << "Method:                         " << space << method_name << endl;
   END_TIMER();
   ADD_TIME_TO(total_write);
 
@@ -462,7 +465,7 @@ int main(void) {
 
   // file handling
   START_TIMER();
-  ofstream file_sol, file_E, file_En;  // output files
+  ofstream file_sol, file_E, file_En, file_freq;  // output files
   // if (averaged_solution && (WRITE_SOL() || WRITE_E())) {  // Fu[0], the fourier coefficient with k_1 = k_2 = 0, is the mean of the solution
   //   for (uint i = 0; i < dim; i++) u[i] -= Fu[0][0];
   // }
@@ -475,6 +478,11 @@ int main(void) {
     file_En.open(filename_energy_return);
     // in the 4th column plot u(pi, pi)
     file_E << t << " " << (energy.int_part + energy.frac_part) << " " << (dE.int_part + dE.frac_part) << " " << u[(ny / 2) * (nx + 1)] << endl;  // write the energy into the file
+  }
+  if (WRITE_FREQ()) {
+    file_freq.open(filename_freq);
+    // write_bis(Fu, nx, ny_complex, t, file_freq);
+    write_fourier(Fu, nx, ny_complex, t, file_freq);
   }
   END_TIMER();
   ADD_TIME_TO(total_write);
@@ -510,18 +518,20 @@ int main(void) {
   //   }
   //   numSteps = 1;
   //   anterior = aux;
+  double max;
   do {
+    memcpy(v, u, dim * sizeof(double));
     START_TIMER();
     if (method == IMEXEULER) {
-      STEP_IMEXEULER_NONHOMO();
+      STEP_IMEXEULER();
     } else if (method == IMEXBDF2) {
       if (numSteps == 1) {
-        STEP_IMEXEULER_NONHOMO();
+        STEP_IMEXEULER();
       } else {
-        STEP_IMEXBDF2_NONHOMO();
+        STEP_IMEXBDF2();
       }
     } else if (method == IMEXRK4) {
-      STEP_IMEXRK4_NONHOMO();
+      STEP_IMEXRK4();
     }
     // normalize the inverse DFT. We first substract the mean of the solution and then we normalize it
     // we would lose the information of Fu, so we save it in Fu_aux and now we will lose the information of Fu_aux
@@ -556,18 +566,48 @@ int main(void) {
     } else
       En_changed = false;
     END_TIMER();
+
+    // for (uint i = 0; i < dim_f; i++) {
+    //   aux_x_fourier[i][0] = -Fu[i][1] * kx[i];
+    //   aux_x_fourier[i][1] = Fu[i][0] * kx[i];
+    //   aux_y_fourier[i][0] = -Fu[i][1] * ky[i];
+    //   aux_y_fourier[i][1] = Fu[i][0] * ky[i];
+    // } /* Perform inverse discrete Fourier transform (DFT) */
+
+    // fftw_execute(p_back_aux_x);
+    // fftw_execute(p_back_aux_y);
+
+    // // file_sol << t << " " << max(aux_x, dim) << " " << max(aux_y, dim) << endl;
+    // for (uint i = 0; i < dim; i++) {
+    //   aux_x[i] = aux_x[i] * aux_x[i] + aux_y[i] * aux_y[i];
+    // }
+    max = 0;
+    for (uint i = 0; i < dim; i++) {
+      aux_x[i] = abs((u[i] - v[i]) / u[i]);
+      if (aux_x[i] > max) max = aux_x[i];
+    }
+
     ADD_TIME_TO(total_other_computations);
 
     START_TIMER();
-    if (WRITE_SOL())
+    if (WRITE_SOL()) {
       write(u, nx, ny, t, file_sol);  // write the solution into the file
+      // write(aux_x, nx, ny, t, file_sol);  // write the solution into the file
+      // file_sol << t << "    " << max << endl;
+    }
     // we plot the energy En at each time independently of freq_plot_e
     if (write_energy && En_changed) file_En << tn << " " << En << endl;  // write the energy into the file
 
     if (WRITE_E()) {  // write the energy into the file
       // plot more digits of the energy at each time
-      file_E << t << " " << setprecision(15) << (energy.int_part + energy.frac_part) * factor_E << " " << (dE.int_part + dE.frac_part) * factor_dE << " " << u[(ny / 2) * (nx + 1)] << endl;  // energy, derivative of the energy, u(pi, pi)
+      file_E << t << " " << (energy.int_part + energy.frac_part) * factor_E << " " << (dE.int_part + dE.frac_part) * factor_dE << " " << u[(ny / 2) * (nx + 1)] << endl;  // energy, derivative of the energy, u(pi, pi)
     }
+
+    if (WRITE_FREQ()) {
+      // write_bis(Fu, nx, ny_complex, t, file_freq);
+      write_fourier(Fu, nx, ny_complex, t, file_freq);
+    }
+
     if (t > fraction_completed * count - EPS) {
       cout << count << "%" << endl;
       count += per;
@@ -609,8 +649,14 @@ int main(void) {
   // creation of tmp files to comunicate with bash scripts in order to plot or not the solution and the energy
   START_TIMER();
   ofstream file_tmp;
-  if (write_solution) {
+  if (write_solution || write_freq) {
     file_tmp.open("data/tmp_write_sol.txt");
+    if (write_solution && !write_freq)
+      file_tmp << 1 << endl;  // only plot of u
+    else if (write_freq && !write_solution)
+      file_tmp << 2 << endl;  // only plot of Fu
+    else
+      file_tmp << 3 << endl;  // plot both
     file_tmp.close();
   }
   if (write_energy) {

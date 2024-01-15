@@ -72,7 +72,38 @@ class Plot(ABC):
 
         return headers_array, data_blocks_array
 
-    def plot_setup(self):
+    def read_data_file_freq(self, file_path):
+        headers = []
+        data_blocks = []
+
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+            if line:
+                header = float(line)
+                headers.append(header)
+
+                i += 1
+                block_lines = []
+                while i < len(lines) and lines[i].strip():
+                    aux = list(map(float, lines[i].split()))
+                    block_lines.append(aux)
+                    i += 1
+                data_block = np.array(block_lines)
+                data_blocks.append(data_block)
+            i += 1
+
+        headers_array = np.array(headers)
+        data_blocks_array = np.array(data_blocks)
+
+        # now we dupplicate the
+
+        return headers_array, data_blocks_array
+
+    def plot_setup(self, isfreq=False):
         # Create a figure
         self.fig = plt.figure()
         self.ax = self.get_ax()
@@ -81,25 +112,30 @@ class Plot(ABC):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         # Replace with the actual file path
         file_path = script_dir + '/../data/solution.txt'
+        file_path_freq = script_dir + '/../data/freq.txt'
         self.headers, self.data_blocks = self.read_data_file(file_path)
+        self.headers_freq, self.data_blocks_freq = self.read_data_file_freq(
+            file_path_freq)
 
         # in practice it takes more time to animate, so we divide the duration by 2 to keep the seconds more or less the same
         self.duration /= 2
 
         # frames to be animated
-        self.num_frames = int(self.duration * 1000 / self.interval)
+        self.num_frames = int(self.duration * 1000.0 / self.interval)
 
         if self.num_frames > len(self.data_blocks):
             self.num_frames = len(self.data_blocks)
 
         # Speed of the animation
-        self.speed = len(self.data_blocks) // self.num_frames
+        self.speed = len(self.data_blocks) / self.num_frames
 
-        print("Number of frames: ", self.num_frames)
-        print("Speed: ", self.speed)
-        print("Interval: ", self.interval)
-        print("Duration: ", self.duration)
-        print("len(self.data_blocks): ", len(self.data_blocks))
+        # print("Number of frames: ", self.num_frames)
+        # print("Speed: ", self.speed)
+        # print("Interval: ", self.interval)
+        # print("Duration: ", self.duration)
+        # print("len(self.data_blocks): ", len(self.data_blocks))
+        # print("len(self.headers): ", len(self.headers))
+        # print("len(self.data_blocks_freq): ", len(self.data_blocks_freq))
 
         # Create data
         self.nx = self.data_blocks.shape[1]
@@ -108,10 +144,14 @@ class Plot(ABC):
         self.X = np.linspace(0, 2*np.pi, self.nx)
         self.Y = np.linspace(0, 2*np.pi, self.ny)
         self.X, self.Y = np.meshgrid(self.X, self.Y, indexing='ij')
-        self.Z = self.data_blocks[0]
-
-        self.Z_MAX = np.max(np.abs(self.data_blocks))
-        self.Z_MIN = -self.Z_MAX
+        if isfreq:
+            self.Z = self.data_blocks_freq[0]
+            self.Z_MAX = np.max(self.data_blocks_freq)
+            self.Z_MIN = 0
+        else:
+            self.Z = self.data_blocks[0]
+            self.Z_MAX = np.max(np.abs(self.data_blocks))
+            self.Z_MIN = -self.Z_MAX
         self.plot_args = self.get_plot_args()
         self.plot_args_extra = self.get_plot_args_extra()
         if self.is_3d():
@@ -149,6 +189,8 @@ class Plot(ABC):
         self.num_plots = len(self.plot)
 
         # Add a color bar which maps values to colors.
+        if isfreq:
+            self.fig.colorbar(self.plot[0], **self.colorbar_args)
         # mappable = self.plot[0] if isinstance(self.plot[0], Artist) else self.plot[0][0]
         # self.fig.colorbar(mappable=m, shrink=0.5, aspect=10, location='left')
 
@@ -164,13 +206,18 @@ class Plot(ABC):
             for plot in self.plot:
                 plot.remove()
 
+            real_frame = int(frame * self.speed)
+
             # Update the arrays
-            self.Z = self.data_blocks[frame * self.speed]
+            if isfreq:
+                self.Z = self.data_blocks_freq[real_frame]
+            else:
+                self.Z = self.data_blocks[real_frame]
             # Z = np.sin(2*X) + np.cos(2*Y+10*headers[frame])
 
             # Update the time text
             self.time_text.set_text('t = %.2f' %
-                                    self.headers[frame * self.speed])
+                                    self.headers[real_frame])
 
             # Update the plot
             # self.plot[0] = self.get_plot()
@@ -250,21 +297,6 @@ class Contour(Plot):
         # self.custom_colorbar()
         self.show_plot()
 
-    # def custom_colorbar(self):
-    #     # remove the previous colorbar
-    #     self.fig.delaxes(self.fig.axes[1])
-
-    #     # create a new colorbar with self.levels
-    #     norm = Normalize(vmin=self.Z_MIN, vmax=self.Z_MAX)
-    #     # a previous version of this used
-    #     # norm= matplotlib.colors.Normalize(vmin=cs.vmin, vmax=cs.vmax)
-    #     # which does not work any more
-    #     sm = plt.cm.ScalarMappable(norm=norm, cmap=self.color)
-    #     sm.set_array([])
-    #     self.fig.colorbar(sm, ax=self.ax, **self.colorbar_args)
-    #     plt.subplots_adjust(wspace=0.05)
-        # center the plot in the figure
-
     def is_3d(self) -> bool:
         return False
 
@@ -326,15 +358,50 @@ class SurfaceContour(Plot):
         return {'zdir': 'z', 'offset': self.offset_rate * self.Z_MIN, 'cmap': self.color, 'levels': self.levels}
 
 
+class Heatmap(Plot):
+    def __init__(self):
+        super().__init__()
+        self.plot_setup(True)
+        # self.custom_colorbar()
+        self.show_plot()
+
+    # def custom_colorbar(self):
+    #     # remove the previous colorbar
+    #     self.fig.delaxes(self.fig.axes[1])
+
+    #     # create a new colorbar with self.levels
+    #     norm = Normalize(vmin=self.Z_MIN, vmax=self.Z_MAX)
+    #     # a previous version of this used
+    #     # norm= matplotlib.colors.Normalize(vmin=cs.vmin, vmax=cs.vmax)
+    #     # which does not work any more
+    #     sm = plt.cm.ScalarMappable(norm=norm, cmap=self.color)
+    #     sm.set_array([])
+    #     self.fig.colorbar(sm, ax=self.ax, **self.colorbar_args)
+    #     plt.subplots_adjust(wspace=0.05)
+        # center the plot in the figure
+
+    def is_3d(self) -> bool:
+        return False
+
+    def get_plot(self):
+        return [self.ax.imshow(self.Z, **self.plot_args)]
+
+    def get_plot_args(self) -> dict[str, Any]:
+        plt.style.use('_mpl-gallery-nogrid')
+        return {'cmap': self.color}
+
+    def get_plot_args_extra(self):
+        pass
+
+
 # count time
 UNIT_TIME = 1000  # in seconds
 LABEL_TIME = "ms"
 start_time = time.time()
-# nu1 = float(sys.argv[1])
-# nu2 = float(sys.argv[2])
-# arg = int(sys.argv[3])
-# Surface()
-# elif arg == 2:
-#     Contour(nu1, nu2)
-# else:
-SurfaceContour()
+i = int(sys.argv[1])
+if i == 1 or i == 3:
+    SurfaceContour()
+# restart all plt config
+plt.rcdefaults()
+if i == 2 or i == 3:
+    Heatmap()

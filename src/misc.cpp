@@ -39,6 +39,21 @@ void write(double *x, int nx, int ny, double t, ofstream &file) {
   file << endl;
 }
 
+void write_fourier(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file) {
+  file << t << endl;
+  for (int i = 0; i < nx / 2 + 1; i++) {
+    for (int j = 0; j < ny_complex - 1; j++) {
+      if (i == 0 && j == 0) {
+        file << 0 << " ";  // we set the mean to 0 (without editing the data in the vector)
+        continue;
+      }
+      file << x[i * ny_complex + j][0] * x[i * ny_complex + j][0] + x[i * ny_complex + j][1] * x[i * ny_complex + j][1] << " ";
+    }
+    file << x[i * ny_complex + ny_complex - 1][0] * x[i * ny_complex + ny_complex - 1][0] + x[i * ny_complex + ny_complex - 1][1] * x[i * ny_complex + ny_complex - 1][1] << endl;
+  }
+  file << endl;
+}
+
 void write_bis(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file) {
 #define round_to_zero(y) (fabs(y) < 1e-10 ? 0 : y)
   file << t << endl;
@@ -88,6 +103,16 @@ void set_C2(double *C2, double *kx, double *ky, int nx, int ny_complex, double d
     aux = kx[i] * kx[i] + (nu2 / nu1) * ky[i] * ky[i];
     C2[i] = 1.0 / (1.5 + dt * (aux * (nu1 * aux - 1.0) + c));
   }
+}
+
+double max(double *x, uint dim) {
+  double max = fabs(x[0]);
+  double tmp;
+  for (uint i = 1; i < dim; i++) {
+    tmp = fabs(x[i]);
+    if (tmp > max) max = tmp;
+  }
+  return max;
 }
 
 double lagrange_root(double x2, double dt, double y0, double y1, double y2) {
