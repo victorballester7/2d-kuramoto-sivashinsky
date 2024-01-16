@@ -4,52 +4,66 @@
 \usepackage{bibliography}
 
 
-\title{Numerical study of the 2D Kuramoto-Sivashinsky equation}
+\title{Numerical study of the\\2D Kuramoto - Sivashinsky equation}
 \author{Víctor Ballester}
 \date{\parbox{\linewidth}{\centering
-Instabilities and nonlinear phenomena\endgraf
+Instabilities and Nonlinear Phenomena\endgraf
 M2 - Applied and Theoretical Mathematics\endgraf
-Université Paris-Dauphine \& PSL\endgraf
+Université Paris-Dauphine, PSL\endgraf
 \today}}
 
 
 \begin{document}
 \maketitle
 \begin{abstract}
-  This is an abstract.
+  The aim of this report is to give both qualitative and quantitative insight into the chaotic behavior of the 2D Kuramoto-Sivashinsky equation. This equation is more commonly known in its 1D version and this report wants to complement the numerical study carried out in \cite{Kalogirou2015} in order to extent the bibliography on the 2D version of the equation. Kuramoto-Sivashinsky types of equations are seen in various physical phenomena such as flame propagation or reaction-diffusion systems \cite{Kuramoto,Sivashinsky1977}. We will see that the 2D KS equation exhibits chaotic behavior as we increase the spatial domain size.
 \end{abstract}
-{
-\hypersetup{linkcolor=black}
-\tableofcontents
-}
+% {
+% \hypersetup{linkcolor=black}
+% \tableofcontents
+% }
 
 \section{Introduction}
-2d KS equation:
+The well known 1D Kuramoto-Sivashinsky (KS) equation can be written as
+\begin{equation}
+  u_t + \frac{1}{2} {u_x}^2 + u_{xx} + u_{xxxx} = 0
+\end{equation}
+It is usually equipped with periodic boundary conditions $u(t, x + L) = u(t, x)$ for some $L > 0$, which defines the domain of definition of the PDE, and an initial condition $u(0, x) = u_0(x)$. The natural extension in the 2D case is the following Dirichlet problem with periodic boundary conditions:
 \begin{equation}
   \begin{cases}
-    u_t = -\frac{1}{2}\abs{\grad u}^2 - \laplacian u - \laplacian^2 u & \text{in } (0, \infty) \times [0, L_x) \times [0, L_y) \\
-    u(t, x, y) = u(t, x + L_x, y)                                     & \text{in } [0, \infty) \times \RR \times [0, L_y)      \\
-    u(t, x, y) = u(t, x, y + L_y)                                     & \text{in } [0, \infty) \times [0, L_x) \times \RR      \\
-    u(0, x, y) = u_0(x, y)                                            & \text{for all } x \in [0, L_x), y \in [0, L_y)
+    u_t + \frac{1}{2} \abs{\grad u}^2 + \laplacian u + \laplacian^2 u = 0 & \text{in } (0, \infty) \times [0, L_x) \times [0, L_y) \\
+    u(t, x, y) = u(t, x + L_x, y)                                         & \text{in } [0, \infty) \times \RR \times [0, L_y)      \\
+    u(t, x, y) = u(t, x, y + L_y)                                         & \text{in } [0, \infty) \times [0, L_x) \times \RR      \\
+    u(0, x, y) = u_0(x, y)                                                & \text{for all } x \in [0, L_x), y \in [0, L_y)
   \end{cases}
 \end{equation}
-If we rescale the spatial domain to $[0, 2\pi)^2$ and the time domain using the transformations
+with $L_x, L_y > 0$. For the sake of simplicity, we will make a rescale of the variables in order to obtain a square domain of definition, namely:
 \begin{equation}
   x_\mathrm{new} = \frac{2\pi}{L_x} x \qquad y_\mathrm{new} = \frac{2\pi}{L_y} y \qquad t_\mathrm{new} = {\left(\frac{L_x}{2 \pi}\right)}^2 t
 \end{equation}
-we get the following equation
-\begin{equation}
-  u_t=-\frac{1}{2}\abs{\grad_\nu u}^2-\laplacian_\nu u-\nu_1{\laplacian_\nu}^2 u
+Using this new variables (and dropping the subindex \emph{new} for simplicity), the equation becomes:
+\begin{equation}\label{eq:2d_ks}
+  \begin{cases}
+    u_t + \frac{1}{2} \abs{\grad_\nu u}^2 + \laplacian_\nu u + {\laplacian_\nu}^2 u = 0 & \text{in } (0, \infty) \times [0, 2\pi) \times [0, 2\pi) \\
+    u(t, x, y) = u(t, x + 2\pi, y)                                                      & \text{in } [0, \infty) \times \RR \times [0, 2\pi)       \\
+    u(t, x, y) = u(t, x, y + 2\pi)                                                      & \text{in } [0, \infty) \times [0, 2\pi) \times \RR       \\
+    u(0, x, y) = u_0(x, y)                                                              & \text{for all } x \in [0, 2\pi), y \in [0, 2\pi)
+  \end{cases}
 \end{equation}
-where we used a slightly-modified notation from the one in \cite{Kalogirou2015}
+where we used the notation from \cite{Kalogirou2015}:
 \begin{align}
   \grad_\nu & = \left(\partial_x , \sqrt{\frac{\nu_2}{\nu_1}} \partial_y
   \right)   & \div_\nu                                                   & = \partial_x + \sqrt{\frac{\nu_1}{\nu_2}} \partial_y
-  \\ \laplacian_\nu &= \div_\nu(\grad_\nu) = \partial_{xx} + \frac{\nu_2}{\nu_1} \partial_{yy} & {\laplacian_\nu}^2 &= \laplacian_\nu(\laplacian_\nu) = \partial_{xxxx} + 2 \frac{\nu_2}{\nu_1} \partial_{xxyy} + \frac{\nu_2^2}{\nu_1^2} \partial_{yyyy}
+  \\ \laplacian_\nu &= \div_\nu(\grad_\nu) = \partial_{xx} + \frac{\nu_2}{\nu_1} \partial_{yy} & {\laplacian_\nu}^2 &= \laplacian_\nu(\laplacian_\nu) = \partial_{xxxx} + 2 \frac{\nu_2}{\nu_1} \partial_{xxyy} + \frac{{\nu_2}^2}{{\nu_1}^2} \partial_{yyyy}
 \end{align}
-and $\displaystyle\nu_1 ={\left( \frac{L_x}{2\pi} \right)}^2$, $\displaystyle\nu_2 = {\left( \frac{L_y}{2\pi} \right)}^2$ and we have dropped the subindices \emph{new} for simplicity.
+and $\nu_1 :={\left( \frac{L_x}{2\pi} \right)}^2$, $\nu_2 := {\left( \frac{L_y}{2\pi} \right)}^2$. Note that the new equation is invariant under the transformation $(t,x,y, \nu_1, \nu_2) \mapsto \left( \frac{\nu_2}{\nu_1} t, y, x, \nu_2, \nu_1 \right)$. That is, if $u(t,x,y)$ is a solution of the equation with parameters $(\nu_1, \nu_2)$, then $u\left( \frac{\nu_2}{\nu_1} t, y, x \right)$ is the solution of the equation for the parameters $(\nu_2, \nu_1)$.
 
-Note that the equation is invariant under the transformation $(t,x,y, \nu_1, \nu_2) \mapsto \left( \frac{\nu_2}{\nu_1} t, y, x, \nu_2, \nu_1 \right)$. That is, if $u(t,x,y)$ is a solution of the equation with parameters $(\nu_1, \nu_2)$, then $u\left( \frac{\nu_2}{\nu_1} t, y, x \right)$ is the solution of the equation for the parameters $(\nu_2, \nu_1)$.
+Let's study now the linear stability of the different modes $(k_x, k_y)$ of the equation for $k_x,k_y\in\NN\cup\{0\}$. Setting $v = \delta(e^{\lambda t+i(k_x x + k_y y)} + \cc)$, with $\delta \ll 1$, as a perturbation of the trivial state $u = 0$, we obtain the following equality once we impose that $v$ is a solution of \cref{eq:2d_ks}:
+\begin{equation}
+  \lambda = \left({k_x}^2+ \frac{\nu_2}{\nu_1} {k_y}^2\right)\left( 1 - \nu_1{k_x}^2 - \nu_2{k_y}^2\right)
+\end{equation}
+where as usual $\cc$ denotes the complex conjugate.
+We see that, for example, if $\nu_1, \nu_2 \geq 1$, then there is no pair $(k_x, k_y)$ that makes $\lambda > 0$ and therefore all the nodes are stable. But as soon as we decrease $\nu_1$ or $\nu_2$ below $1$, unstable nodes start to appear in an \emph{increasing}\footnote{Increasing in the sense the node $(k_x+1,k_y)$ will become unstable once the node $(k_x,k_y)$ had become unstable and not before.} order. For example, for $\nu_1=\nu_2=1/8$ the nodes $(0,1)$, $(1,0)$, $(1,1)$, $(2,0)$, $(0,2)$, $(2,1)$, $(1,2)$, $(2,2)$ are unstable. This is illustrated in \cref{fig:stability_diagram}.
 
 \phantomsection
 \addcontentsline{toc}{section}{References}

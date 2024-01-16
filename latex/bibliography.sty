@@ -18,6 +18,11 @@
   \ifhyperref%
   {\href{#1}{\enllas}}%
   {\url{#1}}}
+\DeclareFieldFormat{eprint}{%
+  \mkbibacro{eprint}\addcolon\space%
+  \ifhyperref%
+  {\href{#1}{\enllas}}%
+  {\url{#1}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \SetSymbolFont{stmry}{bold}{U}{stmry}{m}{n} % in order to solve a warning.

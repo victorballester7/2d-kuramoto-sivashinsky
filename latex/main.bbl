@@ -57,6 +57,71 @@
       \verb http://doi.org/10.1098/rspa.2014.0932
       \endverb
     \endentry
+    \entry{Kuramoto}{article}{}
+      \name{author}{1}{}{%
+        {{hash=7b08084df1c91bce7e6344c9d83e3465}{%
+           family={Kuramoto},
+           familyi={K\bibinitperiod},
+           given={Y.},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{7b08084df1c91bce7e6344c9d83e3465}
+      \strng{fullhash}{7b08084df1c91bce7e6344c9d83e3465}
+      \strng{bibnamehash}{7b08084df1c91bce7e6344c9d83e3465}
+      \strng{authorbibnamehash}{7b08084df1c91bce7e6344c9d83e3465}
+      \strng{authornamehash}{7b08084df1c91bce7e6344c9d83e3465}
+      \strng{authorfullhash}{7b08084df1c91bce7e6344c9d83e3465}
+      \field{labelalpha}{Kur78}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0375-9687}
+      \field{journaltitle}{Progress of Theoretical Physics Supplement}
+      \field{month}{02}
+      \field{title}{Diffusion-induced chaos in reaction systems}
+      \field{volume}{64}
+      \field{year}{1978}
+      \field{pages}{346\bibrangedash 367}
+      \range{pages}{22}
+      \verb{doi}
+      \verb https://doi.org/10.1143/PTPS.64.346
+      \endverb
+      \verb{eprint}
+      \verb https://academic.oup.com/ptps/article-pdf/doi/10.1143/PTPS.64.346/5293041/64-346.pdf
+      \endverb
+    \endentry
+    \entry{Sivashinsky1977}{article}{}
+      \name{author}{1}{}{%
+        {{hash=c184fbf8ae2af6dca9ba956387ddb558}{%
+           family={Sivashinsky},
+           familyi={S\bibinitperiod},
+           given={G.I.},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{c184fbf8ae2af6dca9ba956387ddb558}
+      \strng{fullhash}{c184fbf8ae2af6dca9ba956387ddb558}
+      \strng{bibnamehash}{c184fbf8ae2af6dca9ba956387ddb558}
+      \strng{authorbibnamehash}{c184fbf8ae2af6dca9ba956387ddb558}
+      \strng{authornamehash}{c184fbf8ae2af6dca9ba956387ddb558}
+      \strng{authorfullhash}{c184fbf8ae2af6dca9ba956387ddb558}
+      \field{labelalpha}{Siv77}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0094-5765}
+      \field{journaltitle}{Acta Astronautica}
+      \field{number}{11}
+      \field{title}{Nonlinear analysis of hydrodynamic instability in laminar flames-I. Derivation of basic equations}
+      \field{volume}{4}
+      \field{year}{1977}
+      \field{pages}{1177\bibrangedash 1206}
+      \range{pages}{30}
+      \verb{doi}
+      \verb https://doi.org/10.1016/0094-5765(77)90096-0
+      \endverb
+    \endentry
   \enddatalist
 \endrefsection
 \endinput

@@ -1,0 +1,2 @@
+- Mathematically prove that for nu1, nu2>1 the system is stable and attracting to the trivial state =0.
+- Try to refine the figure of characterization of states in 2d-kuramoto sivashinsky

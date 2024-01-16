@@ -275,7 +275,7 @@ const double betaE[4] = {0.0, -251352885992.0 / 790610919619.0, -383714262797.0 
 // -------------------------------------------------
 // -------------------------------------------------
 
-int main(void) {
+int main(int argc, char *argv[]) {
   // ----------------- PARAMETERS ------------------
   const string filename_solution = "data/solution.txt";            // name of the output file to write the solution
   const string filename_energy = "data/energy.txt";                // name of the output file to write the energy
@@ -353,6 +353,12 @@ int main(void) {
   }
   // -----------------------------------------------
 
+  if (argc > 2) {
+    // nu1 and nu2 are given as arguments
+    nu1 = atof(argv[1]);
+    nu2 = atof(argv[2]);
+  }
+
   // plot the parameters
   cout << "Size of the grid:               " << space << nx << " x " << ny << endl;
   cout << "Parameters:                     " << space << "nu1 = " << nu1 << endl;
@@ -382,7 +388,8 @@ int main(void) {
   double factor_dE = (2 * M_PI) * (2 * M_PI) / (dt * nx * ny);    // factor to compute the derivative of the energy
   double tn, En;
   bool En_changed = false;
-  double c = 1.0 + 1.0 / (nu1);  // constant term to ensure stability of the scheme (see: p227 in Nonlinear dynamics of surfactant–laden multilayer shear flows and related systems)
+  double c = 0.0;
+  // double c = 1.0 + 1.0 / (nu1);  // constant term to ensure stability of the scheme (see: p227 in Nonlinear dynamics of surfactant–laden multilayer shear flows and related systems)
   double *kx = (double *)malloc(dim_f * sizeof(double));
   double *ky = (double *)malloc(dim_f * sizeof(double));
   double *C1 = (double *)malloc(dim_f * sizeof(double));

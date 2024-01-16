@@ -32,7 +32,7 @@ class Plot(ABC):
     colorbar_args = {'shrink': 0.5, 'aspect': 10, 'location': 'left'}
     FPS = 50
     interval = 1000/FPS  # interval between frames in milliseconds
-    duration = 10  # duration of the animation in seconds
+    duration = 20  # duration of the animation in seconds
 
     def __init__(self):
         pass
@@ -122,20 +122,26 @@ class Plot(ABC):
 
         # frames to be animated
         self.num_frames = int(self.duration * 1000.0 / self.interval)
-
-        if self.num_frames > len(self.data_blocks):
-            self.num_frames = len(self.data_blocks)
+        if isfreq:
+            if self.num_frames > len(self.data_blocks_freq):
+                self.num_frames = len(self.data_blocks_freq)
+        else:
+            if self.num_frames > len(self.data_blocks):
+                self.num_frames = len(self.data_blocks)
 
         # Speed of the animation
-        self.speed = len(self.data_blocks) / self.num_frames
+        if isfreq:
+            self.speed = len(self.data_blocks_freq) / self.num_frames
+        else:
+            self.speed = len(self.data_blocks) / self.num_frames
 
-        # print("Number of frames: ", self.num_frames)
-        # print("Speed: ", self.speed)
-        # print("Interval: ", self.interval)
-        # print("Duration: ", self.duration)
-        # print("len(self.data_blocks): ", len(self.data_blocks))
-        # print("len(self.headers): ", len(self.headers))
-        # print("len(self.data_blocks_freq): ", len(self.data_blocks_freq))
+        print("Number of frames: ", self.num_frames)
+        print("Speed: ", self.speed)
+        print("Interval: ", self.interval)
+        print("Duration: ", self.duration)
+        print("len(self.data_blocks): ", len(self.data_blocks))
+        print("len(self.headers): ", len(self.headers))
+        print("len(self.data_blocks_freq): ", len(self.data_blocks_freq))
 
         # Create data
         self.nx = self.data_blocks.shape[1]
@@ -394,6 +400,43 @@ class Heatmap(Plot):
         pass
 
 
+class FreqPlot(Plot):
+    def __init__(self):
+        super().__init__()
+        self.plot_setup(True)
+        # self.custom_colorbar()
+        self.show_plot()
+
+    # def custom_colorbar(self):
+    #     # remove the previous colorbar
+    #     self.fig.delaxes(self.fig.axes[1])
+
+    #     # create a new colorbar with self.levels
+    #     norm = Normalize(vmin=self.Z_MIN, vmax=self.Z_MAX)
+    #     # a previous version of this used
+    #     # norm= matplotlib.colors.Normalize(vmin=cs.vmin, vmax=cs.vmax)
+    #     # which does not work any more
+    #     sm = plt.cm.ScalarMappable(norm=norm, cmap=self.color)
+    #     sm.set_array([])
+    #     self.fig.colorbar(sm, ax=self.ax, **self.colorbar_args)
+    #     plt.subplots_adjust(wspace=0.05)
+        # center the plot in the figure
+
+    def is_3d(self) -> bool:
+        return True
+
+    def get_plot(self):
+        ys = np.arange(len(self.Z[0]))
+        return [self.ax.plot(ys, self.Z[i], zs=i, zdir='x', **self.plot_args) for i in range(len(self.Z))]
+
+    def get_plot_args(self) -> dict[str, Any]:
+        # plt.style.use('_mpl-gallery-nogrid')
+        return {'color': 'red'}
+
+    def get_plot_args_extra(self):
+        pass
+
+
 # count time
 UNIT_TIME = 1000  # in seconds
 LABEL_TIME = "ms"
@@ -404,4 +447,5 @@ if i == 1 or i == 3:
 # restart all plt config
 plt.rcdefaults()
 if i == 2 or i == 3:
+    # FreqPlot()
     Heatmap()
