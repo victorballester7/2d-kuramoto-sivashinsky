@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber main"] 0 "main.bcf" "main.bbl" "main" 1705433670 -1
+["biber main"] 1705518431 "main.bcf" "main.bbl" "main" 1705521447 0
   "./references.bib" 1705431094 1133 3a635648ec6f09cde894a99a981458d9 ""
-  "main.bcf" 1705433670 107972 e8a4e3a9847b663da60107a21678f975 "pdflatex"
+  "main.bcf" 1705521447 108108 409cb66320c368af7ae5083a5117118c "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1705433668 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" "main.pdf" "main" 1705433670 0
-  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" 1705433668 5576 f5756644d56f7408f1b6f67d3f221be5 ""
+["pdflatex"] 1705521445 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" "main.pdf" "main" 1705521447 0
+  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" 1705521445 7915 49fd3d6576d1ee4f92a82baa4f160a60 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1704400182 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1704400182 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1704400182 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -60,6 +60,7 @@
   "/usr/share/texmf-dist/fonts/tfm/public/stmaryrd/stmary7.tfm" 1704400182 848 26631fcb3e4cb6757598b9cda7967b63 ""
   "/usr/share/texmf-dist/fonts/tfm/public/stmaryrd/stmary8.tfm" 1704400182 848 6125cdd3627e68d3db8013b98e587508 ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1704400182 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
+  "/usr/share/texmf-dist/fonts/type1/public/esint-type1/esint10.pfb" 1704400182 34421 79309417cbb00a4641f92d2efa583bbd ""
   "/usr/share/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb" 1704400182 28028 fcd4f6ddbf905cdea8842b1a7b14335f ""
   "/usr/share/texmf-dist/fonts/type1/public/lm/lmbx10.pfb" 1704400182 121021 1bf809ce4a594679006bd72263eba59b ""
   "/usr/share/texmf-dist/fonts/type1/public/lm/lmbx12.pfb" 1704400182 116908 1fca96723793882c2e0160350c192fc8 ""
@@ -376,11 +377,11 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1704454015 4483110 adb1e1d04498b9576f1f17c4219c5e03 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1704453977 6768060 0ee3d21b323831b0a173248acbea44a8 ""
   "bibliography.sty" 1705431115 958 8b3be8751b2cb1731b77011a9ddc0b35 ""
-  "main.aux" 1705433670 2028 1d420f09d08f6d7366dada07af5f79fc "pdflatex"
-  "main.bbl" 1705431115 4758 1e1770d2c7c5a3efee8cc1caf75e28a8 "biber main"
-  "main.run.xml" 1705433670 2376 3f99cf17c9219d8cb1a788da2b54d37f "pdflatex"
-  "main.tex" 1705433668 5576 f5756644d56f7408f1b6f67d3f221be5 ""
-  "preamble.sty" 1705432436 15756 56d89f87bcbb56783200c81ca115fcfe ""
+  "main.aux" 1705521447 3285 ca6f6d089de24e5eaee7d169191210eb "pdflatex"
+  "main.bbl" 1705518431 4758 1e1770d2c7c5a3efee8cc1caf75e28a8 "biber main"
+  "main.run.xml" 1705521447 2376 3f99cf17c9219d8cb1a788da2b54d37f "pdflatex"
+  "main.tex" 1705521445 7915 49fd3d6576d1ee4f92a82baa4f160a60 ""
+  "preamble.sty" 1705492164 15756 56d89f87bcbb56783200c81ca115fcfe ""
   "preamble_style.sty" 1704293992 767 3e26813407f4ae6e4e6dd97ca5ca2f14 ""
   (generated)
   "main.aux"

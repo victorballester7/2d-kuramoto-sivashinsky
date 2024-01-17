@@ -1,10 +1,10 @@
-Nx 128
-Ny 128
+Nx 64
+Ny 64
 nu_1 0.15
 nu_2 0.03
-dt 0.001
-Tfinal 625
-cutoff_time 600
+dt 0.005
+Tfinal 1000
+cutoff_time 0
 anim_solution 0
 anim_freq 0
 plot_energy 1
@@ -12,4 +12,4 @@ average_solution 1
 freq_anim_sol 100
 freq_anim_freq 100
 freq_plot_e 10
-method 1
+method 2

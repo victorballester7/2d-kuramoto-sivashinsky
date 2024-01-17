@@ -4,7 +4,7 @@
 \usepackage{bibliography}
 
 
-\title{Numerical study of the\\2D Kuramoto - Sivashinsky equation}
+\title{Numerical study of the\\2D Kuramoto-Sivashinsky equation}
 \author{Víctor Ballester}
 \date{\parbox{\linewidth}{\centering
 Instabilities and Nonlinear Phenomena\endgraf
@@ -16,7 +16,7 @@ Université Paris-Dauphine, PSL\endgraf
 \begin{document}
 \maketitle
 \begin{abstract}
-  The aim of this report is to give both qualitative and quantitative insight into the chaotic behavior of the 2D Kuramoto-Sivashinsky equation. This equation is more commonly known in its 1D version and this report wants to complement the numerical study carried out in \cite{Kalogirou2015} in order to extent the bibliography on the 2D version of the equation. Kuramoto-Sivashinsky types of equations are seen in various physical phenomena such as flame propagation or reaction-diffusion systems \cite{Kuramoto,Sivashinsky1977}. We will see that the 2D KS equation exhibits chaotic behavior as we increase the spatial domain size.
+  The aim of this report is to give both qualitative and quantitative insight into the chaotic behavior of the 2D Kuramoto-Sivashinsky equation. This equation is more commonly known in its 1D version and this report wants to complement the numerical study carried out in \cite{Kalogirou2015} in order to extend the bibliography on the 2D version of the equation. Kuramoto-Sivashinsky types of equations are seen in various physical phenomena such as flame propagation or reaction-diffusion systems \cite{Kuramoto,Sivashinsky1977}. We will see that the 2D KS equation exhibits chaotic behavior as we increase the spatial domain size.
 \end{abstract}
 % {
 % \hypersetup{linkcolor=black}
@@ -24,7 +24,7 @@ Université Paris-Dauphine, PSL\endgraf
 % }
 
 \section{Introduction}
-The well known 1D Kuramoto-Sivashinsky (KS) equation can be written as
+The well-known 1D Kuramoto-Sivashinsky (KS) equation can be written as
 \begin{equation}
   u_t + \frac{1}{2} {u_x}^2 + u_{xx} + u_{xxxx} = 0
 \end{equation}
@@ -37,11 +37,11 @@ It is usually equipped with periodic boundary conditions $u(t, x + L) = u(t, x)$
     u(0, x, y) = u_0(x, y)                                                & \text{for all } x \in [0, L_x), y \in [0, L_y)
   \end{cases}
 \end{equation}
-with $L_x, L_y > 0$. For the sake of simplicity, we will make a rescale of the variables in order to obtain a square domain of definition, namely:
+with $L_x, L_y > 0$. For the sake of simplicity, we will rescale the variables in order to obtain a square domain of definition, namely:
 \begin{equation}
   x_\mathrm{new} = \frac{2\pi}{L_x} x \qquad y_\mathrm{new} = \frac{2\pi}{L_y} y \qquad t_\mathrm{new} = {\left(\frac{L_x}{2 \pi}\right)}^2 t
 \end{equation}
-Using this new variables (and dropping the subindex \emph{new} for simplicity), the equation becomes:
+Using this new variables (and dropping the subscript \emph{new} for simplicity), the equation becomes:
 \begin{equation}\label{eq:2d_ks}
   \begin{cases}
     u_t + \frac{1}{2} \abs{\grad_\nu u}^2 + \laplacian_\nu u + {\laplacian_\nu}^2 u = 0 & \text{in } (0, \infty) \times [0, 2\pi) \times [0, 2\pi) \\
@@ -56,14 +56,42 @@ where we used the notation from \cite{Kalogirou2015}:
   \right)   & \div_\nu                                                   & = \partial_x + \sqrt{\frac{\nu_1}{\nu_2}} \partial_y
   \\ \laplacian_\nu &= \div_\nu(\grad_\nu) = \partial_{xx} + \frac{\nu_2}{\nu_1} \partial_{yy} & {\laplacian_\nu}^2 &= \laplacian_\nu(\laplacian_\nu) = \partial_{xxxx} + 2 \frac{\nu_2}{\nu_1} \partial_{xxyy} + \frac{{\nu_2}^2}{{\nu_1}^2} \partial_{yyyy}
 \end{align}
-and $\nu_1 :={\left( \frac{L_x}{2\pi} \right)}^2$, $\nu_2 := {\left( \frac{L_y}{2\pi} \right)}^2$. Note that the new equation is invariant under the transformation $(t,x,y, \nu_1, \nu_2) \mapsto \left( \frac{\nu_2}{\nu_1} t, y, x, \nu_2, \nu_1 \right)$. That is, if $u(t,x,y)$ is a solution of the equation with parameters $(\nu_1, \nu_2)$, then $u\left( \frac{\nu_2}{\nu_1} t, y, x \right)$ is the solution of the equation for the parameters $(\nu_2, \nu_1)$.
+and $\nu_1 :={\left( \frac{L_x}{2\pi} \right)}^2$, $\nu_2 := {\left( \frac{L_y}{2\pi} \right)}^2$. Note that the new equation is invariant under the transformation $(t,x,y, \nu_1, \nu_2) \mapsto \left( \frac{\nu_2}{\nu_1} t, y, x, \nu_2, \nu_1 \right)$ if and only if the initial condition is symmetric in $x$ and $y$. In that case, if $u(t,x,y)$ is a solution of the equation with parameters $(\nu_1, \nu_2)$, then $u\left( \frac{\nu_2}{\nu_1} t, y, x \right)$ is the solution of the equation for the parameters $(\nu_2, \nu_1)$.
 
 Let's study now the linear stability of the different modes $(k_x, k_y)$ of the equation for $k_x,k_y\in\NN\cup\{0\}$. Setting $v = \delta(e^{\lambda t+i(k_x x + k_y y)} + \cc)$, with $\delta \ll 1$, as a perturbation of the trivial state $u = 0$, we obtain the following equality once we impose that $v$ is a solution of \cref{eq:2d_ks}:
 \begin{equation}
   \lambda = \left({k_x}^2+ \frac{\nu_2}{\nu_1} {k_y}^2\right)\left( 1 - \nu_1{k_x}^2 - \nu_2{k_y}^2\right)
 \end{equation}
-where as usual $\cc$ denotes the complex conjugate.
-We see that, for example, if $\nu_1, \nu_2 \geq 1$, then there is no pair $(k_x, k_y)$ that makes $\lambda > 0$ and therefore all the nodes are stable. But as soon as we decrease $\nu_1$ or $\nu_2$ below $1$, unstable nodes start to appear in an \emph{increasing}\footnote{Increasing in the sense the node $(k_x+1,k_y)$ will become unstable once the node $(k_x,k_y)$ had become unstable and not before.} order. For example, for $\nu_1=\nu_2=1/8$ the nodes $(0,1)$, $(1,0)$, $(1,1)$, $(2,0)$, $(0,2)$, $(2,1)$, $(1,2)$, $(2,2)$ are unstable. This is illustrated in \cref{fig:stability_diagram}.
+where, as usual, $\cc$ denotes the complex conjugate.
+We see that, for example, if $\nu_1, \nu_2 \geq 1$, then there is no pair $(k_x, k_y)$ that makes $\lambda > 0$ and therefore all the nodes are stable. But as soon as we decrease $\nu_1$ or $\nu_2$ below $1$, unstable nodes start to appear in an \emph{increasing}\footnote{Increasing in the sense the node $(k_x+1,k_y)$ will become unstable once the node $(k_x,k_y)$ had become unstable and not before.} order. For example, for $\nu_1=\nu_2=1/6$ the nodes $(0,1)$, $(1,0)$, $(1,1)$, $(2,0)$, $(0,2)$, $(2,1)$, $(1,2)$ are unstable and all the others are stable.
+
+In order to contribute to the bibliography on the 2D KS equation, we will study the equation with an initial condition different from the one used in \cite{Kalogirou2015}, which was $u_0(x,y) = \sin(x) + \sin(y) + \sin(x+y)$. Instead, we will use the following initial condition:
+\begin{equation}\label{eq:initial_condition}
+  u_0(x,y) = \sin(x) + \sin(y) + \cos(x+y) + \cos(2x) + \sin(2y) + \sin(2x+2y)
+\end{equation}
+which is still symmetric in $x$ and $y$. Note that we are adding the modes $(2,0)$, $(0,2)$, $(2,2)$ to the initial condition used in \cite{Kalogirou2015} and so a richer behavior is expected.
+
+In order to distinguish and classify the different kinds of behavior that the equation exhibits, we will monitor the $L^2$-norm of the solution:
+\begin{equation}
+  E_u(t):=\norm{u(t)}_{L^2}^2 = \int_0^{2\pi} \int_0^{2\pi} {u(t,x,y)}^2 \dd{x} \dd{y}
+\end{equation}
+It will be of interest to study also its time derivative $\dot{E}_u(t)$ and the phase space $(E_u(t), \dot{E}_u(t))$.
+
+Finally, we can easily note that the mean of the solution is decreasing in time. Indeed:
+\begin{multline}
+  4\pi^2\dv{\overline{u}}{t}= \int_0^{2\pi} \int_0^{2\pi} u_t \dd{x} \dd{y} = -\int_0^{2\pi} \int_0^{2\pi} \left( \frac{1}{2} \abs{\grad_\nu u}^2 + \laplacian_\nu u + {\laplacian_\nu}^2 u \right) \dd{x} \dd{y} =\\= -\frac{1}{2}\int_0^{2\pi} \int_0^{2\pi} \left({u_x}^2 + \frac{\nu_2}{\nu_1} {u_y}^2\right) \dd{x} \dd{y} \leq 0
+\end{multline}
+where we used the fact that the solution is periodic in $x$ and $y$. If we forget about the trivial state $u=0$, this later inequality is strict and so the mean of the solution is strictly decreasing in time. In order to avoid this, we will subtract the mean of the solution at each step of integration, or equivalently, we will solve the equation
+\begin{equation}
+  u_t + \frac{1}{2} \left[\abs{\grad_\nu u}^2 - \frac{1}{4\pi^2}\int_0^{2\pi} \int_0^{2\pi} \abs{\grad_\nu u}^2 \dd{x} \dd{y} \right] + \laplacian_\nu u + {\laplacian_\nu}^2 u = 0
+\end{equation}
+with the same initial condition as before, because we have chosen an initial condition with zero mean. The reader may notice that here we have used the same notation to denote the initial solution and $u-\overline{u}$.
+\section{Numerical methods}
+
+In order to int
+
+\section{Results}
+\section{Conclusions}
 
 \phantomsection
 \addcontentsline{toc}{section}{References}

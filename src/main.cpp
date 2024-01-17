@@ -355,8 +355,8 @@ int main(int argc, char *argv[]) {
 
   if (argc > 2) {
     // nu1 and nu2 are given as arguments
-    nu1 = atof(argv[1]);
-    nu2 = atof(argv[2]);
+    nu1 = atof(argv[1]) / 100.;
+    nu2 = atof(argv[2]) / 100.;
   }
 
   // plot the parameters
@@ -388,8 +388,8 @@ int main(int argc, char *argv[]) {
   double factor_dE = (2 * M_PI) * (2 * M_PI) / (dt * nx * ny);    // factor to compute the derivative of the energy
   double tn, En;
   bool En_changed = false;
-  double c = 0.0;
-  // double c = 1.0 + 1.0 / (nu1);  // constant term to ensure stability of the scheme (see: p227 in Nonlinear dynamics of surfactant–laden multilayer shear flows and related systems)
+  // double c = 0.0;
+  double c = 1.0 + 1.0 / (nu1);  // constant term to ensure stability of the scheme (see: p227 in Nonlinear dynamics of surfactant–laden multilayer shear flows and related systems)
   double *kx = (double *)malloc(dim_f * sizeof(double));
   double *ky = (double *)malloc(dim_f * sizeof(double));
   double *C1 = (double *)malloc(dim_f * sizeof(double));

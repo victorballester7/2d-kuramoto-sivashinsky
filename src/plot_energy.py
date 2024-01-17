@@ -3,6 +3,9 @@ from matplotlib import pyplot as plt
 import numpy as np
 import sys
 import time
+import warnings
+
+warnings.filterwarnings("error")  # treat warnings as errors
 
 plt.rcParams.update({
     "text.usetex": True,
@@ -43,25 +46,47 @@ def read_data_energy_return(filename: str) -> np.ndarray:
     return data
 
 
-def plot_energy(filename_E: str, filename_E_return: str, t_min: float) -> None:
-    data_E = read_data_energy(filename_E)
-    data_E_return = read_data_energy_return(filename_E_return)
+def plot_energy(filename_E: str, filename_E_return: str,
+                t_min: float, save: bool) -> None:
+    t = []
+    E = []
+    dE = []
+    En = []
+    En_1 = []
 
-    # get the first index of t such that t > 100
     try:
-        idx_1 = np.where(data_E[:, 0] > t_min)[0][0]
-        idx_2 = np.where(data_E_return[:, 0] > t_min)[0][0]
-    except IndexError:
-        idx_1 = 0
-        idx_2 = 0
-    try:
-        En = data_E_return[idx_2:-1, 1]
-        En_1 = data_E_return[idx_2 + 1:, 1]
-    except IndexError:
-        En = []
-        En_1 = []
+        data_E = read_data_energy(filename_E)
+    except UserWarning:
+        data_E = [[], [], []]
+    else:
+        try:
+            idx_1 = np.where(data_E[:, 0] > t_min)[0][0]
+        except IndexError:
+            idx_1 = 0
+        try:
+            t, E, dE = data_E[idx_1:, 0], data_E[idx_1:, 1], data_E[idx_1:, 2]
+        except IndexError:
+            t = []
+            E = []
+            dE = []
 
-    t, E, dE = data_E[idx_1:, 0], data_E[idx_1:, 1], data_E[idx_1:, 2]
+    try:
+        data_E_return = read_data_energy_return(filename_E_return)
+    except UserWarning:
+        data_E_return = [[], []]
+    else:
+        try:
+            idx_2 = np.where(data_E_return[:, 0] > t_min)[0][0]
+        except IndexError:
+            idx_2 = 0
+        try:
+            En = data_E_return[idx_2:-1, 1]
+            En_1 = data_E_return[idx_2 + 1:, 1]
+        except IndexError:
+            En = []
+            En_1 = []
+
+    # Now you can use t, E, dE, En, and En_1 in the rest of your code
 
     # plot t-E and next to it E-dE
     fig, ax = plt.subplots(1, 3, figsize=(12, 6))
@@ -83,17 +108,33 @@ def plot_energy(filename_E: str, filename_E_return: str, t_min: float) -> None:
     fig.subplots_adjust(wspace=0.5)
     end_time = time.time()
     print("Total time for plotting: ", int(
-        UNIT_TIME*(end_time - start_time)), LABEL_TIME)
-    plt.show()
+        UNIT_TIME * (end_time - start_time)), LABEL_TIME)
+    if save:
+        title = r"$\nu_1 = {}, \nu_2 = {}$".format(nu1, nu2)
+        # add the title above the second subplot
+        fig.suptitle(title, fontsize=16)
+        # write nu1, nu2 with 2 decimal places
+        plt.savefig("img/energy/energy_nu1={}_nu2={}.jpg".format(
+            "{:.2f}".format(nu1), "{:.2f}".format(nu2)))
+    else:
+        plt.show()
 
 
 UNIT_TIME = 1000  # in seconds
 LABEL_TIME = "ms"
 start_time = time.time()
 filename_E = "data/energy.txt"
+# filename_E = "others/2D-Kuramoto-Sivashinsky/u_norm_nu1=0-15_nu2=0-03.txt"
 filename_E_return = "data/energy_return.txt"
 try:
     t_min = float(sys.argv[1])
 except IndexError:
     t_min = 200.0
-plot_energy(filename_E, filename_E_return, t_min)
+
+try:
+    nu1 = float(sys.argv[2]) / 100.0
+    nu2 = float(sys.argv[3]) / 100.0
+except IndexError:
+    plot_energy(filename_E, filename_E_return, t_min, False)
+else:
+    plot_energy(filename_E, filename_E_return, t_min, True)

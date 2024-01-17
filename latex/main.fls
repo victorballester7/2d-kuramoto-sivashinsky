@@ -2000,6 +2000,7 @@ INPUT /usr/share/texmf-dist/fonts/enc/dvips/lm/lm-rmsc.enc
 INPUT main.aux
 INPUT main.run.xml
 OUTPUT main.run.xml
+INPUT /usr/share/texmf-dist/fonts/type1/public/esint-type1/esint10.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/lm/lmbx10.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
