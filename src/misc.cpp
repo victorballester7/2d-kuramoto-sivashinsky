@@ -9,7 +9,8 @@ double u0(double x, double y) {
   if (x < 0) x += 2 * M_PI;  // periodic extension
   if (y < 0) y += 2 * M_PI;  // periodic extension
 
-  return sin(x) + sin(y) + sin(x + y);
+  // return sin(x) + sin(y) + sin(x + y);
+  return sin(x) + sin(y) + cos(x + y) + sin(4 * x + 4 * y) + cos(7 * x) + cos(7 * y);
 }
 
 double U(double x, double y, double t) {

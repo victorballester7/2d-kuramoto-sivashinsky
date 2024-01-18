@@ -50,6 +50,7 @@ def plot_energy(filename_E: str, filename_E_return: str,
                 t_min: float, save: bool) -> None:
     t = []
     E = []
+    u_pi_pi = []
     dE = []
     En = []
     En_1 = []
@@ -64,11 +65,13 @@ def plot_energy(filename_E: str, filename_E_return: str,
         except IndexError:
             idx_1 = 0
         try:
-            t, E, dE = data_E[idx_1:, 0], data_E[idx_1:, 1], data_E[idx_1:, 2]
+            t, E, dE, u_pi_pi = data_E[idx_1:, 0], data_E[idx_1:,
+                                                          1], data_E[idx_1:, 2], data_E[idx_1:, 3]
         except IndexError:
             t = []
             E = []
             dE = []
+            u_pi_pi = []
 
     try:
         data_E_return = read_data_energy_return(filename_E_return)
@@ -89,7 +92,7 @@ def plot_energy(filename_E: str, filename_E_return: str,
     # Now you can use t, E, dE, En, and En_1 in the rest of your code
 
     # plot t-E and next to it E-dE
-    fig, ax = plt.subplots(1, 3, figsize=(12, 6))
+    fig, ax = plt.subplots(1, 4, figsize=(12, 6))
     ax[0].plot(t, E, '-')
     ax[0].set_xlabel(r"$t$")
     ax[0].set_ylabel(r'$E$')
@@ -103,6 +106,10 @@ def plot_energy(filename_E: str, filename_E_return: str,
     ax[2].plot(En, En_1, '.')
     ax[2].set_xlabel(r"$E_n$")
     ax[2].set_ylabel(r'$E_{n+1}$')
+
+    ax[3].plot(t, u_pi_pi, '-')
+    ax[3].set_xlabel(r"$t$")
+    ax[3].set_ylabel(r'$u(\pi, \pi)$')
 
     # add space between subplots
     fig.subplots_adjust(wspace=0.5)

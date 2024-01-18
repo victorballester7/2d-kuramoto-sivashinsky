@@ -5,7 +5,7 @@
 
 
 \title{Numerical study of the\\2D Kuramoto-Sivashinsky equation}
-\author{Víctor Ballester}
+\author{Víctor Ballester Ribó}
 \date{\parbox{\linewidth}{\centering
 Instabilities and Nonlinear Phenomena\endgraf
 M2 - Applied and Theoretical Mathematics\endgraf
@@ -54,7 +54,7 @@ where we used the notation from \cite{Kalogirou2015}:
 \begin{align}
   \grad_\nu & = \left(\partial_x , \sqrt{\frac{\nu_2}{\nu_1}} \partial_y
   \right)   & \div_\nu                                                   & = \partial_x + \sqrt{\frac{\nu_1}{\nu_2}} \partial_y
-  \\ \laplacian_\nu &= \div_\nu(\grad_\nu) = \partial_{xx} + \frac{\nu_2}{\nu_1} \partial_{yy} & {\laplacian_\nu}^2 &= \laplacian_\nu(\laplacian_\nu) = \partial_{xxxx} + 2 \frac{\nu_2}{\nu_1} \partial_{xxyy} + \frac{{\nu_2}^2}{{\nu_1}^2} \partial_{yyyy}
+  \\ \laplacian_\nu &= \div_\nu(\grad_\nu) = \partial_{xx} + \frac{\nu_2}{\nu_1} \partial_{yy} & {\laplacian_\nu}^2 &= \laplacian_\nu(\laplacian_\nu) = {\partial_{x}}^4 + 2 \frac{\nu_2}{\nu_1} {\partial_{x}}^2{\partial_{y}}^2 + \frac{{\nu_2}^2}{{\nu_1}^2} {\partial_{y}}^4
 \end{align}
 and $\nu_1 :={\left( \frac{L_x}{2\pi} \right)}^2$, $\nu_2 := {\left( \frac{L_y}{2\pi} \right)}^2$. Note that the new equation is invariant under the transformation $(t,x,y, \nu_1, \nu_2) \mapsto \left( \frac{\nu_2}{\nu_1} t, y, x, \nu_2, \nu_1 \right)$ if and only if the initial condition is symmetric in $x$ and $y$. In that case, if $u(t,x,y)$ is a solution of the equation with parameters $(\nu_1, \nu_2)$, then $u\left( \frac{\nu_2}{\nu_1} t, y, x \right)$ is the solution of the equation for the parameters $(\nu_2, \nu_1)$.
 
@@ -67,7 +67,7 @@ We see that, for example, if $\nu_1, \nu_2 \geq 1$, then there is no pair $(k_x,
 
 In order to contribute to the bibliography on the 2D KS equation, we will study the equation with an initial condition different from the one used in \cite{Kalogirou2015}, which was $u_0(x,y) = \sin(x) + \sin(y) + \sin(x+y)$. Instead, we will use the following initial condition:
 \begin{equation}\label{eq:initial_condition}
-  u_0(x,y) = \sin(x) + \sin(y) + \cos(x+y) + \cos(2x) + \sin(2y) + \sin(2x+2y)
+  u_0(x,y) = \sin(x) + \sin(y) + \cos(x+y) + \sin(4x+4y) + \cos(7x) + \cos(7y)
 \end{equation}
 which is still symmetric in $x$ and $y$. Note that we are adding the modes $(2,0)$, $(0,2)$, $(2,2)$ to the initial condition used in \cite{Kalogirou2015} and so a richer behavior is expected.
 
@@ -88,15 +88,44 @@ where we used the fact that the solution is periodic in $x$ and $y$. If we forge
 with the same initial condition as before, because we have chosen an initial condition with zero mean. The reader may notice that here we have used the same notation to denote the initial solution and $u-\overline{u}$.
 \section{Numerical methods}
 
-In order to int
+There are several numerical methods to integrate this kind of nonlinear equations. In this report we will use a pseudo-spectral method. The idea is to divide the spatial grid $[0,2\pi]\times [0,2\pi]$ in $N_x \times N_y$ cells and to approximate the solution $u(t,x,y)$ by a truncated Fourier series in each cell:
+\begin{equation}\label{eq:idft}
+  \tilde{u}(t,x_i,y_j) = \sum_{k_x=-N_x/2}^{N_x/2-1} \sum_{k_y=-N_y/2}^{N_y/2-1} \hat{u}(t,k_x,k_y) e^{i(k_x x_i + k_y y_j)}
+\end{equation}
+for $i=0,\dots,N_x-1$ and $j=0,\dots,N_y-1$. The coefficients $\hat{u}(t,k_x,k_y)$ are the discrete Fourier coefficients of the solution and they are given by:
+\begin{equation}\label{eq:dft}
+  \hat{u}(t,k_x,k_y) = \frac{1}{N_x N_y} \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u(t,x_i,y_j) e^{-i(k_x x_i + k_y y_j)}
+\end{equation}
+To efficiently compute the discrete Fourier transform, we will use the Fast Fourier Transform (FFT) algorithm, which reduces the complexity of the computation from $\mathcal{O}({N_x}^2 {N_y}^2)$ to $\mathcal{O}(N_x N_y \log(N_x N_y))$ and attains its maximum performance when $N_x$ and $N_y$ are powers of $2$.
 
+To integrate the PDE in time, we discretize the time domain $[0,T]$ in $N_t$ points separated by a time step $h$. We will use a family of schemes that treat the linear part implicitly and the nonlinear part explicitly, the so called IMEX schemes \cite{Akrivis_kuramoto}. The general theory of IMEX schemes was introduced in \cite{Akrivis2004}, in which they consider schemes of the form:
+\begin{equation}\label{eq:nonlinear_pde}
+  u_t+\mathcal{L}u=\mathcal{N}(u)
+\end{equation}
+where $\mathcal{L}$ is a linear operator and $\mathcal{N}$ is a nonlinear operator. In order for the scheme to be stable and convergent, we need to check the conditions given in \cite{Akrivis2004}. These require $\mathcal{L}$ being a self-adjoint and positive definite operator and $\mathcal{N}$ being a locally Lipschitz continuous operator. In our case, $\mathcal{L}=\laplacian_\nu + {\laplacian_\nu}^2$ but in this case, the operator is not positive definite (see \cite{phdthesis_anna} for explicit details). However, adding a large enough constant $c$ to both sides of the equation solves the problem. We will not reproduce the proof of $\mathcal{N}u=-\frac{1}{2} \abs{\grad_\nu u}^2 + cu$ being locally Lipschitz continuous, as it is not the main interest of this report, and it can be found in \cite{Akrivis_kuramoto}. The constant $c$ that makes the scheme stable and convergent is $c=1+\frac{1}{\nu_1}$ \cite{phdthesis_anna}.
+
+That being set, we will use the 2nd order backward differentiation formula (BDF2) as the scheme to integrate our equation in the Fourier space. We have chosen BDF2 schemes because backward differentiation of order 1 (implicit Euler) produced inconsistencies for small values of $\nu_1$ and $\nu_2$, and higher orders of backward differentiation require much more time to compute. In the Fourier space, \cref{eq:nonlinear-pde} becomes, using matrix notation:
+\begin{equation}
+  \vf{\tilde{u}}_t+\vf{L}\vf{\tilde{u}}=\vf{N}(\vf{\tilde{u}})
+\end{equation}
+The IMEX-BDF2 scheme for \cref{eq:nonlinear_pde} is given by:
+\begin{equation}
+  \frac{3}{2} \vf{\tilde{u}}^{n+2} +h \vf{L} \vf{\tilde{u}}^{n+2} = 2 \vf{\tilde{u}}^{n+1} - \frac{1}{2} \vf{\tilde{u}}^{n} + 2h \vf{N}(\vf{\tilde{u}}^{n+1}) -  h \vf{N}(\vf{\tilde{u}}^{n})
+\end{equation}
+from which we can iteratively solve using the initial condition as a first step and a BDF1 scheme as a second step:
+\begin{equation}
+  \vf{\tilde{u}}^{n+1} + h \vf{L} \vf{\tilde{u}}^{n+1} = \vf{\tilde{u}}^{n} + h \vf{N}(\vf{\tilde{u}}^{n})
+\end{equation}
+Recall that in practice \cref{eq:dft} has to be approximated with $\tilde{u}(t_k,x_i,y_j)$ instead of using the unknown quantity $u(t_k,x_i,y_j)$, where $t_k$ is the $k$-th time step.
+
+All the code used in this report, as well as some animations of the presented results, can be found in this \href{https://github.com/victorballester7/2d-kuramoto-sivashinsky}{GitHub} repository.
 \section{Results}
 \section{Conclusions}
 
 \phantomsection
 \addcontentsline{toc}{section}{References}
 \printbibliography
-% Add a new empty sheet at the end of the document
+SOLUCIONAR NOMS REFERENCIES. O TOTS COM VICTOR BALLESTER O TOTS COM V.BALLESTER.
 \end{document}
 
 

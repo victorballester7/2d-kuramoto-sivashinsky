@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber main"] 1705518431 "main.bcf" "main.bbl" "main" 1705521447 0
-  "./references.bib" 1705431094 1133 3a635648ec6f09cde894a99a981458d9 ""
-  "main.bcf" 1705521447 108108 409cb66320c368af7ae5083a5117118c "pdflatex"
+["biber main"] 0 "main.bcf" "main.bbl" "main" 1705575653 -1
+  "./references.bib" 1705568544 2232 61e2a3a47a820e4cb6a572db6d813de1 ""
+  "main.bcf" 1705575653 108522 cda8a137515bc3f497dbf9b42734dfb5 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1705521445 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" "main.pdf" "main" 1705521447 0
-  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" 1705521445 7915 49fd3d6576d1ee4f92a82baa4f160a60 ""
+["pdflatex"] 1705575651 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" "main.pdf" "main" 1705575653 0
+  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" 1705575651 11960 77bca0d7c0c63c4bed45cdbcf1bea66f ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1704400182 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1704400182 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1704400182 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -377,10 +377,10 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1704454015 4483110 adb1e1d04498b9576f1f17c4219c5e03 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1704453977 6768060 0ee3d21b323831b0a173248acbea44a8 ""
   "bibliography.sty" 1705431115 958 8b3be8751b2cb1731b77011a9ddc0b35 ""
-  "main.aux" 1705521447 3285 ca6f6d089de24e5eaee7d169191210eb "pdflatex"
-  "main.bbl" 1705518431 4758 1e1770d2c7c5a3efee8cc1caf75e28a8 "biber main"
-  "main.run.xml" 1705521447 2376 3f99cf17c9219d8cb1a788da2b54d37f "pdflatex"
-  "main.tex" 1705521445 7915 49fd3d6576d1ee4f92a82baa4f160a60 ""
+  "main.aux" 1705575653 4295 cdbf5f7b0e2e076660fef29f0ff36328 "pdflatex"
+  "main.bbl" 1705573879 9191 b04d9cf64041ecdf415a7eb5aed9a2f3 "biber main"
+  "main.run.xml" 1705575653 2376 3f99cf17c9219d8cb1a788da2b54d37f "pdflatex"
+  "main.tex" 1705575651 11960 77bca0d7c0c63c4bed45cdbcf1bea66f ""
   "preamble.sty" 1705492164 15756 56d89f87bcbb56783200c81ca115fcfe ""
   "preamble_style.sty" 1704293992 767 3e26813407f4ae6e4e6dd97ca5ca2f14 ""
   (generated)

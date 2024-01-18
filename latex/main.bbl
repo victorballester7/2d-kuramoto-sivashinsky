@@ -19,6 +19,91 @@
 
 \refsection{0}
   \datalist[entry]{nyt/global//global/global}
+    \entry{Akrivis2004}{article}{}
+      \name{author}{2}{}{%
+        {{hash=d5772f5d2a6ea2686ba17d4b8f9ea76b}{%
+           family={Akrivis},
+           familyi={A\bibinitperiod},
+           given={Georgios},
+           giveni={G\bibinitperiod}}}%
+        {{hash=79c86a7612c6bc00e344b94e214b362d}{%
+           family={Crouzeix},
+           familyi={C\bibinitperiod},
+           given={Michel},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{abbc0dd382f7f9f45d4c8e3cdbe7820f}
+      \strng{fullhash}{abbc0dd382f7f9f45d4c8e3cdbe7820f}
+      \strng{bibnamehash}{abbc0dd382f7f9f45d4c8e3cdbe7820f}
+      \strng{authorbibnamehash}{abbc0dd382f7f9f45d4c8e3cdbe7820f}
+      \strng{authornamehash}{abbc0dd382f7f9f45d4c8e3cdbe7820f}
+      \strng{authorfullhash}{abbc0dd382f7f9f45d4c8e3cdbe7820f}
+      \field{labelalpha}{AC04}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Math. Comput.}
+      \field{month}{04}
+      \field{title}{Linearly implicit methods for nonlinear parabolic equations}
+      \field{volume}{73}
+      \field{year}{2004}
+      \field{pages}{613\bibrangedash 635}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1090/S0025-5718-03-01573-4
+      \endverb
+    \endentry
+    \entry{Akrivis_kuramoto}{article}{}
+      \name{author}{4}{}{%
+        {{hash=d5772f5d2a6ea2686ba17d4b8f9ea76b}{%
+           family={Akrivis},
+           familyi={A\bibinitperiod},
+           given={Georgios},
+           giveni={G\bibinitperiod}}}%
+        {{hash=204c1d8a291ce8887756cae95fcd3a0b}{%
+           family={Kalogirou},
+           familyi={K\bibinitperiod},
+           given={Anna},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a5c9bf9f1b7d2fb8fc9a9cc0f883b4bf}{%
+           family={Papageorgiou},
+           familyi={P\bibinitperiod},
+           given={Demetrios\bibnamedelima T.},
+           giveni={D\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=87167111aadae9624a43f4cfa68d64ac}{%
+           family={Smyrlis},
+           familyi={S\bibinitperiod},
+           given={Yiorgos-Sokratis},
+           giveni={Y\bibinithyphendelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{b7997ee012264db3094bf6fa87c6db39}
+      \strng{fullhash}{7f9a209912bf7ebccdf7058bab0fab64}
+      \strng{bibnamehash}{b7997ee012264db3094bf6fa87c6db39}
+      \strng{authorbibnamehash}{b7997ee012264db3094bf6fa87c6db39}
+      \strng{authornamehash}{b7997ee012264db3094bf6fa87c6db39}
+      \strng{authorfullhash}{7f9a209912bf7ebccdf7058bab0fab64}
+      \field{labelalpha}{Akr+15}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0272-4979}
+      \field{journaltitle}{IMA Journal of Numerical Analysis}
+      \field{month}{04}
+      \field{number}{1}
+      \field{title}{{Linearly implicit schemes for multi-dimensional Kuramoto-Sivashinsky type equations arising in falling film flows}}
+      \field{volume}{36}
+      \field{year}{2015}
+      \field{pages}{317\bibrangedash 336}
+      \range{pages}{20}
+      \verb{doi}
+      \verb https://doi.org/10.1093/imanum/drv011
+      \endverb
+      \verb{eprint}
+      \verb https://academic.oup.com/imajna/article-pdf/36/1/317/7921361/drv011.pdf
+      \endverb
+    \endentry
     \entry{Kalogirou2015}{article}{}
       \name{author}{3}{}{%
         {{hash=c26b1cb4f96a746ac9898827dfb6e849}{%
@@ -56,6 +141,30 @@
       \verb{doi}
       \verb http://doi.org/10.1098/rspa.2014.0932
       \endverb
+    \endentry
+    \entry{phdthesis_anna}{thesis}{}
+      \name{author}{1}{}{%
+        {{hash=204c1d8a291ce8887756cae95fcd3a0b}{%
+           family={Kalogirou},
+           familyi={K\bibinitperiod},
+           given={Anna},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{204c1d8a291ce8887756cae95fcd3a0b}
+      \strng{fullhash}{204c1d8a291ce8887756cae95fcd3a0b}
+      \strng{bibnamehash}{204c1d8a291ce8887756cae95fcd3a0b}
+      \strng{authorbibnamehash}{204c1d8a291ce8887756cae95fcd3a0b}
+      \strng{authornamehash}{204c1d8a291ce8887756cae95fcd3a0b}
+      \strng{authorfullhash}{204c1d8a291ce8887756cae95fcd3a0b}
+      \field{labelalpha}{Kal14}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{10}
+      \field{title}{Nonlinear dynamics of surfactant-laden multilayer shear flows and related systems}
+      \field{type}{phdthesis}
+      \field{year}{2014}
     \endentry
     \entry{Kuramoto}{article}{}
       \name{author}{1}{}{%
