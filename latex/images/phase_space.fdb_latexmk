@@ -1,8 +1,8 @@
 # Fdb version 4
-["pdflatex"] 1705516392 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/images/phase_space.tex" "phase_space.pdf" "phase_space" 1705516394 0
+["pdflatex"] 1706344023 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/images/phase_space.tex" "phase_space.pdf" "phase_space" 1706344025 0
   "../preamble.sty" 1705492164 15756 56d89f87bcbb56783200c81ca115fcfe ""
-  "/dev/null" 1705509694 0 d41d8cd98f00b204e9800998ecf8427e ""
-  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/images/phase_space.tex" 1705516391 21070 f2d6251e9484d4775e45f7a850a1f6d9 ""
+  "/dev/null" 1706338615 0 d41d8cd98f00b204e9800998ecf8427e ""
+  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/images/phase_space.tex" 1706344023 21887 b9ff3ebf3708651dcabaa425cb945293 ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1704400182 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1704400182 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1704400182 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -270,11 +270,11 @@
   "/usr/share/texmf-dist/tex/latex/xcolor/xcolor.sty" 1704400182 56148 51a9a8571c07b9921892ae11063ae853 ""
   "/usr/share/texmf-dist/tex/latex/xkeyval/xkeyval.sty" 1704400182 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1704400182 40684 9b9ec0b4288972636ff6a3b9c4238efc ""
-  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1704454015 4483110 adb1e1d04498b9576f1f17c4219c5e03 ""
-  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1704453977 6768060 0ee3d21b323831b0a173248acbea44a8 ""
-  "phase_space.aux" 1705516394 673 fee7ec01bc47fa3f199e555264b49839 "pdflatex"
-  "phase_space.out" 1705516393 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "phase_space.tex" 1705516391 21070 f2d6251e9484d4775e45f7a850a1f6d9 ""
+  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1706286031 4483110 adb1e1d04498b9576f1f17c4219c5e03 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1706285990 6768052 a340e7d87d22cd9776ce5836fcb8ad77 ""
+  "phase_space.aux" 1706344025 673 fee7ec01bc47fa3f199e555264b49839 "pdflatex"
+  "phase_space.out" 1706344024 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "phase_space.tex" 1706344023 21887 b9ff3ebf3708651dcabaa425cb945293 ""
   (generated)
   "phase_space.aux"
   "phase_space.log"
