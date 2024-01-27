@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Arch Linux) (preloaded format=pdflatex 2024.1.26)  27 JAN 2024 09:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Arch Linux) (preloaded format=pdflatex 2024.1.26)  27 JAN 2024 12:55
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -2715,39 +2715,7 @@ Package pgfplots info on input line 520: the combination of 'axis on top' and 'a
 Package pgfplots info on input line 520: Setting layers 'axis background,pre main,main,axis grid,axis ticks,axis lines,axis tick labels,axis descriptions,axis foreground'...
 
 
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 737.
-
- [warning /pgfplots/warning/plot without coordinates]
-
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 810.
-
- [warning /pgfplots/warning/plot without coordinates]
-
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 837.
-
- [warning /pgfplots/warning/plot without coordinates]
-
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 855.
-
- [warning /pgfplots/warning/plot without coordinates]
-
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 860.
-
- [warning /pgfplots/warning/plot without coordinates]
-
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 871.
-
- [warning /pgfplots/warning/plot without coordinates]
-
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 896.
-
- [warning /pgfplots/warning/plot without coordinates]
-
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 937.
-
- [warning /pgfplots/warning/plot without coordinates]
-
-Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 954.
+Package pgfplots Warning: the current plot has no coordinates (or all have been filtered away) on input line 941.
 
  [warning /pgfplots/warning/plot without coordinates]
 [1
@@ -2757,15 +2725,15 @@ Package rerunfilecheck Info: File `phase_space.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 46979 strings out of 477985
- 1051023 string characters out of 5840058
- 1935388 words of memory out of 5000000
- 66426 multiletter control sequences out of 15000+600000
+ 46981 strings out of 477985
+ 1051058 string characters out of 5840058
+ 1958388 words of memory out of 5000000
+ 66428 multiletter control sequences out of 15000+600000
  514486 words of font info for 44 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  140i,16n,134p,849b,2256s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb>
-Output written on phase_space.pdf (1 page, 65811 bytes).
+Output written on phase_space.pdf (1 page, 85628 bytes).
 PDF statistics:
  36 PDF objects out of 1000 (max. 8388607)
  24 compressed objects within 1 object stream

@@ -6,6 +6,7 @@ RED='\033[1;31m'
 RESET='\033[0m'
 
 # scaled by 100 to avoid floating point errors
+# NU_MAX=100
 NU_MAX=100
 NU_MIN=5
 NU_STEP=5
@@ -24,16 +25,21 @@ echo -e "${GREEN}Compilation done!${RESET}"
 #
 if [ $# -eq 1 ]; then # if there is one argument
   echo -e "${BLUE}Multi run detected.${RESET}"
-  read -p "Do you want to remove the old images? (y/n, default: y) " -n 1 -r
-  if [[ -z $REPLY ]]; then # if the user just pressed enter
-    rm -rf img/energy/*
-    echo -e "${YELLOW}Old images removed.${RESET}"
-  elif [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo 
-    rm -rf img/energy/*
-    echo -e "${YELLOW}Old images removed.${RESET}"
+  # check if there is a folder called "img/energy"
+  if [ ! -d "img/energy" ]; then
+    mkdir img/energy
   else
-    echo
+    read -p "Old images detected. Do you want to remove them? (y/n, default: y) " -n 1 -r
+    if [[ -z $REPLY ]]; then # if the user just pressed enter
+      rm -rf img/energy/*
+      echo -e "${YELLOW}Old images removed.${RESET}"
+    elif [[ $REPLY =~ ^[Yy]$ ]]; then
+      echo 
+      rm -rf img/energy/*
+      echo -e "${YELLOW}Old images removed.${RESET}"
+    else
+      echo
+    fi
   fi
   for ((nu_one=NU_MAX;nu_one>=NU_MIN;nu_one-=NU_STEP)); do
     for ((nu_two=nu_one;nu_two>=NU_MIN;nu_two-=NU_STEP)); do
@@ -75,7 +81,6 @@ if [ ! -f "data/tmp_write_sol.txt" ]; then
   echo -e "${BLUE}Animation skipped.${RESET}"
 else
   type_anim=$(cat data/tmp_write_sol.txt)
-  echo $type_anim
   rm data/tmp_write_sol.txt # remove the tmp file
   echo -e "${YELLOW}Animating...${RESET}"
   python src/animation.py $type_anim

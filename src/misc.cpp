@@ -9,8 +9,8 @@ double u0(double x, double y) {
   if (x < 0) x += 2 * M_PI;  // periodic extension
   if (y < 0) y += 2 * M_PI;  // periodic extension
 
-  // return sin(x) + sin(y) + sin(x + y);
-  return sin(x) + sin(y) + cos(x + y) + sin(4 * x + 4 * y) + cos(7 * x) + cos(7 * y);
+  return sin(x) + sin(y) + sin(x + y);
+  // return sin(x) + sin(y) + cos(x + y) + sin(4 * x + 4 * y) + cos(7 * x) + cos(7 * y);
 }
 
 double U(double x, double y, double t) {
@@ -148,7 +148,7 @@ double lagrange_eval(double t, double x2, double dt, double y0, double y1, doubl
 }
 
 double lagrange_root(double x2, double dt, My_double y0, My_double y1, My_double y2) {
-  // The Lagrange polynomial of degree 2 that passes through the points (x0, y0), (x0 + dt, y1), (x0 + 2 * dt, y2) is:
+  // The Lagrange polynomial of degree 2 that passes through the points (x2 - 2 * dt, y0), (x2 - dt, y1), (x2, y2) is:
   // p(x) = 1 / (2 * dt ^ 2) * [ x ^ 2 * (y0 - 2 * y1 + y2) - x * (y0 * (x1 + x2) - 2 * y1 * (x0 + x2) + y2 * (x0 + x1)) + y0 * x1 * x2 - 2 * y1 * x0 * x2 + y2 * x0 * x1 ]
   double a = (y0.int_part - 2 * y1.int_part + y2.int_part) + (y0.frac_part - 2 * y1.frac_part + y2.frac_part);
   double tmp = (y0.int_part - 4 * y1.int_part + 3 * y2.int_part) + (y0.frac_part - 4 * y1.frac_part + 3 * y2.frac_part);

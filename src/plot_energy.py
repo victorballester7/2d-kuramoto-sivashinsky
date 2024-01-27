@@ -16,8 +16,8 @@ plt.rcParams.update({
 
 def read_data_energy(filename: str) -> np.ndarray:
     """Read data from filename. The data is of the form:
-    t_1 E_1 dE_1 u(pi, pi)
-    t_2 E_2 dE_2 u(pi, pi)
+    t_1 E_1 dE_1 u(pi, pi) x_max1 y_max1
+    t_2 E_2 dE_2 u(pi, pi) x_max2 y_max2
     ...
 
     Args:
@@ -54,24 +54,32 @@ def plot_energy(filename_E: str, filename_E_return: str,
     dE = []
     En = []
     En_1 = []
+    x_max = []
+    y_max = []
 
     try:
         data_E = read_data_energy(filename_E)
     except UserWarning:
-        data_E = [[], [], []]
+        data_E = [[], [], [], [], [], []]
     else:
         try:
             idx_1 = np.where(data_E[:, 0] > t_min)[0][0]
         except IndexError:
             idx_1 = 0
         try:
-            t, E, dE, u_pi_pi = data_E[idx_1:, 0], data_E[idx_1:,
-                                                          1], data_E[idx_1:, 2], data_E[idx_1:, 3]
+            t = data_E[idx_1:, 0]
+            E = data_E[idx_1:, 1]
+            dE = data_E[idx_1:, 2]
+            u_pi_pi = data_E[idx_1:, 3]
+            x_max = data_E[idx_1:, 4]
+            y_max = data_E[idx_1:, 5]
         except IndexError:
             t = []
             E = []
             dE = []
             u_pi_pi = []
+            x_max = []
+            y_max = []
 
     try:
         data_E_return = read_data_energy_return(filename_E_return)
@@ -92,7 +100,7 @@ def plot_energy(filename_E: str, filename_E_return: str,
     # Now you can use t, E, dE, En, and En_1 in the rest of your code
 
     # plot t-E and next to it E-dE
-    fig, ax = plt.subplots(1, 4, figsize=(12, 6))
+    fig, ax = plt.subplots(1, 5, figsize=(12, 6))
     ax[0].plot(t, E, '-')
     ax[0].set_xlabel(r"$t$")
     ax[0].set_ylabel(r'$E$')
@@ -107,9 +115,16 @@ def plot_energy(filename_E: str, filename_E_return: str,
     ax[2].set_xlabel(r"$E_n$")
     ax[2].set_ylabel(r'$E_{n+1}$')
 
-    ax[3].plot(t, u_pi_pi, '-')
+    ax[3].plot(t, u_pi_pi, 'g-')
     ax[3].set_xlabel(r"$t$")
     ax[3].set_ylabel(r'$u(\pi, \pi)$')
+
+    ax[4].plot(x_max, y_max, 'r.')
+    ax[4].set_xlabel(r"$x_{max}$")
+    ax[4].set_ylabel(r'$y_{max}$')
+    # ax[4].set_aspect('equal')
+    ax[4].set_xlim(0, 2 * np.pi)
+    ax[4].set_ylim(0, 2 * np.pi)
 
     # add space between subplots
     fig.subplots_adjust(wspace=0.5)

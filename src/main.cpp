@@ -31,6 +31,18 @@ using namespace std;
 #define IMEXBDF2 2
 #define IMEXRK4 3
 
+#define SET_MAX()                                  \
+  max_x = 0;                                       \
+  max_y = 0;                                       \
+  for (int i = 0; i < nx; i++) {                   \
+    for (int j = 0; j < ny; j++) {                 \
+      if (u[max_x * ny + max_y] < u[i * ny + j]) { \
+        max_x = i;                                 \
+        max_y = j;                                 \
+      }                                            \
+    }                                              \
+  }
+
 #define NONLINEAR_COMPUTATIONS()                                           \
   {                                                                        \
     /* Step in finite differences */                                       \
@@ -287,7 +299,7 @@ int main(int argc, char *argv[]) {
   uint count = per;
   chrono::steady_clock::time_point begin, end;                                                                                                      // variables to measure the time
   int64_t total_write = 0, total_fftw_computations = 0, total_fft_precomputation = 0, total_energy_computations = 0, total_other_computations = 0;  // variables to measure the time
-  int nx, ny;                                                                                                                                       // number of points in x and y (must be a power of 2), do NOT use uint fftw uses int
+  int nx, ny;                                                                                                                                       // number of points in x and y (must be a power of 2), do NOT use uint: fftw uses int
   double nu1, nu2;                                                                                                                                  // parameters of the system (by default)
   double dt;                                                                                                                                        // initial step size
   double T;                                                                                                                                         // final time of integration
@@ -382,14 +394,15 @@ int main(int argc, char *argv[]) {
   uint numSteps = 0;                     // number of steps
   // vector to store all the solutions
   // double energy = 0, energy2 = 0, energy3 = 0, dE = 0, dE_1 = 0, dE_2 = 0, tn, En;  // energy of the system
-  My_double energy = {0, 0}, energy2 = {0, 0}, energy3 = {0, 0};  // energy of the system
-  My_double dE = {0, 0}, dE_1 = {0, 0}, dE_2 = {0, 0};            // derivative of the energy
-  double factor_E = (2 * M_PI) * (2 * M_PI) / (nx * ny);          // factor to compute the energy
-  double factor_dE = (2 * M_PI) * (2 * M_PI) / (dt * nx * ny);    // factor to compute the derivative of the energy
+  My_double energy0 = {0, 0}, energy1 = {0, 0}, energy2 = {0, 0};  // energy of the system
+  My_double dE0 = {0, 0}, dE1 = {0, 0}, dE2 = {0, 0};              // derivative of the energy
+  double factor_E = (2 * M_PI) * (2 * M_PI) / (nx * ny);           // factor to compute the energy
+  double factor_dE = (2 * M_PI) * (2 * M_PI) / (dt * nx * ny);     // factor to compute the derivative of the energy
   double tn, En;
   bool En_changed = false;
   // double c = 0.0;
   double c = 1.0 + 1.0 / (nu1);  // constant term to ensure stability of the scheme (see: p227 in Nonlinear dynamics of surfactant–laden multilayer shear flows and related systems)
+  int max_x, max_y;
   double *kx = (double *)malloc(dim_f * sizeof(double));
   double *ky = (double *)malloc(dim_f * sizeof(double));
   double *C1 = (double *)malloc(dim_f * sizeof(double));
@@ -484,7 +497,8 @@ int main(int argc, char *argv[]) {
     file_E.open(filename_energy);
     file_En.open(filename_energy_return);
     // in the 4th column plot u(pi, pi)
-    file_E << t << " " << (energy.int_part + energy.frac_part) << " " << (dE.int_part + dE.frac_part) << " " << u[(ny / 2) * (nx + 1)] << endl;  // write the energy into the file
+    SET_MAX();
+    file_E << t << " " << (energy0.int_part + energy0.frac_part) << " " << (dE0.int_part + dE0.frac_part) << " " << u[(ny / 2) * (nx + 1)] << " " << max_x * 2 * M_PI / nx << " " << max_y * 2 * M_PI / ny << endl;  // write the energy into the file
   }
   if (WRITE_FREQ()) {
     file_freq.open(filename_freq);
@@ -554,21 +568,21 @@ int main(int argc, char *argv[]) {
     ADD_TIME_TO(total_fftw_computations);
     // compute the energy (we have to do it each time because if not we would get strange derivatives of the energy, we would be a wrong 'energy2' when writing the derivative)
     START_TIMER();
-    energy3 = energy2;
-    energy2 = energy;
-    energy = My_E(u, nx, ny);
+    energy2 = energy1;
+    energy1 = energy0;
+    energy0 = My_E(u, nx, ny);
     END_TIMER();
     ADD_TIME_TO(total_energy_computations);
     // energy = sqrt(energy);
     START_TIMER();
-    dE_2 = dE_1;
-    dE_1 = dE;
-    dE.int_part = (energy.int_part - energy2.int_part);
-    dE.frac_part = (energy.frac_part - energy2.frac_part);
-    aux = (dE.int_part + dE.frac_part) * (dE_1.int_part + dE_1.frac_part);
+    dE2 = dE1;
+    dE1 = dE0;
+    dE0.int_part = (energy0.int_part - energy1.int_part);
+    dE0.frac_part = (energy0.frac_part - energy1.frac_part);
+    aux = (dE0.int_part + dE0.frac_part) * (dE1.int_part + dE1.frac_part);
     if (aux < 0 && aux < -EPS) {  // then we have a zero in the derivative between t and t - dt
-      tn = lagrange_root(t, dt, dE_2, dE_1, dE);
-      En = lagrange_eval(tn, t, dt, energy3, energy2, energy) * factor_E;
+      tn = lagrange_root(t, dt, dE2, dE1, dE0);
+      En = lagrange_eval(tn, t, dt, energy2, energy1, energy0) * factor_E;
       En_changed = true;
     } else
       En_changed = false;
@@ -607,7 +621,8 @@ int main(int argc, char *argv[]) {
 
     if (WRITE_E()) {  // write the energy into the file
       // plot more digits of the energy at each time
-      file_E << t << " " << (energy.int_part + energy.frac_part) * factor_E << " " << (dE.int_part + dE.frac_part) * factor_dE << " " << u[(ny / 2) * (nx + 1)] << endl;  // energy, derivative of the energy, u(pi, pi)
+      SET_MAX();
+      file_E << t << " " << (energy0.int_part + energy0.frac_part) * factor_E << " " << (dE0.int_part + dE0.frac_part) * factor_dE << " " << u[(ny / 2) * (nx + 1)] << " " << max_x * 2 * M_PI / nx << " " << max_y * 2 * M_PI / ny << endl;  // write the energy into the file
     }
 
     if (WRITE_FREQ()) {
