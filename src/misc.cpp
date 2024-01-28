@@ -9,8 +9,8 @@ double u0(double x, double y) {
   if (x < 0) x += 2 * M_PI;  // periodic extension
   if (y < 0) y += 2 * M_PI;  // periodic extension
 
-  return sin(x) + sin(y) + sin(x + y);
-  // return sin(x) + sin(y) + cos(x + y) + sin(4 * x + 4 * y) + cos(7 * x) + cos(7 * y);
+  // return sin(x) + sin(y) + sin(x + y);
+  return sin(x) + sin(y) + cos(x + y) + sin(4 * x + 4 * y) + cos(7 * x) + cos(7 * y);
 }
 
 double U(double x, double y, double t) {
@@ -29,8 +29,8 @@ double g(double x, double y, double t) {
   // return cos(t) + (6 * sin(x + y)) / 5 - sin(x) / 5 - sin(y) / 5;
 }
 
-void write(double *x, int nx, int ny, double t, ofstream &file) {
-  file << t << endl;
+void write(double *x, int nx, int ny, double t, ofstream &file, bool write_time) {
+  if (write_time) file << t << endl;
   for (int i = 0; i < nx; i++) {
     for (int j = 0; j < ny - 1; j++) {
       file << x[i * ny + j] << " ";
@@ -40,8 +40,8 @@ void write(double *x, int nx, int ny, double t, ofstream &file) {
   file << endl;
 }
 
-void write_fourier(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file) {
-  file << t << endl;
+void write_fourier(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file, bool write_time) {
+  if (write_time) file << t << endl;
   for (int i = 0; i < nx / 2 + 1; i++) {
     for (int j = 0; j < ny_complex - 1; j++) {
       if (i == 0 && j == 0) {

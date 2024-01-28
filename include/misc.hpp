@@ -24,9 +24,9 @@ double g(double x, double y, double t);
 // @param nn: number of points in each direction
 // @param t: time at which the data is written
 // @param file: file to write the data to
-void write(double *x, int nx, int ny, double t, ofstream &file);
+void write(double *x, int nx, int ny, double t, ofstream &file, bool write_time);
 
-void write_fourier(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file);
+void write_fourier(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file, bool write_time);
 
 void write_bis(fftw_complex *x, int nx, int ny_complex, double t, ofstream &file);
 // @brief: computes the initial condition on the whole vector

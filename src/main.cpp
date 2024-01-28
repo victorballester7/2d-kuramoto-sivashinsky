@@ -239,39 +239,40 @@ using namespace std;
     t += dt;                                                                                                                                                                                            \
   }
 
-#define CLEANUP()                         \
-  {                                       \
-    if (write_solution) file_sol.close(); \
-    if (write_energy) file_E.close();     \
-    /* Clean variables */                 \
-    free(kx);                             \
-    free(ky);                             \
-    free(C1);                             \
-    free(C2);                             \
-    free(denom);                          \
-    free(L);                              \
-    /* FFT Cleanup */                     \
-    fftw_destroy_plan(p_for_u);           \
-    fftw_destroy_plan(p_back_u);          \
-    fftw_destroy_plan(p_for_aux_x);       \
-    fftw_destroy_plan(p_for_aux_y);       \
-    fftw_destroy_plan(p_back_aux_x);      \
-    fftw_destroy_plan(p_back_aux_y);      \
-    fftw_destroy_plan(p_for_aux_x_2);     \
-    fftw_destroy_plan(p_for_aux_y_2);     \
-    fftw_destroy_plan(p_back_aux_x_2);    \
-    fftw_destroy_plan(p_back_aux_y_2);    \
-    fftw_free(u);                         \
-    fftw_free(aux_x);                     \
-    fftw_free(aux_y);                     \
-    fftw_free(Fu);                        \
-    fftw_free(Fu_2);                      \
-    fftw_free(Fu_aux);                    \
-    fftw_free(aux_x_fourier);             \
-    fftw_free(aux_y_fourier);             \
-    fftw_free(aux_x_fourier_2);           \
-    fftw_free(aux_y_fourier_2);           \
-    fftw_cleanup();                       \
+#define CLEANUP()                                \
+  {                                              \
+    if (write_solution) file_sol.close();        \
+    if (write_slice_sol) file_sol_slice.close(); \
+    if (write_energy) file_E.close();            \
+    /* Clean variables */                        \
+    free(kx);                                    \
+    free(ky);                                    \
+    free(C1);                                    \
+    free(C2);                                    \
+    free(denom);                                 \
+    free(L);                                     \
+    /* FFT Cleanup */                            \
+    fftw_destroy_plan(p_for_u);                  \
+    fftw_destroy_plan(p_back_u);                 \
+    fftw_destroy_plan(p_for_aux_x);              \
+    fftw_destroy_plan(p_for_aux_y);              \
+    fftw_destroy_plan(p_back_aux_x);             \
+    fftw_destroy_plan(p_back_aux_y);             \
+    fftw_destroy_plan(p_for_aux_x_2);            \
+    fftw_destroy_plan(p_for_aux_y_2);            \
+    fftw_destroy_plan(p_back_aux_x_2);           \
+    fftw_destroy_plan(p_back_aux_y_2);           \
+    fftw_free(u);                                \
+    fftw_free(aux_x);                            \
+    fftw_free(aux_y);                            \
+    fftw_free(Fu);                               \
+    fftw_free(Fu_2);                             \
+    fftw_free(Fu_aux);                           \
+    fftw_free(aux_x_fourier);                    \
+    fftw_free(aux_y_fourier);                    \
+    fftw_free(aux_x_fourier_2);                  \
+    fftw_free(aux_y_fourier_2);                  \
+    fftw_cleanup();                              \
   }
 
 #define EPS 1e-8
@@ -289,13 +290,15 @@ const double betaE[4] = {0.0, -251352885992.0 / 790610919619.0, -383714262797.0 
 
 int main(int argc, char *argv[]) {
   // ----------------- PARAMETERS ------------------
-  const string filename_solution = "data/solution.txt";            // name of the output file to write the solution
-  const string filename_energy = "data/energy.txt";                // name of the output file to write the energy
-  const string filename_energy_return = "data/energy_return.txt";  // name of the output file to write the return map of the energy
-  const string filename_input = "data/input.txt";                  // name of the input file
-  const string filename_freq = "data/freq.txt";                    // name of the output file to write the frequency of the energy
-  const string space = "    ";                                     // space to print
-  const uint per = 10;                                             // progress percentage interval to print (each count%)
+  const string filename_solution = "data/solution.txt";              // name of the output file to write the solution
+  const string filename_solution_slice = "data/solution_slice.txt";  // name of the output file to write the slice of the solution
+  const string filename_freq_slice = "data/freq_slice.txt";          // name of the output file to write the slice of the frequency of the solution
+  const string filename_energy = "data/energy.txt";                  // name of the output file to write the energy
+  const string filename_energy_return = "data/energy_return.txt";    // name of the output file to write the return map of the energy
+  const string filename_input = "data/input.txt";                    // name of the input file
+  const string filename_freq = "data/freq.txt";                      // name of the output file to write the frequency of the energy
+  const string space = "    ";                                       // space to print
+  const uint per = 10;                                               // progress percentage interval to print (each count%)
   uint count = per;
   chrono::steady_clock::time_point begin, end;                                                                                                      // variables to measure the time
   int64_t total_write = 0, total_fftw_computations = 0, total_fft_precomputation = 0, total_energy_computations = 0, total_other_computations = 0;  // variables to measure the time
@@ -304,14 +307,20 @@ int main(int argc, char *argv[]) {
   double dt;                                                                                                                                        // initial step size
   double T;                                                                                                                                         // final time of integration
   double cutoff_time;                                                                                                                               // time at which it starts the stationary regime
+  double time_slice_sol;                                                                                                                            // time at which we want to write the slice of the solution
+  double time_slice_freq;                                                                                                                           // time at which we want to write the slice of the frequency of the solution
   // DO NOT DECREASE THE NU'S BELOW 0.2 BECAUSE THE SOLUTION WILL START TO EXPLODE
-  bool averaged_solution;  // 1 if we want to average the solution, 0 otherwise
-  bool write_solution;     // whether to write the solution to a file or not
-  bool write_energy;       // whether to write the energy to a file or not
-  bool write_freq;         // whether to write the frequency of the energy to a file or not
-  uint freq_anim_sol;      // frequency of the plot of the solution
-  uint freq_plot_e;        // frequency of the plot of the energy
-  uint freq_anim_freq;     // frequency of the plot of the frequency of the energy
+  bool averaged_solution;      // 1 if we want to average the solution, 0 otherwise
+  bool write_solution;         // whether to write the solution to a file or not
+  bool write_slice_sol;        // whether to write the slice of the solution to a file or not corresponding to a specific time
+  bool write_slice_freq;       // whether to write the slice of the frequency of the solution to a file or not corresponding to a specific time
+  bool write_energy;           // whether to write the energy to a file or not
+  bool write_freq;             // whether to write the frequency of the energy to a file or not
+  bool estimate_period;        // whether to estimate the period of the solution or not
+  bool estimate_period_burst;  // whether to estimate the period of the solution or not in the burst regime
+  uint freq_anim_sol;          // frequency of the plot of the solution
+  uint freq_plot_e;            // frequency of the plot of the energy
+  uint freq_anim_freq;         // frequency of the plot of the frequency of the energy
   uint method;
   string method_name;
   // -----------------------------------------------
@@ -331,8 +340,14 @@ int main(int argc, char *argv[]) {
     file_input >> tmp >> cutoff_time;
     file_input >> tmp >> write_solution;
     file_input >> tmp >> write_freq;
+    file_input >> tmp >> write_slice_sol;
+    file_input >> tmp >> write_slice_freq;
     file_input >> tmp >> write_energy;
+    file_input >> tmp >> time_slice_sol;
+    file_input >> tmp >> time_slice_freq;
     file_input >> tmp >> averaged_solution;
+    file_input >> tmp >> estimate_period;
+    file_input >> tmp >> estimate_period_burst;
     file_input >> tmp >> freq_anim_sol;
     file_input >> tmp >> freq_anim_freq;
     file_input >> tmp >> freq_plot_e;
@@ -380,7 +395,10 @@ int main(int argc, char *argv[]) {
   cout << "Use averaged solution?          " << space << (averaged_solution ? "yes" : "no") << endl;
   cout << "Write physical solution to file?" << space << (write_solution ? "yes" : "no") << endl;
   cout << "Write Fourier solution to file? " << space << (write_freq ? "yes" : "no") << endl;
+  cout << "Write slice of solution to file?" << space << (write_slice_sol ? "yes" : "no") << endl;
+  cout << "Write slice of freq to file?    " << space << (write_slice_freq ? "yes" : "no") << endl;
   cout << "Write energy to file?           " << space << (write_energy ? "yes" : "no") << endl;
+  cout << "Estimate period?                " << space << (estimate_period ? "yes" : "no") << endl;
   cout << "Method:                         " << space << method_name << endl;
   END_TIMER();
   ADD_TIME_TO(total_write);
@@ -485,13 +503,19 @@ int main(int argc, char *argv[]) {
 
   // file handling
   START_TIMER();
-  ofstream file_sol, file_E, file_En, file_freq;  // output files
+  ofstream file_sol, file_sol_slice, file_E, file_En, file_freq, file_freq_slice;  // output files
   // if (averaged_solution && (WRITE_SOL() || WRITE_E())) {  // Fu[0], the fourier coefficient with k_1 = k_2 = 0, is the mean of the solution
   //   for (uint i = 0; i < dim; i++) u[i] -= Fu[0][0];
   // }
   if (WRITE_SOL()) {
     file_sol.open(filename_solution);
-    write(u, nx, ny, t, file_sol);  // write the solution into the file
+    write(u, nx, ny, t, file_sol, true);  // write the solution into the file
+  }
+  if (write_slice_sol) {
+    file_sol_slice.open(filename_solution_slice);
+  }
+  if (write_slice_freq) {
+    file_freq_slice.open(filename_freq_slice);
   }
   if (WRITE_E()) {  // write the energy into the file
     file_E.open(filename_energy);
@@ -503,7 +527,7 @@ int main(int argc, char *argv[]) {
   if (WRITE_FREQ()) {
     file_freq.open(filename_freq);
     // write_bis(Fu, nx, ny_complex, t, file_freq);
-    write_fourier(Fu, nx, ny_complex, t, file_freq);
+    write_fourier(Fu, nx, ny_complex, t, file_freq, true);
   }
   END_TIMER();
   ADD_TIME_TO(total_write);
@@ -612,9 +636,15 @@ int main(int argc, char *argv[]) {
 
     START_TIMER();
     if (WRITE_SOL()) {
-      write(u, nx, ny, t, file_sol);  // write the solution into the file
+      write(u, nx, ny, t, file_sol, true);  // write the solution into the file
       // write(aux_x, nx, ny, t, file_sol);  // write the solution into the file
       // file_sol << t << "    " << max << endl;
+    }
+    if (t < time_slice_sol && t + dt > time_slice_sol && write_slice_sol) {
+      write(u, nx, ny, t, file_sol_slice, false);  // write the solution into the file
+    }
+    if (t < time_slice_freq && t + dt > time_slice_freq && write_slice_freq) {
+      write_fourier(Fu, nx, ny_complex, t, file_freq_slice, false);  // write the solution into the file
     }
     // we plot the energy En at each time independently of freq_plot_e
     if (write_energy && En_changed) file_En << tn << " " << En << endl;  // write the energy into the file
@@ -627,7 +657,7 @@ int main(int argc, char *argv[]) {
 
     if (WRITE_FREQ()) {
       // write_bis(Fu, nx, ny_complex, t, file_freq);
-      write_fourier(Fu, nx, ny_complex, t, file_freq);
+      write_fourier(Fu, nx, ny_complex, t, file_freq, true);
     }
 
     if (t > fraction_completed * count - EPS) {
@@ -671,6 +701,16 @@ int main(int argc, char *argv[]) {
   // creation of tmp files to comunicate with bash scripts in order to plot or not the solution and the energy
   START_TIMER();
   ofstream file_tmp;
+  if (write_slice_sol) {
+    file_tmp.open("data/tmp_write_slice_sol.txt");
+    file_tmp << nu1 << " " << nu2 << " " << time_slice_sol << endl;
+    file_tmp.close();
+  }
+  if (write_slice_freq) {
+    file_tmp.open("data/tmp_write_slice_freq.txt");
+    file_tmp << nu1 << " " << nu2 << " " << time_slice_freq << endl;
+    file_tmp.close();
+  }
   if (write_solution || write_freq) {
     file_tmp.open("data/tmp_write_sol.txt");
     if (write_solution && !write_freq)
@@ -681,9 +721,17 @@ int main(int argc, char *argv[]) {
       file_tmp << 3 << endl;  // plot both
     file_tmp.close();
   }
-  if (write_energy) {
+  if (write_energy || write_freq || write_solution) {
     file_tmp.open("data/tmp_write_E.txt");
     file_tmp << cutoff_time << endl;  // we do this to pass the cutoff time to the bash scriptand then to the python script
+    file_tmp.close();
+  }
+  if (estimate_period) {
+    file_tmp.open("data/tmp_estimate_period.txt");
+    file_tmp.close();
+  }
+  if (estimate_period_burst) {
+    file_tmp.open("data/tmp_estimate_period_burst.txt");
     file_tmp.close();
   }
   END_TIMER();

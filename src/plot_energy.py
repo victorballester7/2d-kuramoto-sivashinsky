@@ -4,7 +4,10 @@ import numpy as np
 import sys
 import time
 import warnings
-
+# import read_data.py
+from read_data import read_data_energy, read_data_energy_return
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 warnings.filterwarnings("error")  # treat warnings as errors
 
 plt.rcParams.update({
@@ -12,38 +15,6 @@ plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": "Helvetica",
 })
-
-
-def read_data_energy(filename: str) -> np.ndarray:
-    """Read data from filename. The data is of the form:
-    t_1 E_1 dE_1 u(pi, pi) x_max1 y_max1
-    t_2 E_2 dE_2 u(pi, pi) x_max2 y_max2
-    ...
-
-    Args:
-        filename (str): File path.
-
-    Returns:
-        np.ndarray: Data.
-    """
-    data = np.loadtxt(filename)
-    return data
-
-
-def read_data_energy_return(filename: str) -> np.ndarray:
-    """Read data from filename. The data is of the form:
-    t1 E_1
-    t2 E_2
-    ...
-
-    Args:
-        filename (str): File path.
-
-    Returns:
-        np.ndarray: Data.
-    """
-    data = np.loadtxt(filename)
-    return data
 
 
 def plot_energy(filename_E: str, filename_E_return: str,
@@ -125,6 +96,59 @@ def plot_energy(filename_E: str, filename_E_return: str,
     # ax[4].set_aspect('equal')
     ax[4].set_xlim(0, 2 * np.pi)
     ax[4].set_ylim(0, 2 * np.pi)
+
+    # fig, ax = plt.subplots(1, 1, figsize=(12, 6))
+    # ax.plot(t, E, '-')
+    # # data_E2 = read_data_energy("data/energy2.txt")
+    # # try:
+    # #     idx_1 = np.where(data_E2[:, 0] > t_min)[0][0]
+    # # except IndexError:
+    # #     idx_1 = 0
+    # # try:
+    # #     t2 = data_E2[idx_1:, 0]
+    # #     u2_pi_pi = data_E2[idx_1:, 3]
+    # # except IndexError:
+    # #     t2 = []
+    # #     u2_pi_pi = []
+    # # increase font size
+    # # I want to select the x-range for the zoomed region. I have figured it out suitable values
+    # # by trial and error. How can I pass more elegantly the dates as something
+    # # like
+    # # x1 = 205
+    # # x2 = 310
+
+    # # # select y-range for zoomed region
+    # # y1 = -50
+    # # y2 = 50
+    # # ax.set_ylim(-1000, 500)
+    # # Make the zoom-in plot:
+    # font_size = 40
+    # plt.rcParams.update({'font.size': font_size})
+    # # # increase size xticks and yticks
+    # plt.xticks(fontsize=font_size)
+    # plt.yticks(fontsize=font_size)
+    # plt.xlabel(r"$t$", fontsize=font_size)
+    # plt.ylabel(r'$E$', fontsize=font_size)
+
+    # # axins = zoomed_inset_axes(
+    # #     ax,
+    # #     6,
+    # #     loc='lower left',
+    # #     bbox_to_anchor=(
+    # #         -0.66,
+    # #         0.05),
+    # #     bbox_transform=ax.transAxes)
+
+    # # axins.plot(E, dE, '-')
+    # # axins.set_xlim(x1, x2)
+    # # axins.set_ylim(y1, y2)
+    # # axins.set_aspect(0.75)
+    # # mark_inset(ax, axins, loc1=2, loc2=1, fc="none", ec="0.5")
+    # # plt.xticks(fontsize=font_size // 1.5)
+    # # plt.yticks(fontsize=font_size // 1.5)
+
+    # # save the figure
+    # plt.savefig("latex/images/hetero_chaotic.pdf", bbox_inches='tight')
 
     # add space between subplots
     fig.subplots_adjust(wspace=0.5)

@@ -98,10 +98,83 @@
       \field{pages}{317\bibrangedash 336}
       \range{pages}{20}
       \verb{doi}
-      \verb https://doi.org/10.1093/imanum/drv011
+      \verb 10.1093/imanum/drv011
+      \endverb
+    \endentry
+    \entry{1d-ks}{article}{}
+      \name{author}{3}{}{%
+        {{hash=59184e4eb912f3bf1cdecde08b6f14f9}{%
+           family={Cvitanović},
+           familyi={C\bibinitperiod},
+           given={Predrag},
+           giveni={P\bibinitperiod}}}%
+        {{hash=e38bc806827ceaf81009066bf55ce3bc}{%
+           family={Davidchack},
+           familyi={D\bibinitperiod},
+           given={Ruslan\bibnamedelima L.},
+           giveni={R\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=ce576a628aab179fb1df56e6c20fb78b}{%
+           family={Siminos},
+           familyi={S\bibinitperiod},
+           given={Evangelos},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{b2523c5974421d425c14efad6bc93aaa}
+      \strng{fullhash}{b2523c5974421d425c14efad6bc93aaa}
+      \strng{bibnamehash}{b2523c5974421d425c14efad6bc93aaa}
+      \strng{authorbibnamehash}{b2523c5974421d425c14efad6bc93aaa}
+      \strng{authornamehash}{b2523c5974421d425c14efad6bc93aaa}
+      \strng{authorfullhash}{b2523c5974421d425c14efad6bc93aaa}
+      \field{labelalpha}{CDS10}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{SIAM Journal on Applied Dynamical Systems}
+      \field{number}{1}
+      \field{title}{On the State Space Geometry of the Kuramoto-Sivashinsky Flow in a Periodic Domain}
+      \field{volume}{9}
+      \field{year}{2010}
+      \field{pages}{1\bibrangedash 33}
+      \range{pages}{33}
+      \verb{doi}
+      \verb 10.1137/070705623
       \endverb
       \verb{eprint}
-      \verb https://academic.oup.com/imajna/article-pdf/36/1/317/7921361/drv011.pdf
+      \verb https://arxiv.org/pdf/0709.2944.pdf
+      \endverb
+    \endentry
+    \entry{fftw}{online}{}
+      \name{author}{2}{}{%
+        {{hash=26a5a1c098bdade790e2ee41c62dd36b}{%
+           family={Frigo},
+           familyi={F\bibinitperiod},
+           given={Matteo},
+           giveni={M\bibinitperiod}}}%
+        {{hash=f271cef1e5ae0aff0d07deccf21fd368}{%
+           family={Johnson},
+           familyi={J\bibinitperiod},
+           given={Steven\bibnamedelima G.},
+           giveni={S\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \strng{namehash}{534f6e9a353fb1ac07e7f8e33d067b91}
+      \strng{fullhash}{534f6e9a353fb1ac07e7f8e33d067b91}
+      \strng{bibnamehash}{534f6e9a353fb1ac07e7f8e33d067b91}
+      \strng{authorbibnamehash}{534f6e9a353fb1ac07e7f8e33d067b91}
+      \strng{authornamehash}{534f6e9a353fb1ac07e7f8e33d067b91}
+      \strng{authorfullhash}{534f6e9a353fb1ac07e7f8e33d067b91}
+      \field{labelalpha}{FJ}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: 27/01/2024}
+      \field{title}{{FFTW}: {F}astest {F}ourier {T}ransform in the {W}est}
+      \verb{urlraw}
+      \verb http://www.fftw.org/
+      \endverb
+      \verb{url}
+      \verb http://www.fftw.org/
       \endverb
     \endentry
     \entry{Kalogirou2015}{article}{}
@@ -139,7 +212,7 @@
       \field{volume}{471}
       \field{year}{2015}
       \verb{doi}
-      \verb http://doi.org/10.1098/rspa.2014.0932
+      \verb 10.1098/rspa.2014.0932
       \endverb
     \endentry
     \entry{phdthesis_anna}{thesis}{}
@@ -165,6 +238,12 @@
       \field{title}{Nonlinear dynamics of surfactant-laden multilayer shear flows and related systems}
       \field{type}{phdthesis}
       \field{year}{2014}
+      \verb{doi}
+      \verb 10.25560/25067
+      \endverb
+      \verb{eprint}
+      \verb https://spiral.imperial.ac.uk/bitstream/10044/1/25067/1/Kalogirou-A-2013-PhD-Thesis.pdf
+      \endverb
     \endentry
     \entry{Kuramoto}{article}{}
       \name{author}{1}{}{%
@@ -194,7 +273,7 @@
       \field{pages}{346\bibrangedash 367}
       \range{pages}{22}
       \verb{doi}
-      \verb https://doi.org/10.1143/PTPS.64.346
+      \verb 10.1143/PTPS.64.346
       \endverb
       \verb{eprint}
       \verb https://academic.oup.com/ptps/article-pdf/doi/10.1143/PTPS.64.346/5293041/64-346.pdf
@@ -228,7 +307,7 @@
       \field{pages}{1177\bibrangedash 1206}
       \range{pages}{30}
       \verb{doi}
-      \verb https://doi.org/10.1016/0094-5765(77)90096-0
+      \verb 10.1016/0094-5765(77)90096-0
       \endverb
     \endentry
   \enddatalist

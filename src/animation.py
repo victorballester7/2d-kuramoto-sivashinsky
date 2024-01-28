@@ -15,6 +15,7 @@ from matplotlib.artist import Artist
 from matplotlib.colors import Normalize
 import sys
 import time
+from read_data import read_data_file, read_data_file_freq
 
 
 class Plot(ABC):
@@ -31,79 +32,13 @@ class Plot(ABC):
     color_extra = 'royalblue'
     colorbar_args = {'shrink': 0.5, 'aspect': 10, 'location': 'left'}
     FPS = 50
-    interval = 1000/FPS  # interval between frames in milliseconds
+    interval = 1000 / FPS  # interval between frames in milliseconds
     duration = 20  # duration of the animation in seconds
 
     def __init__(self):
         pass
 
-    def read_data_file(self, file_path):
-        headers = []
-        data_blocks = []
-
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-
-        i = 0
-        while i < len(lines):
-            line = lines[i].strip()
-            if line:
-                header = float(line)
-                headers.append(header)
-
-                i += 1
-                block_lines = []
-                while i < len(lines) and lines[i].strip():
-                    aux = list(map(float, lines[i].split()))
-                    # repeat the first element of each line to make the animation periodic
-                    aux.append(aux[0])
-                    block_lines.append(aux)
-                    i += 1
-                # repeat the first line to make the animation periodic
-                block_lines.append(block_lines[0])
-                data_block = np.array(block_lines)
-                data_blocks.append(data_block)
-            i += 1
-
-        headers_array = np.array(headers)
-        data_blocks_array = np.array(data_blocks)
-
-        # now we dupplicate the
-
-        return headers_array, data_blocks_array
-
-    def read_data_file_freq(self, file_path):
-        headers = []
-        data_blocks = []
-
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-
-        i = 0
-        while i < len(lines):
-            line = lines[i].strip()
-            if line:
-                header = float(line)
-                headers.append(header)
-
-                i += 1
-                block_lines = []
-                while i < len(lines) and lines[i].strip():
-                    aux = list(map(float, lines[i].split()))
-                    block_lines.append(aux)
-                    i += 1
-                data_block = np.array(block_lines)
-                data_blocks.append(data_block)
-            i += 1
-
-        headers_array = np.array(headers)
-        data_blocks_array = np.array(data_blocks)
-
-        # now we dupplicate the
-
-        return headers_array, data_blocks_array
-
-    def plot_setup(self, isfreq=False):
+    def plot_setup(self, isfreq=False, t_min=0):
         # Create a figure
         self.fig = plt.figure()
         self.ax = self.get_ax()
@@ -113,11 +48,26 @@ class Plot(ABC):
         # Replace with the actual file path
         file_path = script_dir + '/../data/solution.txt'
         file_path_freq = script_dir + '/../data/freq.txt'
-        self.headers, self.data_blocks = self.read_data_file(file_path)
-        self.headers_freq, self.data_blocks_freq = self.read_data_file_freq(
+        self.headers, self.data_blocks = read_data_file(file_path)
+        self.headers_freq, self.data_blocks_freq = read_data_file_freq(
             file_path_freq)
+        EPS = 0.000001
+        try:
+            idx_1 = np.where(self.headers > t_min - EPS)[0][0]
+        except IndexError:
+            idx_1 = 0
+        try:
+            idx_2 = np.where(self.headers_freq > t_min - EPS)[0][0]
+        except IndexError:
+            idx_2 = 0
 
-        # in practice it takes more time to animate, so we divide the duration by 2 to keep the seconds more or less the same
+        self.headers = self.headers[idx_1:]
+        self.data_blocks = self.data_blocks[idx_1:]
+        self.headers_freq = self.headers_freq[idx_2:]
+        self.data_blocks_freq = self.data_blocks_freq[idx_2:]
+
+        # in practice it takes more time to animate, so we divide the duration
+        # by 2 to keep the seconds more or less the same
         self.duration /= 2
 
         # frames to be animated
@@ -138,17 +88,17 @@ class Plot(ABC):
         print("Number of frames: ", self.num_frames)
         print("Speed: ", self.speed)
         print("Interval: ", self.interval)
-        print("Duration: ", self.duration)
-        print("len(self.data_blocks): ", len(self.data_blocks))
-        print("len(self.headers): ", len(self.headers))
-        print("len(self.data_blocks_freq): ", len(self.data_blocks_freq))
+        print("Expected duration: ", self.duration)
+        # print("len(self.data_blocks): ", len(self.data_blocks))
+        # print("len(self.headers): ", len(self.headers))
+        # print("len(self.data_blocks_freq): ", len(self.data_blocks_freq))
 
         # Create data
         self.nx = self.data_blocks.shape[1]
         self.ny = self.data_blocks.shape[2]
 
-        self.X = np.linspace(0, 2*np.pi, self.nx)
-        self.Y = np.linspace(0, 2*np.pi, self.ny)
+        self.X = np.linspace(0, 2 * np.pi, self.nx)
+        self.Y = np.linspace(0, 2 * np.pi, self.ny)
         self.X, self.Y = np.meshgrid(self.X, self.Y, indexing='ij')
         if isfreq:
             self.Z = self.data_blocks_freq[0]
@@ -176,7 +126,8 @@ class Plot(ABC):
         # self.subtitle_args = {'x': 0.5, 'y': self.y_pos_title - 0.14, 's': self.subtitle, 'transform': self.ax.transAxes,
         #                       'fontsize': self.FONTSIZE_TITLE - 4, 'horizontalalignment': 'center'}
         # plt.title(
-        #     subtitle, fontsize=self.FONTSIZE_TITLE - 2, y=self.y_pos_title - 0.05)
+        # subtitle, fontsize=self.FONTSIZE_TITLE - 2, y=self.y_pos_title -
+        # 0.05)
 
         # Axes
         self.ax.set_xlabel(self.X_LABEL)
@@ -239,7 +190,7 @@ class Plot(ABC):
 
         end_time = time.time()
         print("Total time for animating: ", int(
-            UNIT_TIME*(end_time - start_time)), LABEL_TIME)
+            UNIT_TIME * (end_time - start_time)), LABEL_TIME)
 
     def get_ax(self) -> Axes | Axes3D:
         if self.is_3d():
@@ -320,13 +271,13 @@ class Contour(Plot):
 
 
 class SurfaceContour(Plot):
-    def __init__(self):
+    def __init__(self, t_min):
         super().__init__()
         self.offset_rate = 2
-        self.plot_setup()
+        self.plot_setup(t_min=t_min)
         # self.plot.pop()
         # self.num_plots -= 1
-        self.ax.set_zlim(self.offset_rate*self.Z_MIN, self.Z_MAX)
+        self.ax.set_zlim(self.offset_rate * self.Z_MIN, self.Z_MAX)
         # self.custom_colorbar()
         self.show_plot()
 
@@ -349,7 +300,8 @@ class SurfaceContour(Plot):
     def get_plot(self):
         # assume self.ax is Axes3D
         self.ax = cast(Axes3D, self.ax)
-        return [self.ax.contour(self.X, self.Y, self.Z, **self.plot_args_extra), self.ax.plot_surface(self.X, self.Y, self.Z, **self.plot_args)]
+        return [self.ax.contour(self.X, self.Y, self.Z, **self.plot_args_extra),
+                self.ax.plot_surface(self.X, self.Y, self.Z, **self.plot_args)]
 
     def get_plot_args(self) -> dict[str, Any]:
         # return {'rstride': 1, 'cstride': 1, 'facecolor': self.color_extra, 'linewidth': 0.01,
@@ -361,13 +313,14 @@ class SurfaceContour(Plot):
         plt.style.use('_mpl-gallery-nogrid')
         self.num_levels = 20
         self.levels = np.linspace(self.Z_MIN, self.Z_MAX, self.num_levels)
-        return {'zdir': 'z', 'offset': self.offset_rate * self.Z_MIN, 'cmap': self.color, 'levels': self.levels}
+        return {'zdir': 'z', 'offset': self.offset_rate *
+                self.Z_MIN, 'cmap': self.color, 'levels': self.levels}
 
 
 class Heatmap(Plot):
-    def __init__(self):
+    def __init__(self, t_min):
         super().__init__()
-        self.plot_setup(True)
+        self.plot_setup(isfreq=True, t_min=t_min)
         # self.custom_colorbar()
         self.show_plot()
 
@@ -427,7 +380,8 @@ class FreqPlot(Plot):
 
     def get_plot(self):
         ys = np.arange(len(self.Z[0]))
-        return [self.ax.plot(ys, self.Z[i], zs=i, zdir='x', **self.plot_args) for i in range(len(self.Z))]
+        return [self.ax.plot(ys, self.Z[i], zs=i, zdir='x',
+                             **self.plot_args) for i in range(len(self.Z))]
 
     def get_plot_args(self) -> dict[str, Any]:
         # plt.style.use('_mpl-gallery-nogrid')
@@ -442,10 +396,14 @@ UNIT_TIME = 1000  # in seconds
 LABEL_TIME = "ms"
 start_time = time.time()
 i = int(sys.argv[1])
+try:
+    t_min = float(sys.argv[2])
+except IndexError:
+    t_min = 0.0
 if i == 1 or i == 3:
-    SurfaceContour()
+    SurfaceContour(t_min)
 # restart all plt config
 plt.rcdefaults()
 if i == 2 or i == 3:
     # FreqPlot()
-    Heatmap()
+    Heatmap(t_min)

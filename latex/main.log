@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Arch Linux) (preloaded format=pdflatex 2024.1.26)  27 JAN 2024 12:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Arch Linux) (preloaded format=pdflatex 2024.1.26)  29 JAN 2024 00:41
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -2959,7 +2959,7 @@ Package biblatex Info: ... and expl3
 Package: blx-case-expl3 2023/03/05 v3.19 expl3 case changing code for biblatex
 ))
 LaTeX Font Info:    Overwriting symbol font `stmry' in version `bold'
-(Font)                  U/stmry/b/n --> U/stmry/m/n on input line 28.
+(Font)                  U/stmry/b/n --> U/stmry/m/n on input line 29.
 )
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
@@ -3129,26 +3129,146 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 28.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [2]
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [2] [3]
+<images/nu1-nu2.pdf, id=98, 498.43916pt x 270.93922pt>
+File: images/nu1-nu2.pdf Graphic file (type pdf)
+<use images/nu1-nu2.pdf>
+Package pdftex.def Info: images/nu1-nu2.pdf  used on input line 138.
+(pdftex.def)             Requested size: 455.24411pt x 247.45633pt.
+<images/nu1=nu2.pdf, id=105, 437.096pt x 72.803pt>
+File: images/nu1=nu2.pdf Graphic file (type pdf)
+<use images/nu1=nu2.pdf>
+Package pdftex.def Info: images/nu1=nu2.pdf  used on input line 148.
+(pdftex.def)             Requested size: 455.24411pt x 75.82552pt.
+ [4]
+<images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf, id=119, 289.08pt x 252.945pt>
+File: images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf Graphic file (type pdf)
+<use images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf>
+Package pdftex.def Info: images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf  used on input line 174.
+(pdftex.def)             Requested size: 145.68144pt x 127.46797pt.
+<images/slice_nu1_0.85_nu2_0.3_time_917.294.pdf, id=120, 289.08pt x 252.945pt>
+File: images/slice_nu1_0.85_nu2_0.3_time_917.294.pdf Graphic file (type pdf)
+<use images/slice_nu1_0.85_nu2_0.3_time_917.294.pdf>
+Package pdftex.def Info: images/slice_nu1_0.85_nu2_0.3_time_917.294.pdf  used on input line 178.
+(pdftex.def)             Requested size: 145.68144pt x 127.46797pt.
+<images/slice_nu1_0.85_nu2_0.3_time_934.588.pdf, id=121, 289.08pt x 252.945pt>
+File: images/slice_nu1_0.85_nu2_0.3_time_934.588.pdf Graphic file (type pdf)
+<use images/slice_nu1_0.85_nu2_0.3_time_934.588.pdf>
+Package pdftex.def Info: images/slice_nu1_0.85_nu2_0.3_time_934.588.pdf  used on input line 182.
+(pdftex.def)             Requested size: 145.68144pt x 127.46797pt.
+<images/qp_tw.pdf, id=124, 742.29947pt x 396.40219pt>
+File: images/qp_tw.pdf Graphic file (type pdf)
+<use images/qp_tw.pdf>
+Package pdftex.def Info: images/qp_tw.pdf  used on input line 192.
+(pdftex.def)             Requested size: 318.66948pt x 170.17743pt.
+ [5 <./images/nu1-nu2.pdf> <./images/nu1=nu2.pdf>]
 
-LaTeX Warning: Reference `eq:nonlinear-pde' on page 1 undefined on input line 107.
+LaTeX Warning: Reference `fig:sections_tp' on page 1 undefined on input line 213.
 
-[3]
-Overfull \hbox (0.24638pt too wide) in paragraph at lines 130--130
-[]\OT1/lmr/m/n/10 Georgios Akrivis et al. \  Lin-early im-plicit schemes for multi-dimensional Kuramoto-Sivashinsky
- []
+<images/tp_energy.pdf, id=183, 789.65994pt x 433.42172pt>
+File: images/tp_energy.pdf Graphic file (type pdf)
+<use images/tp_energy.pdf>
+Package pdftex.def Info: images/tp_energy.pdf  used on input line 218.
+(pdftex.def)             Requested size: 145.68144pt x 79.9569pt.
+<images/tp_energy_phase.pdf, id=184, 802.42645pt x 433.42172pt>
+File: images/tp_energy_phase.pdf Graphic file (type pdf)
+<use images/tp_energy_phase.pdf>
+Package pdftex.def Info: images/tp_energy_phase.pdf  used on input line 222.
+(pdftex.def)             Requested size: 145.68144pt x 78.6871pt.
+<images/tp_u_pi_pi.pdf, id=185, 785.10576pt x 441.34206pt>
+File: images/tp_u_pi_pi.pdf Graphic file (type pdf)
+<use images/tp_u_pi_pi.pdf>
+Package pdftex.def Info: images/tp_u_pi_pi.pdf  used on input line 227.
+(pdftex.def)             Requested size: 145.68144pt x 81.88943pt.
+<images/slice_nu1_0.35_nu2_0.3_time_490.24.pdf, id=186, 289.08pt x 260.17201pt>
+File: images/slice_nu1_0.35_nu2_0.3_time_490.24.pdf Graphic file (type pdf)
+<use images/slice_nu1_0.35_nu2_0.3_time_490.24.pdf>
+Package pdftex.def Info: images/slice_nu1_0.35_nu2_0.3_time_490.24.pdf  used on input line 231.
+(pdftex.def)             Requested size: 109.26108pt x 98.33441pt.
+<images/slice_nu1_0.35_nu2_0.3_time_491.7.pdf, id=187, 289.08pt x 260.17201pt>
+File: images/slice_nu1_0.35_nu2_0.3_time_491.7.pdf Graphic file (type pdf)
+<use images/slice_nu1_0.35_nu2_0.3_time_491.7.pdf>
+Package pdftex.def Info: images/slice_nu1_0.35_nu2_0.3_time_491.7.pdf  used on input line 235.
+(pdftex.def)             Requested size: 109.26108pt x 98.33441pt.
+<images/slice_nu1_0.35_nu2_0.3_time_493.61.pdf, id=188, 289.08pt x 260.17201pt>
+File: images/slice_nu1_0.35_nu2_0.3_time_493.61.pdf Graphic file (type pdf)
+<use images/slice_nu1_0.35_nu2_0.3_time_493.61.pdf>
+Package pdftex.def Info: images/slice_nu1_0.35_nu2_0.3_time_493.61.pdf  used on input line 239.
+(pdftex.def)             Requested size: 109.26108pt x 98.33441pt.
+<images/slice_nu1_0.35_nu2_0.3_time_495.62.pdf, id=189, 289.08pt x 260.17201pt>
+File: images/slice_nu1_0.35_nu2_0.3_time_495.62.pdf Graphic file (type pdf)
+<use images/slice_nu1_0.35_nu2_0.3_time_495.62.pdf>
+Package pdftex.def Info: images/slice_nu1_0.35_nu2_0.3_time_495.62.pdf  used on input line 243.
+(pdftex.def)             Requested size: 109.26108pt x 98.33441pt.
+<images/homo_burst.pdf, id=192, 795.7989pt x 433.42172pt>
+File: images/homo_burst.pdf Graphic file (type pdf)
+<use images/homo_burst.pdf>
+Package pdftex.def Info: images/homo_burst.pdf  used on input line 255.
+(pdftex.def)             Requested size: 204.85846pt x 111.5693pt.
+<images/homo_burst_phase.pdf, id=193, 820.77116pt x 433.42172pt>
+File: images/homo_burst_phase.pdf Graphic file (type pdf)
+<use images/homo_burst_phase.pdf>
+Package pdftex.def Info: images/homo_burst_phase.pdf  used on input line 259.
+(pdftex.def)             Requested size: 204.85846pt x 108.17659pt.
+<images/hetero_burst.pdf, id=194, 795.7989pt x 433.42172pt>
+File: images/hetero_burst.pdf Graphic file (type pdf)
+<use images/hetero_burst.pdf>
+Package pdftex.def Info: images/hetero_burst.pdf  used on input line 263.
+(pdftex.def)             Requested size: 204.85846pt x 111.5693pt.
+<images/hetero_burst_phase.pdf, id=195, 839.11589pt x 447.67159pt>
+File: images/hetero_burst_phase.pdf Graphic file (type pdf)
+<use images/hetero_burst_phase.pdf>
+Package pdftex.def Info: images/hetero_burst_phase.pdf  used on input line 267.
+(pdftex.def)             Requested size: 204.85846pt x 109.28772pt.
+[6 <./images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf> <./images/slice_nu1_0.85_nu2_0.3_time_917.294.pdf> <./images/slice_nu1_0.85_nu2_0.3_time_934.588.pdf> <./images/qp_tw.pdf>]
+<images/qp_phase.pdf, id=259, 831.88188pt x 433.42172pt>
+File: images/qp_phase.pdf Graphic file (type pdf)
+<use images/qp_phase.pdf>
+Package pdftex.def Info: images/qp_phase.pdf  used on input line 282.
+(pdftex.def)             Requested size: 204.85846pt x 106.72824pt.
+<images/qp_return.pdf, id=260, 802.49138pt x 440.3761pt>
+File: images/qp_return.pdf Graphic file (type pdf)
+<use images/qp_return.pdf>
+Package pdftex.def Info: images/qp_return.pdf  used on input line 286.
+(pdftex.def)             Requested size: 204.85846pt x 112.41873pt.
+<images/homo_chaotic.pdf, id=262, 795.7989pt x 433.42172pt>
+File: images/homo_chaotic.pdf Graphic file (type pdf)
+<use images/homo_chaotic.pdf>
+Package pdftex.def Info: images/homo_chaotic.pdf  used on input line 299.
+(pdftex.def)             Requested size: 204.85846pt x 111.5693pt.
+<images/hetero_chaotic.pdf, id=263, 795.7989pt x 433.42172pt>
+File: images/hetero_chaotic.pdf Graphic file (type pdf)
+<use images/hetero_chaotic.pdf>
+Package pdftex.def Info: images/hetero_chaotic.pdf  used on input line 303.
+(pdftex.def)             Requested size: 204.85846pt x 111.5693pt.
 
 
-Overfull \hbox (2.52196pt too wide) in paragraph at lines 130--130
+LaTeX Warning: Reference `fig:sec:chaotic_burst' on page 1 undefined on input line 309.
+
+<images/slice_nu1_0.008_nu2_0.008_time_5.0.pdf, id=264, 289.08pt x 260.17201pt>
+File: images/slice_nu1_0.008_nu2_0.008_time_5.0.pdf Graphic file (type pdf)
+<use images/slice_nu1_0.008_nu2_0.008_time_5.0.pdf>
+Package pdftex.def Info: images/slice_nu1_0.008_nu2_0.008_time_5.0.pdf  used on input line 315.
+(pdftex.def)             Requested size: 204.85846pt x 184.37009pt.
+<images/c_return.pdf, id=265, 808.00465pt x 433.42172pt>
+File: images/c_return.pdf Graphic file (type pdf)
+<use images/c_return.pdf>
+Package pdftex.def Info: images/c_return.pdf  used on input line 320.
+(pdftex.def)             Requested size: 204.85846pt x 109.88287pt.
+<images/slice_freq_nu1_0.008_nu2_0.008_time_5.0.pdf, id=269, 397.485pt x 325.215pt>
+File: images/slice_freq_nu1_0.008_nu2_0.008_time_5.0.pdf Graphic file (type pdf)
+<use images/slice_freq_nu1_0.008_nu2_0.008_time_5.0.pdf>
+Package pdftex.def Info: images/slice_freq_nu1_0.008_nu2_0.008_time_5.0.pdf  used on input line 330.
+(pdftex.def)             Requested size: 227.62206pt x 186.24289pt.
+LaTeX Font Info:    Trying to load font information for OT1+lmtt on input line 339.
+(/usr/share/texmf-dist/tex/latex/lm/ot1lmtt.fd
+File: ot1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [7{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-rmsc.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-rmtt.enc} <./images/tp_energy.pdf> <./images/tp_energy_phase.pdf> <./images/tp_u_pi_pi.pdf> <./images/slice_nu1_0.35_nu2_0.3_time_490.24.pdf> <./images/slice_nu1_0.35_nu2_0.3_time_491.7.pdf> <./images/slice_nu1_0.35_nu2_0.3_time_493.61.pdf> <./images/slice_nu1_0.35_nu2_0.3_time_495.62.pdf>]
+Overfull \hbox (2.52196pt too wide) in paragraph at lines 340--340
 []\OT1/lmr/m/n/10 Y. Ku-ramoto. \  Diffusion-induced chaos in re-ac-tion sys-tems." In: \OT1/lmr/m/it/10 Progress of The-o-ret-i-cal Physics
  []
 
-
-Overfull \hbox (37.24269pt too wide) in paragraph at lines 130--131
-[]\OT1/lmr/m/n/10 SOLUCIONAR NOMS REF-ER-EN-CIES. O TOTS COM VIC-TOR BALLESTER O TOTS COM V.BALLESTER. 
- []
-
-[4{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-rmsc.enc}] (./main.aux)
+[8 <./images/homo_burst.pdf> <./images/homo_burst_phase.pdf> <./images/hetero_burst.pdf> <./images/hetero_burst_phase.pdf> <./images/qp_phase.pdf> <./images/qp_return.pdf>] [9 <./images/homo_chaotic.pdf> <./images/hetero_chaotic.pdf> <./images/slice_nu1_0.008_nu2_0.008_time_5.0.pdf> <./images/c_return.pdf> <./images/slice_freq_nu1_0.008_nu2_0.008_time_5.0.pdf>] (./main.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -3157,18 +3277,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 58441 strings out of 477985
- 1279552 string characters out of 5840058
- 2182558 words of memory out of 5000000
- 77660 multiletter control sequences out of 15000+600000
- 570707 words of font info for 91 fonts, out of 8000000 for 9000
+ 58782 strings out of 477985
+ 1288751 string characters out of 5840058
+ 2185377 words of memory out of 5000000
+ 77925 multiletter control sequences out of 15000+600000
+ 576907 words of font info for 94 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 140i,15n,134p,1244b,1763s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texmf-dist/fonts/type1/public/esint-type1/esint10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb>
-Output written on main.pdf (4 pages, 399409 bytes).
+ 140i,15n,134p,1618b,1813s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/esint-type1/esint10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi5.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/share/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb>
+Output written on main.pdf (9 pages, 2628829 bytes).
 PDF statistics:
- 234 PDF objects out of 1000 (max. 8388607)
- 176 compressed objects within 2 object streams
- 34 named destinations out of 1000 (max. 500000)
- 53 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 674 PDF objects out of 1000 (max. 8388607)
+ 556 compressed objects within 6 object streams
+ 79 named destinations out of 1000 (max. 500000)
+ 221 words of extra memory for PDF output out of 10000 (max. 10000000)
 
