@@ -33,12 +33,12 @@ class Plot(ABC):
     colorbar_args = {'shrink': 0.5, 'aspect': 10, 'location': 'left'}
     FPS = 50
     interval = 1000 / FPS  # interval between frames in milliseconds
-    duration = 20  # duration of the animation in seconds
+    duration = 40  # duration of the animation in seconds
 
     def __init__(self):
         pass
 
-    def plot_setup(self, isfreq=False, t_min=0):
+    def plot_setup(self, isfreq=False, t_min=0, save=False):
         # Create a figure
         self.fig = plt.figure()
         self.ax = self.get_ax()
@@ -68,7 +68,8 @@ class Plot(ABC):
 
         # in practice it takes more time to animate, so we divide the duration
         # by 2 to keep the seconds more or less the same
-        self.duration /= 2
+        if not save:
+            self.duration /= 2
 
         # frames to be animated
         self.num_frames = int(self.duration * 1000.0 / self.interval)
@@ -271,15 +272,21 @@ class Contour(Plot):
 
 
 class SurfaceContour(Plot):
-    def __init__(self, t_min):
+    def __init__(self, t_min, save):
         super().__init__()
         self.offset_rate = 2
-        self.plot_setup(t_min=t_min)
+        self.plot_setup(t_min=t_min, save=save)
         # self.plot.pop()
         # self.num_plots -= 1
         self.ax.set_zlim(self.offset_rate * self.Z_MIN, self.Z_MAX)
         # self.custom_colorbar()
-        self.show_plot()
+        if save:
+            # save all the frames of the animation
+            filename = 'latex/presentation/videos/animation_' + \
+                str(nu1) + '_' + str(nu2) + '.mp4'
+            self.ani.save(filename, writer='ffmpeg', dpi=300)
+        else:
+            self.show_plot()
 
     # def custom_colorbar(self):
     #     # remove the previous colorbar
@@ -398,10 +405,14 @@ start_time = time.time()
 i = int(sys.argv[1])
 try:
     t_min = float(sys.argv[2])
+    nu1 = float(sys.argv[3])
+    nu2 = float(sys.argv[4])
 except IndexError:
     t_min = 0.0
+    nu1 = np.nan
+    nu2 = np.nan
 if i == 1 or i == 3:
-    SurfaceContour(t_min)
+    SurfaceContour(t_min, True)  # save activated
 # restart all plt config
 plt.rcdefaults()
 if i == 2 or i == 3:

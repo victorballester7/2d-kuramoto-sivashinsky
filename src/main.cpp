@@ -736,14 +736,14 @@ int main(int argc, char *argv[]) {
   if (write_solution || write_freq) {
     file_tmp.open("data/tmp_write_sol.txt");
     if (write_solution && !write_freq)
-      file_tmp << 1 << endl;  // only plot of u
+      file_tmp << 1 << " " << cutoff_time << " " << nu1 << " " << nu2 << endl;  // only plot of u
     else if (write_freq && !write_solution)
-      file_tmp << 2 << endl;  // only plot of Fu
+      file_tmp << 2 << " " << cutoff_time << " " << nu1 << " " << nu2 << endl;  // only plot of Fu
     else
-      file_tmp << 3 << endl;  // plot both
+      file_tmp << 3 << " " << cutoff_time << " " << nu1 << " " << nu2 << endl;  // plot both
     file_tmp.close();
   }
-  if (write_energy || write_freq || write_solution) {
+  if (write_energy) {
     file_tmp.open("data/tmp_write_E.txt");
     file_tmp << cutoff_time << endl;  // we do this to pass the cutoff time to the bash scriptand then to the python script
     file_tmp.close();

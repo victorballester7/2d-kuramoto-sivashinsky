@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber main"] 1706523260 "main.bcf" "main.bbl" "main" 1706530891 0
-  "./references.bib" 1706523260 3489 655798b73192cb66c82861bf0e4a11fe ""
-  "main.bcf" 1706530890 109255 da7379c79b3c6662fa2962e10e845986 "pdflatex"
+["biber main"] 0 "main.bcf" "main.bbl" "main" 1706560792 -1
+  "./references.bib" 1706542750 3488 624f03af0a8f9079bb2d13e53fc59bb0 ""
+  "main.bcf" 1706560791 109253 c840feb56cff29b25e152d18df36f1ee "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1706530888 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" "main.pdf" "main" 1706530891 0
-  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" 1706530888 39744 e5d146d5bc3ef9240fe9764074ee3326 ""
+["pdflatex"] 1706560789 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" "main.pdf" "main" 1706560792 0
+  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/main.tex" 1706560734 40126 15e546cea4a84f02ecff64162eb5c6a9 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1704400182 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1704400182 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1704400182 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -404,8 +404,8 @@
   "images/homo_burst.pdf" 1706468714 69993 8d7760c74afefdcaafcfa5a8ca06dbfa ""
   "images/homo_burst_phase.pdf" 1706470692 100797 97c4cd804b0f5d1c77476ae75d5236aa ""
   "images/homo_chaotic.pdf" 1706480578 71133 442b29cb0ea8be3eb3d17b98bc83855f ""
-  "images/nu1-nu2.pdf" 1706455984 88064 5e18a1d65a076078e49e358d78a0ae2a ""
-  "images/nu1=nu2.pdf" 1706525567 45585 7e9025db849518677bf7a19208637259 ""
+  "images/nu1-nu2.pdf" 1706558659 88064 55ea92b238406f449fb7e9b3077c3a33 ""
+  "images/nu1=nu2.pdf" 1706558654 45592 264ff8e05ecb9348c8d79dd398d0d090 ""
   "images/qp_phase.pdf" 1706478670 183888 b8369ba730acf8caa7b50c0df360cf0e ""
   "images/qp_return.pdf" 1706479482 71118 0f0d9eeb896e92845760919ca5cfaab1 ""
   "images/qp_tw.pdf" 1706461093 148878 cae3569257cbb8e3eae33548efd07f85 ""
@@ -427,12 +427,12 @@
   "images/tp_energy.pdf" 1706464251 72094 4e26387f2665f602731bbf1950379a0e ""
   "images/tp_energy_phase.pdf" 1706464632 105141 0e79f6203c6e8762abc9a738d6cd56f8 ""
   "images/tp_u_pi_pi.pdf" 1706464148 72248 58a1f34528dd183af180771d09bd8911 ""
-  "main.aux" 1706530890 19067 3bf8b96374be6561fe0ab255efef63b1 "pdflatex"
-  "main.bbl" 1706523261 14768 6e1b4ee99d8627843e39c55f91e1b231 "biber main"
-  "main.run.xml" 1706530890 2376 3f99cf17c9219d8cb1a788da2b54d37f "pdflatex"
-  "main.tex" 1706530888 39744 e5d146d5bc3ef9240fe9764074ee3326 ""
+  "main.aux" 1706560791 19084 f7f165ceca7ecde116c3cd47ae561ed8 "pdflatex"
+  "main.bbl" 1706543900 14767 79244ef8a9d8a6f9d3c469c1292bf794 "biber main"
+  "main.run.xml" 1706560791 2376 3f99cf17c9219d8cb1a788da2b54d37f "pdflatex"
+  "main.tex" 1706560734 40126 15e546cea4a84f02ecff64162eb5c6a9 ""
   "preamble.sty" 1706367952 15756 56d89f87bcbb56783200c81ca115fcfe ""
-  "preamble_style.sty" 1706367952 767 3e26813407f4ae6e4e6dd97ca5ca2f14 ""
+  "preamble_style.sty" 1706560787 767 3e26813407f4ae6e4e6dd97ca5ca2f14 ""
   (generated)
   "main.aux"
   "main.bcf"

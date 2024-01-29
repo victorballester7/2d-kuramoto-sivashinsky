@@ -1,0 +1,110 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global}
+    \entry{Akriviskuramoto}{article}{}
+      \name{author}{4}{}{%
+        {{hash=d5772f5d2a6ea2686ba17d4b8f9ea76b}{%
+           family={Akrivis},
+           familyi={A\bibinitperiod},
+           given={Georgios},
+           giveni={G\bibinitperiod}}}%
+        {{hash=204c1d8a291ce8887756cae95fcd3a0b}{%
+           family={Kalogirou},
+           familyi={K\bibinitperiod},
+           given={Anna},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a5c9bf9f1b7d2fb8fc9a9cc0f883b4bf}{%
+           family={Papageorgiou},
+           familyi={P\bibinitperiod},
+           given={Demetrios\bibnamedelima T.},
+           giveni={D\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=87167111aadae9624a43f4cfa68d64ac}{%
+           family={Smyrlis},
+           familyi={S\bibinitperiod},
+           given={Yiorgos-Sokratis},
+           giveni={Y\bibinithyphendelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{b7997ee012264db3094bf6fa87c6db39}
+      \strng{fullhash}{7f9a209912bf7ebccdf7058bab0fab64}
+      \strng{bibnamehash}{b7997ee012264db3094bf6fa87c6db39}
+      \strng{authorbibnamehash}{b7997ee012264db3094bf6fa87c6db39}
+      \strng{authornamehash}{b7997ee012264db3094bf6fa87c6db39}
+      \strng{authorfullhash}{7f9a209912bf7ebccdf7058bab0fab64}
+      \field{labelalpha}{Akr+15}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0272-4979}
+      \field{journaltitle}{IMA Journal of Numerical Analysis}
+      \field{month}{04}
+      \field{number}{1}
+      \field{title}{{Linearly implicit schemes for multi-dimensional Kuramoto-Sivashinsky type equations arising in falling film flows}}
+      \field{volume}{36}
+      \field{year}{2015}
+      \field{pages}{317\bibrangedash 336}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.1093/imanum/drv011
+      \endverb
+    \endentry
+    \entry{Kalogirou2015}{article}{}
+      \name{author}{3}{}{%
+        {{hash=c26b1cb4f96a746ac9898827dfb6e849}{%
+           family={Kalogirou},
+           familyi={K\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=620bcf7b24ca0611634e0b92ba54e6dc}{%
+           family={Keaveny},
+           familyi={K\bibinitperiod},
+           given={E.\bibnamedelimi E.},
+           giveni={E\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=08a8bbb5a465e41396cdaddcb9c193f3}{%
+           family={Papageorgiou},
+           familyi={P\bibinitperiod},
+           given={D.\bibnamedelimi T.},
+           giveni={D\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \strng{namehash}{cfd4d0f19ea4e3361ff0f4f92478739e}
+      \strng{fullhash}{cfd4d0f19ea4e3361ff0f4f92478739e}
+      \strng{bibnamehash}{cfd4d0f19ea4e3361ff0f4f92478739e}
+      \strng{authorbibnamehash}{cfd4d0f19ea4e3361ff0f4f92478739e}
+      \strng{authornamehash}{cfd4d0f19ea4e3361ff0f4f92478739e}
+      \strng{authorfullhash}{cfd4d0f19ea4e3361ff0f4f92478739e}
+      \field{labelalpha}{KKP15}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proc. R. Soc. A}
+      \field{number}{20140932}
+      \field{title}{An in-depth numerical study of the two-dimensional {Kuramoto-Sivashinsky} equation}
+      \field{volume}{471}
+      \field{year}{2015}
+      \verb{doi}
+      \verb 10.1098/rspa.2014.0932
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

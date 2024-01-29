@@ -121,9 +121,8 @@ if [ ! -f "data/tmp_write_sol.txt" ]; then
 else
   type_anim=$(cat data/tmp_write_sol.txt)
   rm data/tmp_write_sol.txt # remove the tmp file
-  cutoff_time=$(cat data/tmp_write_E.txt)
   echo -e "${YELLOW}Animating...${RESET}"
-  python src/animation.py $type_anim $cutoff_time
+  python src/animation.py $type_anim
   if [ $? -ne 0 ]; then
     echo -e "${RED}Animating failed!${RESET}"
     exit 1

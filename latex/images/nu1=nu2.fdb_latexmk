@@ -1,8 +1,8 @@
 # Fdb version 4
-["pdflatex"] 1706525566 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/images/nu1=nu2.tex" "nu1=nu2.pdf" "nu1=nu2" 1706525568 0
+["pdflatex"] 1706558653 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/images/nu1=nu2.tex" "nu1=nu2.pdf" "nu1=nu2" 1706558654 0
   "../preamble.sty" 1706367952 15756 56d89f87bcbb56783200c81ca115fcfe ""
-  "/dev/null" 1706512003 0 d41d8cd98f00b204e9800998ecf8427e ""
-  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/images/nu1=nu2.tex" 1706525566 3768 aef04854948025d3996747c807fb91d1 ""
+  "/dev/null" 1706552213 0 d41d8cd98f00b204e9800998ecf8427e ""
+  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/images/nu1=nu2.tex" 1706558652 3768 a43d65befeca3872f18a4997e6df321c ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1704400182 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1704400182 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1704400182 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -283,9 +283,9 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1704400182 40684 9b9ec0b4288972636ff6a3b9c4238efc ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1706286031 4483110 adb1e1d04498b9576f1f17c4219c5e03 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1706285990 6768052 a340e7d87d22cd9776ce5836fcb8ad77 ""
-  "nu1=nu2.aux" 1706525567 673 fee7ec01bc47fa3f199e555264b49839 "pdflatex"
-  "nu1=nu2.out" 1706525567 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "nu1=nu2.tex" 1706525566 3768 aef04854948025d3996747c807fb91d1 ""
+  "nu1=nu2.aux" 1706558654 673 fee7ec01bc47fa3f199e555264b49839 "pdflatex"
+  "nu1=nu2.out" 1706558653 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "nu1=nu2.tex" 1706558652 3768 a43d65befeca3872f18a4997e6df321c ""
   (generated)
   "nu1=nu2.aux"
   "nu1=nu2.log"

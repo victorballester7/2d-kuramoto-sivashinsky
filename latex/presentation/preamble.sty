@@ -24,6 +24,7 @@
 \usepackage{utfsym} % for astronomical symbols.
 \usepackage{multimedia} % for videos.
 \usepackage{media9} % for videos.
+\usepackage{lmodern}
 
 %%%%% tikz images %%%%%%
 \usepackage{tikz, pgfplots} % for tikz images.
@@ -65,17 +66,18 @@
 \definecolor{sphHarmMoonSunSolarRad}{RGB}{220,0,60}
 \definecolor{pointMass}{RGB}{70,70,70}
 
+\captionsetup[figure]{font=footnotesize,labelfont={footnotesize,bf}}
+\captionsetup[table]{font=footnotesize,labelfont={footnotesize,bf}}
 %% for references (hyperref)
 \hypersetup{
   colorlinks = true,
-  linkcolor = black, % color of internal links (sections, pages, etc.) 
+  linkcolor = red!60!black, % color of internal links (sections, pages, etc.) 
   filecolor = cyan, % color for URLs which open local files
   % citecolor = green!70!black, %	color for bibliographical citations in text.     
   citecolor = green!40!black, %	color for bibliographical citations in text.     
   urlcolor = cyan, % color of URL links (mail, web) 
 }
 %%%%%%%%%%%%%%%%%%%%
-
 %%%%%%% Math-commands %%%%%%%
 %%% GENERAL 
 \newcommand{\function}[5]{

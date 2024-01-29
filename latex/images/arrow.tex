@@ -1,0 +1,13 @@
+\documentclass{standalone}
+\usepackage{../preamble}
+
+\begin{document}
+\begin{tikzpicture}
+  %curly arrow with stealth tip from top to bottom
+  \def\d{0.1}
+  \def\eps{0.001}
+  % Draw the outer box with margins
+  \draw[line width=0.1mm,white] (-\d,\eps) -- (\d,\eps) -- (\d,-1-\eps) -- (-\d,-1-\eps) -- cycle;
+  \draw[->,>=stealth,ultra thick,decorate,decoration={snake,amplitude=0.3mm,segment length=2mm,post length=1mm}] (0,0) -- (0,-1);
+\end{tikzpicture}
+\end{document}

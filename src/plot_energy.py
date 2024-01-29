@@ -97,58 +97,58 @@ def plot_energy(filename_E: str, filename_E_return: str,
     ax[4].set_xlim(0, 2 * np.pi)
     ax[4].set_ylim(0, 2 * np.pi)
 
-    # fig, ax = plt.subplots(1, 1, figsize=(12, 6))
-    # ax.plot(t, E, '-')
-    # # data_E2 = read_data_energy("data/energy2.txt")
-    # # try:
-    # #     idx_1 = np.where(data_E2[:, 0] > t_min)[0][0]
-    # # except IndexError:
-    # #     idx_1 = 0
-    # # try:
-    # #     t2 = data_E2[idx_1:, 0]
-    # #     u2_pi_pi = data_E2[idx_1:, 3]
-    # # except IndexError:
-    # #     t2 = []
-    # #     u2_pi_pi = []
-    # # increase font size
-    # # I want to select the x-range for the zoomed region. I have figured it out suitable values
-    # # by trial and error. How can I pass more elegantly the dates as something
-    # # like
-    # # x1 = 205
-    # # x2 = 310
+    fig, ax = plt.subplots(1, 1, figsize=(12, 6))
+    ax.plot(t, E, '-')
+    # data_E2 = read_data_energy("data/energy2.txt")
+    # try:
+    #     idx_1 = np.where(data_E2[:, 0] > t_min)[0][0]
+    # except IndexError:
+    #     idx_1 = 0
+    # try:
+    #     t2 = data_E2[idx_1:, 0]
+    #     u2_pi_pi = data_E2[idx_1:, 3]
+    # except IndexError:
+    #     t2 = []
+    #     u2_pi_pi = []
+    # increase font size
+    # I want to select the x-range for the zoomed region. I have figured it out suitable values
+    # by trial and error. How can I pass more elegantly the dates as something
+    # like
+    # x1 = 205
+    # x2 = 310
 
-    # # # select y-range for zoomed region
-    # # y1 = -50
-    # # y2 = 50
-    # # ax.set_ylim(-1000, 500)
-    # # Make the zoom-in plot:
-    # font_size = 40
-    # plt.rcParams.update({'font.size': font_size})
-    # # # increase size xticks and yticks
-    # plt.xticks(fontsize=font_size)
-    # plt.yticks(fontsize=font_size)
-    # plt.xlabel(r"$t$", fontsize=font_size)
-    # plt.ylabel(r'$E$', fontsize=font_size)
+    # # select y-range for zoomed region
+    # y1 = -50
+    # y2 = 50
+    # ax.set_ylim(-1000, 500)
+    # Make the zoom-in plot:
+    font_size = 40
+    plt.rcParams.update({'font.size': font_size})
+    # # increase size xticks and yticks
+    plt.xticks(fontsize=font_size)
+    plt.yticks(fontsize=font_size)
+    plt.xlabel(r"$t$", fontsize=font_size)
+    plt.ylabel(r'$E$', fontsize=font_size)
 
-    # # axins = zoomed_inset_axes(
-    # #     ax,
-    # #     6,
-    # #     loc='lower left',
-    # #     bbox_to_anchor=(
-    # #         -0.66,
-    # #         0.05),
-    # #     bbox_transform=ax.transAxes)
+    # axins = zoomed_inset_axes(
+    #     ax,
+    #     6,
+    #     loc='lower left',
+    #     bbox_to_anchor=(
+    #         -0.66,
+    #         0.05),
+    #     bbox_transform=ax.transAxes)
 
-    # # axins.plot(E, dE, '-')
-    # # axins.set_xlim(x1, x2)
-    # # axins.set_ylim(y1, y2)
-    # # axins.set_aspect(0.75)
-    # # mark_inset(ax, axins, loc1=2, loc2=1, fc="none", ec="0.5")
-    # # plt.xticks(fontsize=font_size // 1.5)
-    # # plt.yticks(fontsize=font_size // 1.5)
+    # axins.plot(E, dE, '-')
+    # axins.set_xlim(x1, x2)
+    # axins.set_ylim(y1, y2)
+    # axins.set_aspect(0.75)
+    # mark_inset(ax, axins, loc1=2, loc2=1, fc="none", ec="0.5")
+    # plt.xticks(fontsize=font_size // 1.5)
+    # plt.yticks(fontsize=font_size // 1.5)
 
-    # # save the figure
-    # plt.savefig("latex/images/hetero_chaotic.pdf", bbox_inches='tight')
+    # save the figure
+    plt.savefig("latex/images/tw_energy.pdf", bbox_inches='tight')
 
     # add space between subplots
     fig.subplots_adjust(wspace=0.5)

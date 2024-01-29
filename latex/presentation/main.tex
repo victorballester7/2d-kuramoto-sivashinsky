@@ -1,11 +1,14 @@
 % \documentclass[handout]{beamer} %"handout" serveix per a treure els \pause
 \documentclass{beamer} %"handout" serveix per a treure els \pause
 \usepackage{preamble}
+\usepackage{../bibliography}
 
 \usetheme{Copenhagen}
 \usecolortheme{seahorse}
 
-% \addbibresource{references.bib}
+\input{embed_video.tex}
+
+\addbibresource{../references.bib}
 
 %gets rid of bottom navigation bars
 \setbeamertemplate{footline}[frame number]{}
@@ -16,278 +19,228 @@
 %gets rid of footer
 %will override 'frame number' instruction above
 %comment out to revert to previous/default definitions
-\setbeamertemplate{footline}{}
+% \setbeamertemplate{footline}{}
 % Remove the "Figure" prefix from captions
 \captionsetup[figure]{labelformat=empty}
 % \setbeameroption{show notes}
 
-
-\title{Numerical propagation of errors\\of Earth-orbiting spacecraft}
-\author{Víctor Ballester\texorpdfstring{\vspace{0.15cm}\\}{}{\small Supervisor: Josep Maria Mondelo}}
-\institute{Departament de Matemàtiques\\Facultat de Ciències}
-\titlegraphic{\includegraphics[width=0.3\textwidth]{../Images/uab.pdf}}
-\date{July 11, 2023}
+\def\scalecaption{0.6}
+\title{Numerical study of the\\2D Kuramoto-Sivashinsky equation}
+\author{Víctor Ballester Ribó}
+\institute{\centering
+Instabilities and Nonlinear Phenomena\endgraf
+M2 - Applied and Theoretical Mathematics\endgraf
+Université Paris-Dauphine, PSL}
+\date{January 30, 2024}
 
 \begin{document}
 \frame{\titlepage}
-\begin{frame}{Motivation}
-  \begin{itemize}
-    \item Around 7000 satellites (active and inactive) orbit the Earth.
-    \item Various unintentional collisions have occurred in the past.
-    \item Point Earth model is not enough. We need a more accurate model.
-  \end{itemize}
-  \vspace{0.5cm}\pause
-  \textbf{Goal:}
-  \begin{itemize}
-    \item Develop a geopotential model of the Earth.
-    \item Propagate the position of a satellite adding different perturbations.
-    \item Estimate the error of the trajectory.
-  \end{itemize}
-\end{frame}
-\begin{frame}{Equation for $V$}
-  Let $\Omega\subseteq \RR^3$ be the region that occupies the Earth.
-  \begin{gather*}
-    \vf{g} = -\int_\Omega G\frac{\vf{r}-\vf{s}}{\norm{\vf{r}-\vf{s}}^3}\rho(\vf{s})\dd^3\vf{s}=\grad V\\
-    V=\int_\Omega G\frac{\rho(\vf{s})}{\norm{\vf{r}-\vf{s}}}\dd^3\vf{s}
-  \end{gather*}\pause
-  \begin{theorem}
-    $V$ satisfies the following exterior boundary problem:\note{Comment the unicity of the solution}
-    \begin{equation*}\label{eq:dirichletProblem}
-      \begin{cases}
-        \laplacian V = 0 & \text{in } \Omega^c    \\
-        V = f            & \text{on } \Fr{\Omega} \\
-        \displaystyle\lim_{\norm{\vf{r}}\to\infty}V=0
-      \end{cases}
-    \end{equation*}
-    where $f:\Fr{\Omega}\to\RR$ is the gravitational potential on the surface of the Earth.
-  \end{theorem}
-\end{frame}
-\begin{frame}
-  Separation of variables: $V=R(r)\Theta(\theta)\Phi(\phi)$
-  \begin{gather*}
-    \begin{cases}
-      \displaystyle\frac{{(r^2R')}'}{R}=n(n+1)                   \\
-      \displaystyle\frac{1}{\Theta}\Theta''  =-m^2\vspace{0.1cm} \\
-      \displaystyle\frac{\sin\phi}{\Phi}{(\sin\phi\Phi')}'+n(n+1){(\sin\phi)}^2  =m^2
-    \end{cases}\!n,m\in\NN\cup\{0\}, m\leq n
-  \end{gather*}\pause
-  Imposing boundary conditions:
-  \begin{equation*}
-    V =\frac{GM_\oplus}{R_\oplus}\sum_{n=0}^\infty \sum_{m=0}^n{\left(\frac{{R_\oplus}}{r}\right)}^{n+1}(\bar{C}_{n,m}Y_{n,m}^{\mathrm{c}}(\theta,\phi)+\bar{S}_{n,m}Y_{n,m}^{\mathrm{s}}(\theta,\phi))
-  \end{equation*}
-  where
-  \begin{align*}
-    Y_{n,m}^{\mathrm{c}}(\theta,\phi) & =N_{n,m}P_{n,m}(\cos\theta)\cos(m\phi) \\
-    Y_{n,m}^{\mathrm{s}}(\theta,\phi) & =N_{n,m}P_{n,m}(\cos\theta)\sin(m\phi)
-  \end{align*}
-  are the \textbf{spherical harmonics}.
-\end{frame}
-\begin{frame}{Deviations of the Earth's rotation axis}
-  \begin{minipage}{0.49\textwidth}
-    \begin{figure}
-      \centering
-      \includegraphics[width=\textwidth]{../Images/precession_nutation.pdf}
-    \end{figure}
-  \end{minipage}
-  \begin{minipage}{0.49\textwidth}
-    \begin{itemize}
-      \item \textcolor[RGB]{0,113,188}{{Precession}}
-      \item \textcolor[RGB]{255,0,0}{{Nutation}}
-      \item \textcolor[RGB]{0,146,70}{{Rotation}}
-      \item \textcolor[RGB]{158,0,255}{{Polar motion}}
-    \end{itemize}
-    \vspace{1cm}
-    \begin{figure}
-      \centering
-      \href{https://youtu.be/KnPk2T_kpco}{
-        \includegraphics[width=\textwidth, keepaspectratio]{../Images/polarMotion_video_frame.png}
-      }
-      \vspace{-0.5cm}
-      \caption{\tiny Source: \href{https://svs.gsfc.nasa.gov/20196}{NASA Earth Orientation Animations}}
-    \end{figure}
-  \end{minipage}
-\end{frame}
-\begin{frame}{Celestial sphere}
-  \begin{itemize}
-    \item Abstract sphere of infinite radius centered at the Earth.
-    \item All celestial objects are projected naturally onto it.
-  \end{itemize}
-  \begin{minipage}{0.45\textwidth}
-    \begin{figure}
-      \centering
-      \includegraphics[width=\textwidth]{../Images/right_ascension-decli.pdf}
-    \end{figure}
-  \end{minipage}\hfill
-  \begin{minipage}{0.5\textwidth}
-    \textbf{Mean axis of rotation:} Axis of rotation when the nutation perturbation are averaged out.
-
-    \textbf{Mean equator:} plane perpendicular to the mean axis of rotation.
-
-    \textbf{Mean vernal equinox ($\overline{\Upsilon}$):} The point of intersection between the mean equator with the ecliptic where the Sun crosses the celestial equator from south to north.
-  \end{minipage}
-\end{frame}
-\begin{frame}{Inertial and non-inertial reference frames}
-  J2000 date: January 1, 2000 at 12:00 TT.
-  \vspace{0.5cm}
-
-  \textbf{Quasi-inertial}:
-  \begin{itemize}
-    \item $x$-axis: pointing towards the $\overline{\Upsilon}$ of the J2000 date
-    \item $z$-axis: perpendicular to the mean equator of the J2000 date
-  \end{itemize}
-
-  \textbf{Non-inertial} (Earth fixed):
-  \begin{itemize}
-    \item $z$-axis: pointing towards the IRP (\emph{International Reference Pole})
-    \item $x$-axis: pointing towards the zero meridian and in the plane perpendicular to the $z$-axis.
-  \end{itemize}
-
-  In both systems $y$-axis is chosen in order to complete a right-handed system.
-\end{frame}
-% \begin{frame}{Transformation between systems}
-
-
-
-%   \begin{figure}[htbp]
-%     \centering
-%     \begin{minipage}[ht]{0.3\textwidth}
-%       \centering
-%       \includegraphics[width=\textwidth]{../Images/ecliptic_equator.pdf}
-%     \end{minipage}
-%     \hspace{0.025\textwidth}
-%     \begin{minipage}[ht]{0.3\textwidth}
-%       \centering
-%       \includegraphics[width=0.9\textwidth]{../Images/nutation_matrix.pdf}
-%     \end{minipage}
-%     \hspace{0.025\textwidth}
-%     \begin{minipage}[ht]{0.3\textwidth}
-%       \centering
-%       \includegraphics[width=0.9\textwidth]{../Images/polar_motion_matrix.pdf}
-%     \end{minipage}
-%   \end{figure}
-% \end{frame}
-\begin{frame}
-  \frametitle{Other perturbations}
-  $\vf{r} = \text{satellite position with respect to Earth's center of mass}$
-
-  \vspace{0.25cm}
-  \begin{itemize}
-    \item<1-> Third body perturbations (Moon and Sun): $$\frac{GM}{\norm{\vf{s}-\vf{r}}^2}(\vf{s}-\vf{r}) - \frac{GM}{\norm{\vf{s}}^2}\vf{s}$$
-    \item<2-> Atmospheric drag: $$-\frac{1}{2}C_\mathrm{D} \frac{A}{m}\rho v_\mathrm{rel}\vf{v}_\mathrm{rel}$$
-      where $\vf{v}_\mathrm{rel}=\dot{\vf{r}}-\vf{\omega}_\oplus\times\vf{r}$.
-    \item<3-> Solar radiation pressure: $$
-        -\nu P_\odot C_\mathrm{R} \frac{A_\odot}{m} \frac{\vf{s}_\odot-\vf{r}}{\norm{\vf{s}_\odot-\vf{r}}}
-      $$
-  \end{itemize}
-\end{frame}
-\begin{frame}{Differential system}
-  Using the Runge-Kutta-Fehlberg method of order 7(8) we will integrate the differential system:
-  \begin{equation*}
-    \begin{cases}
-      \dot{\vf{r}}=\vf{v} \\
-      \dot{\vf{v}}=\vf{a}_{\mathrm{GP}} + \delta_{\mathrm{D}}\vf{a}_{\mathrm{D}}+\delta_{\mathrm{R}}\vf{a}_{\mathrm{R}}+\delta_{\mathrm{sun}}\vf{a}_{\mathrm{sun}}+\delta_{\mathrm{moon}}\vf{a}_\mathrm{moon}
-    \end{cases}
-  \end{equation*}
-  \pause
-  \vspace{0.25cm}
-
-  Initial conditions from \textbf{TLEs} (Two Line Elements sets).
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{../Images/TLE.pdf}
-  \end{figure}
-\end{frame}
-\begin{frame}{Results}
-  Scheme of our simulation:
-  \begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{../Images/simulation_scheme.pdf}
-  \end{figure}\pause
-  \begin{minipage}{0.4\textwidth}
-    \begin{figure}[ht]
-      \centering
-      \includegraphics[width=\textwidth]{../Images/satellite_orbits_custom.pdf}
-    \end{figure}
-  \end{minipage}\hfill
-  \begin{minipage}{0.55\textwidth}
-    Zones that we will explore:
-    \begin{itemize}
-      \item \textbf{L}ow \textbf{E}arth \textbf{O}rbit satellites
-      \item \textbf{M}edium \textbf{E}arth \textbf{O}rbit satellites
-      \item \textbf{G}eostationary \textbf{E}arth \textbf{O}rbit satellites
-    \end{itemize}
-  \end{minipage}
-\end{frame}
-\begin{frame}{Results - LEO}
-  \begin{itemize}
-    \item ISS makes $\sim 16$ orbits per day.
-    \item LEO satellites interact with the atmosphere.
-    \item The atmospheric drag is difficult to predict.
-  \end{itemize}
-  \begin{figure}[htbp]
-    \centering
-    \begin{minipage}[ht]{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../Images/simulation/ISS_pointMass_comparison.pdf}
-      \caption{\hspace{0.8cm}ISS}
-    \end{minipage}
-    \hspace{0.0333333\textwidth}
-    \begin{minipage}[ht]{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../Images/simulation/ISS.pdf}
-      \caption{\hspace{0.8cm}ISS}
-    \end{minipage}
-  \end{figure}
-\end{frame}
-\begin{frame}{Results - MEO}
+\begin{frame}{Introduction}
+  2D Kuramoto-Sivashinsky equation:
+  $$
+    u_t + \frac{1}{2} \abs{\grad u}^2 + \laplacian u + \laplacian^2 u = 0
+  $$
   \begin{figure}[ht]
     \centering
-    \begin{minipage}[ht]{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../Images/simulation/SIRIUS.pdf}
-      \caption{Sirius-3}
-    \end{minipage}
-    \hspace{0.0333333\textwidth}
-    \begin{minipage}[ht]{0.45\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../Images/simulation/GALILEO.pdf}
-      \caption{Galileo-20}
-    \end{minipage}
+    \includegraphics[height=0.1\textheight]{../images/arrow.pdf}
   \end{figure}
-  \begin{itemize}
-    \item GPM is very oscillatory.
-    \item Sun and Moon reduce the oscillations.
-    \item Solar radiation increases the oscillations.
-  \end{itemize}
+  \hspace{-0.4cm}
+  \scalebox{0.88}{$\displaystyle
+    u_t+\frac{1}{2}\left({u_x}^2+\frac{\nu_2}{\nu_1} {u_y}^2\right)+ u_{xx}+\frac{\nu_2}{\nu_1} u_{yy}+\nu_1\left[u_{xxxx}+\frac{\nu_2}{\nu_1} u_{yyyy}+\frac{{\nu_2}^2}{{\nu_1}^2}u_{xxyy}\right]=0
+  $}
+
+  \vspace{0.5cm}
+  In order to distinguish between different types of solutions, we have monitored the evolution of the $L^2$ energy:
+  $$
+    E(t) = \int_{0}^{2\pi} \int_{0}^{2\pi} {u(x,y,t)}^2 \dd{x} \dd{y}
+  $$
 \end{frame}
-\begin{frame}{Results - GEO}
+\begin{frame}{Numerical methods}
+  We have used a pseudo-spectral method
+  \begin{itemize}
+    \item Fourier transform in space.
+    \item Implicit-Explicit BDF2 in time \cite{Akriviskuramoto}.
+  \end{itemize}
+  \begin{equation*}
+    \vf{\tilde{u}}_t+\vf{L}\vf{\tilde{u}}=\vf{N}(\vf{\tilde{u}})
+  \end{equation*}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[height=0.1\textheight]{../images/arrow.pdf}
+  \end{figure}
+  \begin{equation*}
+    \frac{3}{2} \vf{\tilde{u}}^{n+2} +h \vf{L} \vf{\tilde{u}}^{n+2} = 2 \vf{\tilde{u}}^{n+1} - \frac{1}{2} \vf{\tilde{u}}^{n} + 2h \vf{N}(\vf{\tilde{u}}^{n+1}) -  h \vf{N}(\vf{\tilde{u}}^{n})
+  \end{equation*}
+  First step with Implicit-Explicit Euler:
+  \begin{equation*}
+    \vf{\tilde{u}}^{n+1} = \vf{\tilde{u}}^{n} + h \vf{N}(\vf{\tilde{u}}^{n+1})
+  \end{equation*}
+\end{frame}
+\def\scalenus{0.6}
+\begin{frame}{Results}
   \begin{minipage}{0.48\textwidth}
+    \centering
+    \scalebox{\scalenus}{$u_0(x,y) = \sin(x) + \sin(y) + \sin(x+y)$}
+  \end{minipage}\hspace{-0.3cm}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \scalebox{\scalenus}{$u_0(x,y) = \sin(x) + \sin(y) + \cos(x+y)$}\\
+    \scalebox{\scalenus}{$\qquad\qquad\qquad+ \sin(4x+4y) + \cos(7x) + \cos(7y)$}
+  \end{minipage}
+  \vspace{-0.15cm}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{../images/nu1-nu2_presentation.pdf}
+  \end{figure}
+  \vspace{-0.15cm}
+  \scalebox{0.4}{The top left figure is taken from \cite{Kalogirou2015}.}
+\end{frame}
+\begin{frame}{Results - Travelling waves}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    $\nu_1=0.35$, $\nu_2=0.3$
+
+    \vspace{1.5cm}
     \begin{figure}[ht]
       \centering
-      \includegraphics[width=\textwidth]{../Images/simulation/TDRS-3.pdf}
-      \caption{TDRS-3}
+      \href{run:videos/animation_0.85_0.3.mp4}{
+        \includegraphics[width=\linewidth]{../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf}
+      }
+      \vspace{-0.3cm}
+      \caption{\scalebox{\scalecaption}{Solution at $t=900$}}
     \end{figure}
   \end{minipage}
-  \hfill
   \begin{minipage}{0.48\textwidth}
     \begin{itemize}
-      \item Adding the Sun and the Moon the errors are reduced.
-      \item Solar radiation again increases the oscillations.
-      \item Maneuver at around the 13th day.
+      \item Periodic in both space and time.
+      \item Energy constant.
     \end{itemize}
+
+    \vspace{1.5cm}
+    \centering
+    \begin{figure}[ht]
+      \centering
+      \href{run:videos/animation_0.4_0.4.mp4}{\includegraphics[width=\textwidth]{../images/tw_energy.pdf}}
+      \caption{\scalebox{\scalecaption}{Energy evolution}}
+    \end{figure}
+  \end{minipage}
+\end{frame}
+\begin{frame}{Results - Time-periodic waves}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    $\nu_1=0.35$, $\nu_2=0.3$
+
+    \vspace{1.5cm}
+    \begin{figure}[ht]
+      \centering
+      \href{run:videos/animation_0.35_0.3.mp4}{
+        \includegraphics[width=\linewidth]{../images/slice_nu1_0.35_nu2_0.3_time_493.61.pdf}
+      }
+      \caption{\scalebox{\scalecaption}{Solution at $t=493.61$}}
+    \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \begin{figure}[ht]
+      \centering
+      \href{run:videos/animation_0.4_0.4.mp4}{\includegraphics[width=\textwidth]{../images/tp_energy.pdf}}
+      \caption{\scalebox{\scalecaption}{Energy evolution}}
+    \end{figure}
+
+    \vspace{0.2cm}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=\textwidth]{../images/tp_energy_phase.pdf}
+      \caption{\scalebox{\scalecaption}{Phase space $(E,\dot{E})$}}
+    \end{figure}
+  \end{minipage}
+\end{frame}
+\begin{frame}{Results - Periodic bursts}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \textbf{Homoclinic burst}
+    $\nu_1=\nu_2=0.45$
+
+    \vspace{0.5cm}
+    \begin{figure}[ht]
+      \centering
+      \href{run:videos/animation_0.45_0.45.mp4}{\includegraphics[width=0.9\textwidth]{../images/homo_burst.pdf}}
+      \vspace{-0.3cm}
+      \caption{\scalebox{\scalecaption}{Energy evolution}}
+    \end{figure}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.9\textwidth]{../images/burst_nu1=0.40_nu2=0.40.pdf}
+      \caption{\scalebox{\scalecaption}{Relative error $\displaystyle\max_{x,y\in [0,2\pi]} \frac{\abs{u(t,x,y)-u(t-h,x,y)}}{\abs{u(t,x,y)}}$}}
+    \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \textbf{Heteroclinic burst}
+    $\nu_1=\nu_2=0.4$
+    \vspace{0.5cm}
+    \begin{figure}[ht]
+      \centering
+      \href{run:videos/animation_0.4_0.4.mp4}{\includegraphics[width=0.9\textwidth]{../images/hetero_burst.pdf}}
+      \vspace{-0.3cm}
+      \caption{\scalebox{\scalecaption}{Energy evolution}}
+    \end{figure}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.9\textwidth]{../images/burst_nu1=0.40_nu2=0.40.pdf}
+      \caption{\scalebox{\scalecaption}{Relative error $\displaystyle\max_{x,y\in [0,2\pi]} \frac{\abs{u(t,x,y)-u(t-h,x,y)}}{\abs{u(t,x,y)}}$}}
+    \end{figure}
+  \end{minipage}
+\end{frame}
+\begin{frame}{Results - Chaotic solutions}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \textbf{Quasi-periodic}
+
+    $\nu_1=0.25$, $\nu_2=0.2$
+
+    \vspace{0.5cm}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.9\textwidth]{../images/qp_phase.pdf}
+      \vspace{-0.3cm}
+      \caption{\scalebox{\scalecaption}{Phase space $(E,\dot{E})$}}
+    \end{figure}
+
+    \vspace{0.2cm}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.9\textwidth]{../images/qp_return.pdf}
+      \caption{\scalebox{\scalecaption}{Return map with section $\dot{E}=0$}}
+    \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \textbf{Chaotic solution}
+    $\nu_1=\nu_2=0.008$
+
+    \vspace{0.2cm}
+    \begin{figure}[ht]
+      \centering
+      \href{run:videos/animation_0.008_0.008.mp4}{\includegraphics[width=0.62\textwidth]{../images/slice_nu1_0.008_nu2_0.008_time_5.0.pdf}}
+      \vspace{-0.3cm}
+      \caption{\scalebox{\scalecaption}{Solution at time $t=5$}}
+    \end{figure}
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.62\textwidth]{../images/slice_freq_nu1_0.008_nu2_0.008_time_5.0.pdf}
+      \caption{\scalebox{\scalecaption}{Fourier spectrum at time $t=5$}}
+    \end{figure}
   \end{minipage}
 \end{frame}
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item The point mass model is not enough to predict the orbit of a satellite.
-    \item Adding both together the Sun and the Moon the variability of the errors is reduced.
-    \item Solar radiation pressure increases the oscillations.
+    \item Periods of time-periodic waves are generally much smaller than periods of travelling waves and these are much smaller than periods of periodic bursts.
+    \item A finer mesh grid is needed in a vicinity of bursts, specially for chaotic homoclinic and heteroclinic bursts.
+    \item Quasi-periodic seem to be a transition between travelling waves or time-periodic waves and periodic bursts.
   \end{itemize}
-  \vspace{0.5cm}\pause
-  \textbf{Improvements:}
-  \begin{itemize}
-    \item Atmospheric drag and solar radiation bad modelled.
-    \item Study the influence of the inclination and eccentricity on the errors.
-  \end{itemize}
+\end{frame}
+\begin{frame}[noframenumbering]{References}
+  \printbibliography[heading=none]
 \end{frame}
 \end{document}
