@@ -16,12 +16,8 @@ Université Paris-Dauphine, PSL\endgraf
 \begin{document}
 \maketitle
 \begin{abstract}
-  The aim of this report is to give both qualitative and quantitative insight into the chaotic behaviour of the 2D Kuramoto-Sivashinsky equation. This equation is more commonly known in its 1D version and this report wants to complement the numerical study carried out in \cite{Kalogirou2015} in order to extend the bibliography on the 2D version of the equation. Kuramoto-Sivashinsky types of equations are seen in various physical phenomena such as flame propagation or reaction-diffusion systems \cite{Kuramoto,Sivashinsky1977}. We will see that the 2D KS equation exhibits chaotic behaviour as we increase the spatial domain size.
+  The objective of this report is to provide both qualitative and quantitative insights into the chaotic behaviour of the 2D Kuramoto-Sivashinsky equation. While the 1D version of this equation is more commonly known, this report aims to complement the numerical study conducted in \cite{Kalogirou2015} by extending the bibliography on the 2D version of the equation. Kuramoto-Sivashinsky equations are encountered in various physical phenomena, such as flame propagation or reaction-diffusion systems \cite{Kuramoto,Sivashinsky1977}. It will become apparent that the 2D KS equation exhibits chaotic behaviour as the spatial domain size increases.
 \end{abstract}
-% {
-% \hypersetup{linkcolor=black}
-% \tableofcontents
-% }
 
 \section{Introduction}\label{sec:intro}
 The well-known 1D Kuramoto-Sivashinsky (KS) equation can be written as
@@ -29,7 +25,7 @@ The well-known 1D Kuramoto-Sivashinsky (KS) equation can be written as
   u_t + \frac{1}{2} {u_x}^2 + u_{xx} + u_{xxxx} = 0
 \end{equation}
 It is usually equipped with periodic boundary conditions $u(t, x + L) = u(t, x)$ for some $L > 0$, which defines the domain of definition of the PDE, and an initial condition $u(0, x) = u_0(x)$ \cite{1d-ks}. The natural extension in the 2D case is the following Dirichlet problem with periodic boundary conditions:
-\begin{equation}
+\begin{equation}\label{eq:2d_ks_0}
   \begin{cases}
     u_t + \frac{1}{2} \abs{\grad u}^2 + \laplacian u + \laplacian^2 u = 0 & \text{in } (0, \infty) \times [0, L_x) \times [0, L_y) \\
     u(t, x, y) = u(t, x + L_x, y)                                         & \text{in } [0, \infty) \times \RR \times [0, L_y)      \\
@@ -56,9 +52,9 @@ where we used the notation from \cite{Kalogirou2015}:
   \right)   & \div_\nu                                                   & = \partial_x + \sqrt{\frac{\nu_1}{\nu_2}} \partial_y
   \\ \laplacian_\nu &= \div_\nu(\grad_\nu) = \partial_{xx} + \frac{\nu_2}{\nu_1} \partial_{yy} & {\laplacian_\nu}^2 &= \laplacian_\nu(\laplacian_\nu) := {\partial_{x}}^4 + 2 \frac{\nu_2}{\nu_1} {\partial_{x}}^2{\partial_{y}}^2 + \frac{{\nu_2}^2}{{\nu_1}^2} {\partial_{y}}^4
 \end{align}
-and $\nu_1 :={\left( \frac{L_x}{2\pi} \right)}^2$, $\nu_2 := {\left( \frac{L_y}{2\pi} \right)}^2$. Note that the new equation is invariant under the transformation $(t,x,y, \nu_1, \nu_2) \mapsto \left( \frac{\nu_2}{\nu_1} t, y, x, \nu_2, \nu_1 \right)$ if and only if the initial condition is symmetric in $x$ and $y$. In that case, if $u(t,x,y)$ is a solution of the equation with parameters $(\nu_1, \nu_2)$, then $u\left( \frac{\nu_2}{\nu_1} t, y, x \right)$ is the solution of the equation with parameters $(\nu_2, \nu_1)$.
+and $\nu_1 :={\left( \frac{2\pi}{L_x} \right)}^2$, $\nu_2 := {\left( \frac{2\pi}{L_y} \right)}^2$. Note that the new equation is invariant under the transformation $(t,x,y, \nu_1, \nu_2) \mapsto \left( \frac{\nu_2}{\nu_1} t, y, x, \nu_2, \nu_1 \right)$ if and only if the initial condition is symmetric in $x$ and $y$. In that case, if $u(t,x,y)$ is a solution of the equation with parameters $(\nu_1, \nu_2)$, then $u\left( \frac{\nu_2}{\nu_1} t, y, x \right)$ is a solution of the equation with parameters $(\nu_2, \nu_1)$.
 
-Let's study now the linear stability of the different modes $(k_x, k_y)$ of the equation for $k_x,k_y\in\NN\cup\{0\}$. Setting $v = \delta(e^{\lambda t+i(k_x x + k_y y)} + \cc)$, with $\delta \ll 1$ and $\cc$ denoting the complex conjugate, as a perturbation of the trivial state $u = 0$, we obtain the following equality once we impose that $v$ is a solution of \cref{eq:2d_ks}:
+First, let's study the linear stability of the different modes $(k_x, k_y)$ of the equation for $k_x,k_y\in\NN\cup\{0\}$. Setting $v = \delta(e^{\lambda t+i(k_x x + k_y y)} + \cc)$, with $\delta \ll 1$ and $\cc$ denoting the complex conjugate, as a perturbation of the trivial state $u = 0$, we obtain the following equality once we impose that $v$ is a solution of the linear part of \cref{eq:2d_ks}:
 \begin{equation}\label{eq:linear_stability}
   \lambda = \left({k_x}^2+ \frac{\nu_2}{\nu_1} {k_y}^2\right)\left( 1 - \nu_1{k_x}^2 - \nu_2{k_y}^2\right)
 \end{equation}
@@ -68,26 +64,26 @@ In order to contribute to the bibliography on the 2D KS equation, we will study 
 \begin{equation}\label{eq:initial_condition}
   u_0(x,y) = \sin(x) + \sin(y) + \cos(x+y) + \sin(4x+4y) + \cos(7x) + \cos(7y)
 \end{equation}
-which is still symmetric in $x$ and $y$. Note that we are adding the modes $(4,4)$, $(7,0)$ and $(0,7)$ to the initial condition used in \cite{Kalogirou2015} and so a richer behaviour is expected.
+which is still symmetric in $x$ and $y$. Note that we are adding the modes $(4,4)$, $(7,0)$ and $(0,7)$ to the initial condition used in \cite{Kalogirou2015} and so a richer behaviour is expected. We will see, though, that for large values of $\nu_1$ and $\nu_2$ in the interval $[0,1]$, the behaviour of the equation is still similar to the one observed in \cite{Kalogirou2015} (see \cref{sec:general_results}).
 
-In order to distinguish and classify the different kinds of behaviour that the equation exhibits, we will monitor the $L^2$-norm of the solution:
+In order to distinguish and classify the different kinds of behaviour that the equation exhibits, we will monitor the $L^2$-norm, or energy, of the solution:
 \begin{equation}
   E(t):=\norm{u(t)}_{L^2}^2 = \int_0^{2\pi} \int_0^{2\pi} {u(t,x,y)}^2 \dd{x} \dd{y}
 \end{equation}
-It will be of interest to study also its time derivative $\dot{E}(t)$ and the phase space $(E(t), \dot{E}(t))$ (see \cref{sec:types_of_solutions} for more details).
+It will be of interest to study also its time derivative $\dot{E}(t)$ and the phase space $(E(t), \dot{E}(t))$ (see \cref{sec:types_of_solutions} for more details). Furthermore, in order to detect quasi-periodic behaviour the return map $E_n=E(t_n)$, where $t_n$ is the $n$-th zero of $\dot{E}(t)$, will also be of interest.
 
 Finally, we can easily note that the mean of the solution is decreasing in time. Indeed:
 \begin{multline}
   4\pi^2\dv{\overline{u}}{t}= \int_0^{2\pi} \int_0^{2\pi} u_t \dd{x} \dd{y} = -\int_0^{2\pi} \int_0^{2\pi} \left( \frac{1}{2} \abs{\grad_\nu u}^2 + \laplacian_\nu u + {\laplacian_\nu}^2 u \right) \dd{x} \dd{y} =\\= -\frac{1}{2}\int_0^{2\pi} \int_0^{2\pi} \left({u_x}^2 + \frac{\nu_2}{\nu_1} {u_y}^2\right) \dd{x} \dd{y} \leq 0
 \end{multline}
-where we used the fact that the solution is periodic in $x$ and $y$. If we forget about the trivial state $u=0$ or any other stationary state, this later inequality is strict and so the mean of the solution is strictly decreasing in time. In order to avoid this, we will subtract the mean of the solution at each step of integration, or equivalently, we will solve the equation
+where we used the fact that the solution is periodic in $x$ and $y$. If we forget about the trivial state $u=0$ or any other stationary state, this later inequality is strict. This implies that the mean of the solution is strictly decreasing in time. In order to avoid this, we will subtract the mean of the solution at each step of integration, or equivalently, we will solve the equation
 \begin{equation}
   u_t + \frac{1}{2} \left[\abs{\grad_\nu u}^2 - \frac{1}{4\pi^2}\int_0^{2\pi} \int_0^{2\pi} \abs{\grad_\nu u}^2 \dd{x} \dd{y} \right] + \laplacian_\nu u + {\laplacian_\nu}^2 u = 0
 \end{equation}
 with the same initial condition as before, because we have chosen an initial condition with zero mean. The reader may notice that here we have used the same notation to denote the initial solution and $u-\overline{u}$, but it should be clear from the context which one we are referring to.
 \section{Numerical methods}
 
-There are several numerical methods to integrate this kind of nonlinear equations. In this report we will use a pseudo-spectral method. The idea is to divide the spatial grid $[0,2\pi]\times [0,2\pi]$ in $N_x \times N_y$ cells and to approximate the solution $u(t,x,y)$ by a truncated Fourier series in each cell:
+There are several numerical methods to integrate these kinds of nonlinear equations. In this report we will use a pseudo-spectral method. The idea is to divide the spatial grid $[0,2\pi]\times [0,2\pi]$ in $N_x \times N_y$ cells and to approximate the solution $u(t,x,y)$ by a truncated Fourier series in each cell:
 \begin{equation}\label{eq:idft}
   \tilde{u}(t,x_i,y_j) = \sum_{k_x=-N_x/2}^{N_x/2-1} \sum_{k_y=-N_y/2}^{N_y/2-1} \hat{u}(t,k_x,k_y) e^{i(k_x x_i + k_y y_j)}
 \end{equation}
@@ -95,15 +91,15 @@ for $i=0,\dots,N_x-1$ and $j=0,\dots,N_y-1$. The coefficients $\hat{u}(t,k_x,k_y
 \begin{equation}\label{eq:dft}
   \hat{u}(t,k_x,k_y) = \frac{1}{N_x N_y} \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u(t,x_i,y_j) e^{-i(k_x x_i + k_y y_j)}
 \end{equation}
-To efficiently compute the discrete Fourier transform, we will use the Fast Fourier Transform (FFT) algorithm, which reduces the complexity of the computation from $\mathcal{O}({N_x}^2 {N_y}^2)$ to $\mathcal{O}(N_x N_y \log(N_x N_y))$ and attains its maximum performance when $N_x$ and $N_y$ are powers of $2$.
+To efficiently compute the discrete Fourier transform, we will use the Fast Fourier Transform (FFT) algorithm, which reduces the complexity of the computation from $\mathcal{O}({N_x}^2 {N_y}^2)$ to $\mathcal{O}(N_x N_y \log(N_x N_y))$ operations and attains its maximum performance when $N_x$ and $N_y$ are powers of $2$, due to the construction of the algorithm \cite{fft}.
 
 To integrate the PDE in time, we discretize the time domain $[0,T]$ in $N_t$ points separated by a time step $h$. We will use a family of schemes that treat the linear part implicitly and the nonlinear part explicitly, the so called IMEX schemes \cite{Akrivis_kuramoto}. The general theory of IMEX schemes was introduced in \cite{Akrivis2004}, in which they consider schemes of the form
 \begin{equation}\label{eq:nonlinear_pde}
   u_t+\mathcal{L}u=\mathcal{N}(u)
 \end{equation}
-where $\mathcal{L}$ is a linear operator and $\mathcal{N}$ is a nonlinear operator. In order for the scheme to be stable and convergent, we need to check the conditions given in \cite{Akrivis2004}. These require $\mathcal{L}$ being a self-adjoint and positive definite operator and $\mathcal{N}$ being a locally Lipschitz continuous operator. In our problem, $\mathcal{L}=\laplacian_\nu + {\laplacian_\nu}^2$ but in this case, the operator is not positive definite (see \cite{phdthesis_anna} for explicit details). However, adding a large enough constant $c$ to both sides of the equation solves the problem. We will not reproduce the proof of $\mathcal{N}u=-\frac{1}{2} \abs{\grad_\nu u}^2 + cu$ being locally Lipschitz continuous, as it is not the main interest of this report, and it can be found in \cite{Akrivis_kuramoto}. The constant $c$ that makes the scheme stable and convergent is $c=1+\frac{1}{\nu_1}$ \cite{phdthesis_anna}.
+where $\mathcal{L}$ is a linear operator and $\mathcal{N}$ is a nonlinear operator. In order for the scheme to be stable and convergent, we need to check the conditions given in \cite{Akrivis2004}. These require $\mathcal{L}$ being self-adjoint and positive definite, and $\mathcal{N}$ being locally Lipschitz continuous. In our problem, $\mathcal{L}=\laplacian_\nu + {\laplacian_\nu}^2$ but in this case it can be seen that the operator is not positive definite (see \cite{phdthesis_anna} for explicit details). However, adding a large enough constant $c$ to both sides of the equation solves the problem. We will not reproduce the proof of $\mathcal{N}u=-\frac{1}{2} \abs{\grad_\nu u}^2 + cu$ being locally Lipschitz continuous, as it is not the main interest of this report, and it can be found in \cite{Akrivis_kuramoto}. A constant $c$ that makes the scheme stable and convergent is, for example, $c=1+\frac{1}{\nu_1}$ \cite{phdthesis_anna}.
 
-That being set, we will use the 2nd order backward differentiation formula (BDF2) as the scheme to integrate our equation in the Fourier space. We have chosen BDF2 schemes because backward differentiation of order 1 (implicit Euler) produced inconsistencies for small values of $\nu_1$ and $\nu_2$, and higher orders of backward differentiation require much more time to compute. In the Fourier space, \cref{eq:nonlinear_pde} becomes, using matrix notation:
+That being set, we will use the 2nd order backward differentiation formula (BDF2) as the scheme to integrate our equation in the Fourier space. We have chosen BDF2 schemes because backward differentiation of order 1 (implicit Euler scheme) produced inconsistencies for small values of $\nu_1$ and $\nu_2$, and higher orders of backward differentiation require much more time to compute. In the Fourier space, \cref{eq:nonlinear_pde} becomes, using matrix notation:
 \begin{equation}
   \vf{\tilde{u}}_t+\vf{L}\vf{\tilde{u}}=\vf{N}(\vf{\tilde{u}})
 \end{equation}
@@ -117,18 +113,18 @@ from which we can iteratively solve using the initial condition as a zero step a
 \end{equation}
 Recall that in practice \cref{eq:dft} has to be approximated with $\tilde{u}(t_k,x_i,y_j)$ instead of using the unknown quantity $u(t_k,x_i,y_j)$, where $t_k$ is the $k$-th time step.
 
-For the majority of the simulations, we have used $N_x=N_y=64$, which corresponds to a spatial resolution of $dx=dy=2\pi/64\approx 0.098$. The time step used was $h=0.005$, although for some computations, specially those more chaotic, we have decrease it to $h=0.001$. All the code used in this report has been written in C, using the FFTW library \cite{fftw} to compute the FFT, and it can be found in this \href{https://github.com/victorballester7/2d-kuramoto-sivashinsky}{GitHub} repository. The reader may want to check that link to see some of the animations that we have produced, in order to better understand the different types of behaviour that we will describe in the next section.
+For the majority of the simulations, we have used $N_x=N_y=64$, which corresponds to a spatial resolution of $dx=dy=2\pi/64\approx 0.098$. The time step used was $h=0.005$, although for some computations, specially those more chaotic, we have decrease it to $h=0.001$. All the code used in this report has been written in C++, using the FFTW library \cite{fftw} to compute the FFT, and it can be found in this \href{https://github.com/victorballester7/2d-kuramoto-sivashinsky}{GitHub} repository. The reader may also wish to visit the provided link to view some of the animations we have produced. This can aid in better understanding the various types of behaviour described in the next section.
 
+In the next section we will present the main results of this report.
 \section{Results}
-In this section we will present the main results of this report.
 \subsection{Types of solutions}\label{sec:types_of_solutions}
 We will start by presenting the different types of solutions that we can find for the 2D KS equation and how we can detect them.
 
-The most simple type of solution are the stationary states. These can be characterized by observing a constant energy evolution in time as well as constant point on the discretized grid where the maximum of the solution is attained. This last characterization will be of interest for easily distinguishing between time-periodic waves and travelling waves.
+The most simple solutions are the stationary states. These can be characterized by observing a constant evolution in time of all the parameters used to monitor all the other solutions.
 
-There are few different types of periodic solutions. We start with the travelling waves, which are solutions of the form $u(t,x,y) = f(x-ct,y-dt)$, where $c,d\in\RR$ are the speeds of the wave in the $x$ and $y$ directions respectively. They are characterized by the periodic oscillations of the position of a point on the grid, say for convention $u(t,\pi,\pi)$, and a line pattern in the plot $\argmax_x u(t,x,y)$ vs $\argmax_y u(t,x,y)$, which will give the direction of the front of the wave. A different kind of waves are the time-periodic waves, which also exhibit a periodic variation of $u(t,\pi,\pi)$ but the plot $\argmax_x u(t,x,y)$ vs $\argmax_y u(t,x,y)$ does not show any line pattern. In this case the energy of the solution exhibits a periodic behaviour which can be confirmed with a periodic orbit in the phase space $(E(t), \dot{E}(t))$. Finally, we have periodic bursts. These are characterized by an almost constant behaviour of the energy between one or more states together with periodic abrupt and rapid changes in the energy that make the energy jump from one state to another. We want to make clear that when we find only one state in the energy, which may correspond to several physical states, we will call it a periodic homoclinic burst. Whereas if we find more than one state in the energy, and therefore more than one physical state, we will call it a periodic heteroclinic burst. In both cases, the energy will be almost constant between bursts (see \cref{sec:periodic_bursts} for visual examples).
+There are few different types of periodic solutions. We start with the travelling waves, which are solutions of the form $u(t,x,y) = f(x-ct,y-dt)$, where $c,d\in\RR$ are the speeds of the wave in the $x$ and $y$ directions respectively. They are characterized by periodic oscillations of the position of a point on the grid, say for convention $u(t,\pi,\pi)$, and a line pattern in the plot $\argmax_x u(t,x,y)$ vs $\argmax_y u(t,x,y)$, which will give the direction of the front of the wave. This last characterization will be of special interest for easily distinguishing between travelling waves and time-periodic waves. These latter ones also exhibit a periodic variation of $u(t,\pi,\pi)$ but the plot $\argmax_x u(t,x,y)$ vs $\argmax_y u(t,x,y)$ does not show any line pattern. In this case the energy of the solution exhibits a periodic behaviour which can be confirmed with a periodic orbit in the phase space $(E(t), \dot{E}(t))$. Finally, we have periodic bursts. These can be characterized by a piecewise constant or quasi-constant behaviour in the energy together with periodic abrupt and rapid changes in the energy (bursts) that make the energy jump from one state to another. We want to emphasize that when encountering only one state in the energy, which may correspond to several physical states, we will refer to it as a periodic homoclinic burst. However, if we encounter more than one state in the energy, and consequently more than one physical state, we will call it a periodic heteroclinic burst. In both cases, the energy will be quasi-constant between bursts (see \cref{sec:periodic_bursts} for visual examples).
 
-Finally, we have the chaotic or almost chaotic solutions. The one closest to the group above are the quasi-periodic solutions, which can be easily recognized by observing at the return maps $(E_n,E_{n+1})$ where $E_n$ is the energy at time $t_n$ which is the $n$-th intersection of the orbit in the phase space $(E(t), \dot{E}(t))$ with the transversal section $\dot{E}(t)=0$. In these plots we observe a dense set of points that form a continuous curve, differently from the periodic solutions where we observe only a few isolated points. We should make a note on how did we manage to find the zeros of $\dot{E}$. As suggested in \cite{Kalogirou2015}, we used a 2nd order linear interpolation polynomial using 3 consecutive points of $\dot{E}$ and then approximating the zero of $\dot{E}$ by the zero of the interpolation polynomial. Two other kinds of chaotic solutions are the chaotic homoclinic and heteroclinic burst, which resemble their analogous periodic solutions but with a disrupted anomaly periodicity just before each burst (see \cref{sec:chaotic} for examples).
+Finally, we have the chaotic or quasi-chaotic solutions. The one closest to the group above are the quasi-periodic solutions, which can be easily recognized by looking at the return maps $(E_n,E_{n+1})$, where $E_n$ is the energy at time $t_n$, the $n$-th intersection of the orbit in the phase space $(E(t), \dot{E}(t))$ with the transversal section $\dot{E}(t)=0$. That is, $t_n$ is the $n$-th zero of $\dot{E}(t)$. In these plots we observe a dense set of points that form a continuous curve, differently from the periodic solutions where we observe only a few isolated points. We should make a note on how did we manage to find the zeros of $\dot{E}$. As suggested in \cite{Kalogirou2015}, we employed a 2nd order linear interpolating polynomial using 3 consecutive points of $\dot{E}$ and then approximating the zero of $\dot{E}$ by the zero of the interpolating polynomial. Two other kinds of chaotic solutions are the chaotic homoclinic and heteroclinic burst, which resemble their analogous periodic solutions but with a disrupted anomaly periodicity just before each burst (see \cref{sec:chaotic} for examples).
 
 \subsection{General results}\label{sec:general_results}
 As done in \cite{Kalogirou2015} we will also perform a general computation to understand the behaviours for all the values of $\nu_1$ and $\nu_2$ in the interval $[0,1]$ with a discretization of $0.05$. The results are shown in \cref{fig:classification_nu1_nu2}.
@@ -139,21 +135,23 @@ As done in \cite{Kalogirou2015} we will also perform a general computation to un
   \caption{Classification of the different types of solutions for all the values of $\nu_1$ and $\nu_2$ in the interval $[0,1]$ with a discretization of $0.05$. The figure on the left is obtained with the initial condition $u_0(x,y) = \sin(x) + \sin(y) + \sin(x+y)$, and it is taken from \cite{Kalogirou2015}. The figure on the right is obtained with the initial condition \cref{eq:initial_condition}.}
   \label{fig:classification_nu1_nu2}
 \end{figure}
-First we note that both plots are symmetric with respect to the line $\nu_1=\nu_2$ due to the comment that we have done in \cref{sec:intro}. We can observe some similarities in the right part of the plots and also in the bottom left corner which correspond to small values of $\nu_1$ and $\nu_2$.
 
-As many of the bifurcations may appear at slightly different values of $\nu_1$ and $\nu_2$, many of them are hidden by the big discretization that we have used. For example, we can see that in the left diagram, there is a line of black dots when $\nu_2=0.2$ and $0.7\leq \nu_1 \leq 1$ that we do not observe on the right diagram. Because of this, we have performed a more detailed study of the behaviour of the equation in the case $\nu:=\nu_1=\nu_2$ with a discretization of $0.01$. The results are shown in \cref{fig:classification_nu}.
+First we note that both plots are symmetric with respect to the line $\nu_1=\nu_2$ due to the comment that we have done in \cref{sec:intro} regarding the symmetry of the solutions. We can observe some similarities in the right part of the plots and also in the bottom left corner which correspond to small values of $\nu_1$ and $\nu_2$. This should not be a surprise for the reader, as we saw in \cref{eq:linear_stability} that for large values of $\nu_1$ and $\nu_2$ within $[0,1]$, most of the modes decay rapidly to the trivial state $u=0$. As a result, for these large values of the parameters, the addition of the modes $(4,4)$, $(7,0)$ and $(0,7)$ does not seem to have a significant impact on the behaviour of the equation. However, as we decrease the parameters, we begin to observe significant changes, either due to the destabilization of more modes or the increased importance of nonlinear contributions. As we will observe in the frequency spectrum at the very end of this report (see \cref{fig:chaotic_modes}), we think that the latter is the main reason for the changes in the behaviour of the equation.
+
+As many of the bifurcations may appear at slightly different values of $\nu_1$ and $\nu_2$, many of them are hidden by the big discretization step that we have used. For example, we can see that in the left diagram, there is a line of black dots when $\nu_2=0.2$ and $0.7\leq \nu_1 \leq 1$ that we do not observe on the right diagram. This does not mean that it should appear in the right diagram, but just that it may be due to the discretization step. Because of this, we have performed a more detailed study of the behaviour of the equation in the case $\nu:=\nu_1=\nu_2$ with a discretization of $0.01$. The results are shown in \cref{fig:classification_nu}.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{images/nu1=nu2.pdf}
-  \caption{Classification of the different types of solutions for all the values of $\nu$ in the interval $[0,1]$ with a discretization of $0.01$.}
+  \includegraphics[width=0.95\textwidth]{images/nu1=nu2.pdf}
+  \caption{Classification of the different types of solutions for all the values of $\nu$ in the interval $[0,0.5]$ with a discretization of $0.01$.}
   \label{fig:classification_nu}
 \end{figure}
-Recall that we have omitted the range $\nu\in(0.5,1]$ because of the monotonous stationary state behaviour of the equation.
+
+Recall that we have omitted the range $\nu\in(0.5,1]$ because of the monotonous stationary state behaviour of the equation. It is wroth noting that for the smallest values of $\nu\in[0,0.1]$ we had to decrease the time step to $h=0.001$ and increase the resolution of the grid to $128\times 128$. As an illustration, for $\nu=0.01$, the length of the domain of the initial PDE of \cref{eq:2d_ks_0} would be $L_x=L_y=\frac{2\pi}{\sqrt{\nu}}\approx 62.83$. If we divide this length by 128 we get a discretization step of $dx=dy\approx 0.49$, which is still not small enough but enough to observe the behaviour of the equation.
 
 In the following sections we will delve into the properties of some solutions shown in those diagrams.
 \subsection{Travelling waves}\label{sec:travelling_waves}
-We start studying the travelling waves. Observing the right diagram in \cref{fig:classification_nu1_nu2}, we can see that there is an apparently continuous set of solutions around $\nu_2=0.3$ and $0.65\leq \nu_1\leq 1$ containing travelling waves. In the \cref{tab:travelling_waves} we represent the periods of the travelling waves in this interval of $\nu_1$ for fixed $\nu_2=0.3$. Note that the period is inversely proportional to the speed of the wave. Thus, the shorter the period, the faster the travelling wave propagates.
+We start studying travelling waves. Observing the right diagram in \cref{fig:classification_nu1_nu2}, we can see that there is an apparently continuous set of solutions around $\nu_2=0.3$ and $0.65\leq \nu_1\leq 1$ containing travelling waves. In the \cref{tab:travelling_waves} we represent the periods of the travelling waves in this interval of $\nu_1$ for fixed $\nu_2=0.3$. Note that the period is inversely proportional to the speed of the wave. Thus, the shorter the period, the faster the travelling wave propagates.
 
 \begin{table}[ht]
   \centering
@@ -166,36 +164,39 @@ We start studying the travelling waves. Observing the right diagram in \cref{fig
   \caption{Periods of the travelling waves for fixed $\nu_2=0.3$ and different values of $\nu_1$.}
   \label{tab:travelling_waves}
 \end{table}
-What the reader may observe a decrease on the period as $\nu_1$ decreases. In the \cref{fig:sections_tw} we show three equally spaced sections of the travelling wave corresponding to $\nu_1=0.85$ and $\nu_2=0.3$.
+
+The reader may observe a decrease on the period as $\nu_1$ decreases. In \cref{fig:sections_tw} we show three equally spaced sections of the travelling wave corresponding to $\nu_1=0.85$ and $\nu_2=0.3$, which as deduced from the plots, travels in the $x$ direction.
 
 \begin{figure}[ht]
   \centering
-  \begin{subfigure}[b]{0.32\textwidth}
+  \begin{subfigure}[b]{0.33\textwidth}
     \includegraphics[width=\textwidth]{images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf}
     \caption{$t=900$}
   \end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}
+  \begin{subfigure}[b]{0.33\textwidth}
     \includegraphics[width=\textwidth]{images/slice_nu1_0.85_nu2_0.3_time_917.294.pdf}
     \caption{$t=917.294$}
   \end{subfigure}\hfill
-  \begin{subfigure}[b]{0.32\textwidth}
+  \begin{subfigure}[b]{0.33\textwidth}
     \includegraphics[width=\textwidth]{images/slice_nu1_0.85_nu2_0.3_time_934.588.pdf}
     \caption{$t=934.588$}
   \end{subfigure}
   \caption{Sections of the travelling wave with $\nu_1=0.85$ and $\nu_2=0.3$ at different times.}
   \label{fig:sections_tw}
 \end{figure}
-The quasi-periodic travelling wave solution that we can observe in \cref{fig:classification_nu1_nu2} is a sign of approaching a bifurcation point between travelling waves and periodic bursts, and maybe other types of solutions. We do not have an analytical proof of this, but only numerical experiments. In \cref{fig:qp_tw} we show the evolution of a particular particle situated at $(\pi,\pi)$ for $\nu_1=0.65$ and $\nu_2=0.3$.
+
+The quasi-periodic travelling wave solution that we observe in \cref{fig:classification_nu1_nu2} at $\nu_1=0.6$ and $\nu_2=0.3$ is a sign of approaching a bifurcation point between travelling waves and periodic bursts, and maybe other types of solutions. We do not have an analytical proof of this, but only numerical experiments. In \cref{fig:qp_tw} we show the evolution of a particular particle situated at $(\pi,\pi)$ for two particular values of $\nu_1$, $0.6$ and $0.59013$, and fixed $\nu_2=0.3$.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\textwidth]{images/qp_tw.pdf}
+  \includegraphics[width=0.6\textwidth]{images/qp_tw.pdf}
   \caption{Evolution of $u(\pi,\pi)$ as a function of time for $\nu_1=0.65$ and $\nu_2=0.3$.}
   \label{fig:qp_tw}
 \end{figure}
-We let the reader extract their own conclusions when comparing this figure with ????????????? (POSAR HETEROCLINIC).
+
+We let the reader extract their own conclusions when comparing the initial evolution of the energy in this figure and \cref{fig:he_c}.
 \subsection{Time periodic waves}\label{sec:time_periodic_waves}
-We now move on to the time periodic waves. We can do a similar experiment as in \cref{sec:travelling_waves} and reproduce the periods of the time periodic waves for fixed $\nu_2=0.2$ and $0.45\leq \nu_1\leq 0.95$, as shown in \cref{fig:classification_nu1_nu2}. The results are shown in \cref{tab:time_periodic_waves}.
+We now move on to the time periodic waves. We can do a similar experiment as in \cref{sec:travelling_waves} and reproduce the periods of the periodic waves for fixed $\nu_2=0.2$ and $0.45\leq \nu_1\leq 0.95$, as shown in \cref{fig:classification_nu1_nu2}. The results are shown in \cref{tab:time_periodic_waves}.
 
 \begin{table}[ht]
   \centering
@@ -208,15 +209,16 @@ We now move on to the time periodic waves. We can do a similar experiment as in 
   \caption{Periods of the time periodic waves for fixed $\nu_2=0.2$ and different values of $\nu_1$.}
   \label{tab:time_periodic_waves}
 \end{table}
+
 Again, the periods are decreasing as $\nu_1$ decreases except in the last value of $\nu_1=0.45$, where we observe a sudden increase in the period. We may suspect that this reason has to do with the proximity of a bifurcation point between time periodic waves and bursts. As a pure curiosity, we note that these periods are much smaller than the periods of the travelling waves in \cref{tab:travelling_waves}.
 
-We now display some sections of the time periodic wave corresponding to $\nu_1=0.35$ and $\nu_2=0.3$ in \cref{fig:sections_tp}.
+We now display in \cref{fig:sections_tp} some sections of the time periodic wave corresponding to $\nu_1=0.35$ and $\nu_2=0.3$, as well as the evolution of the energy of the solution, its phase space $(E(t), \dot{E}(t))$ and the evolution of $u(t,\pi,\pi)$ as a function of time.
 
 \begin{figure}
   \centering
   \begin{subfigure}[ht]{0.32\textwidth}
     \includegraphics[width=\textwidth]{images/tp_energy.pdf}
-    \caption{Energy of the solution as a function of time.}
+    \caption{Energy of the solution.}
   \end{subfigure}\hfill
   \begin{subfigure}[ht]{0.32\textwidth}
     \includegraphics[width=\textwidth]{images/tp_energy_phase.pdf}
@@ -225,7 +227,7 @@ We now display some sections of the time periodic wave corresponding to $\nu_1=0
   \end{subfigure}\hfill
   \begin{subfigure}[ht]{0.32\textwidth}
     \includegraphics[width=\textwidth]{images/tp_u_pi_pi.pdf}
-    \caption{Evolution of $u(\pi,\pi)$ as a function of time.}
+    \caption{Evolution of $u(\pi,\pi)$.}
   \end{subfigure}\\
   \begin{subfigure}[ht]{0.24\textwidth}
     \includegraphics[width=\textwidth]{images/slice_nu1_0.35_nu2_0.3_time_490.24.pdf}
@@ -243,27 +245,30 @@ We now display some sections of the time periodic wave corresponding to $\nu_1=0
     \includegraphics[width=\textwidth]{images/slice_nu1_0.35_nu2_0.3_time_495.62.pdf}
     \caption{$t=495.62$}
   \end{subfigure}
-  \caption{Time periodic wave with $\nu_1=0.35$ and $\nu_2=0.3$. On the top we show the energy of the solution as a function of time, its phase space $(E(t), \dot{E}(t))$ and the evolution of $u(\pi,\pi)$ as a function of time. On the bottom we display the solution at each of the four different extrema points of the energy in one period.}
+  \caption{Time periodic wave with $\nu_1=0.35$ and $\nu_2=0.3$. On the top we show the energy of the solution as a function of time, its phase space $(E(t), \dot{E}(t))$ and the evolution of $u(t,\pi,\pi)$ as a function of time. On the bottom we display the solution at each of the four different extrema of the energy in one period.}
+  \label{fig:sections_tp}
 \end{figure}
-We should make a point in the phase space $(E(t), \dot{E}(t))$ of \cref{fig:tp_energy_phase}. We can observe that the orbit autointersects itself, which may seem to be a contradiction with the unicity of solution. However, we note that the differential system is not autonomous, and so autointersections are allowed.
+
+We should clarify the self-intersection in the phase space $(E(t), \dot{E}(t))$ of \cref{fig:tp_energy_phase}, which may seem to be a contradiction with the unicity of solution. Recall that the differential system $(E(t), \dot{E}(t))$ is not autonomous, and so self-intersections are allowed, because the phase space is the projection onto the plane $t=0$ of the orbits in the 3D space $(t,E(t), \dot{E}(t))$.
 \subsection{Periodic bursts}\label{sec:periodic_bursts}
-The last type of periodic solutions that remains to be studied are the periodic bursts. In \cref{fig:burst} we show the two different kind of burst that we may encounter in the 2D-KS equation: homoclinic bursts and heteroclinic bursts.
+The last type of periodic solutions that remains to be studied are the periodic bursts. In \cref{fig:burst} we show two different kinds of burst that we may encounter in the 2D-KS equation: homoclinic bursts and heteroclinic bursts.
 
 \begin{figure}[ht]
   \centering
-  \begin{subfigure}[ht]{0.45\textwidth}
+  \begin{subfigure}[ht]{0.435\textwidth}
     \includegraphics[width=\textwidth]{images/homo_burst.pdf}
     \caption{Evolution of the energy of the homoclinic bursts corresponding to parameters $\nu_1=\nu_2=0.45$.}
-  \end{subfigure}\hfill
-  \begin{subfigure}[ht]{0.45\textwidth}
+  \end{subfigure}\hspace{0.04666\textwidth}
+  \begin{subfigure}[ht]{0.435\textwidth}
     \includegraphics[width=\textwidth]{images/homo_burst_phase.pdf}
     \caption{Phase space $(E(t), \dot{E}(t))$ of the homoclinic bursts corresponding to parameters $\nu_1=\nu_2=0.45$.}
   \end{subfigure}\\
-  \begin{subfigure}[ht]{0.45\textwidth}
+  \begin{subfigure}[ht]{0.435\textwidth}
     \includegraphics[width=\textwidth]{images/hetero_burst.pdf}
     \caption{Evolution of the energy of the heteroclinic bursts corresponding to parameters $\nu_1=\nu_2=0.4$.}
-  \end{subfigure}\hfill
-  \begin{subfigure}[ht]{0.45\textwidth}
+    \label{fig:he_c}
+  \end{subfigure}\hspace{0.04666\textwidth}
+  \begin{subfigure}[ht]{0.435\textwidth}
     \includegraphics[width=\textwidth]{images/hetero_burst_phase.pdf}
     \caption{Phase space $(E(t), \dot{E}(t))$ of the heteroclinic bursts corresponding to parameters $\nu_1=\nu_2=0.4$.}
   \end{subfigure}
@@ -271,6 +276,65 @@ The last type of periodic solutions that remains to be studied are the periodic 
   \label{fig:burst}
 \end{figure}
 
+The reader may observe the particular rapid growth of the energy during a burst. Furthermore, we note that in the phase space $(E(t), \dot{E}(t))$ the majority of time is employed when $\dot{E}$ is near zero, as can be deduced from the energy evolution diagram. See \cref{fig:burst_relative} for a quantitative comparison of the relative change of the solution in the vicinity of a burst.
+
+As we noted in the introductory section, even though the energy of a homoclinic burst remains constant or quasi-constant between bursts, or in the heteroclinic case, jumps between two or more states, the physical solution may change drastically. In \cref{fig:slices_burst} we show some sections of the solution corresponding to the heteroclinic burst in \cref{fig:he_c}.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[ht]{0.248\textwidth}
+    \includegraphics[width=\textwidth]{images/slice_nu1_0.4_nu2_0.4_time_810.0.pdf}
+    \caption{$t= 810$}
+    \label{fig:he_a}
+  \end{subfigure}\hspace{0.168\textwidth}
+  \begin{subfigure}[ht]{0.248\textwidth}
+    \includegraphics[width=\textwidth]{images/slice_nu1_0.4_nu2_0.4_time_910.0.pdf}
+    \caption{$t= 910$}
+    \label{fig:he_b}
+  \end{subfigure}\\\hfill
+  \begin{subfigure}[ht]{0.248\textwidth}
+    \includegraphics[width=\textwidth]{images/slice_nu1_0.4_nu2_0.4_time_570.0.pdf}
+    \caption{$t= 570$}
+  \end{subfigure}\hfill
+  \begin{subfigure}[ht]{0.248\textwidth}
+    \includegraphics[width=\textwidth]{images/slice_nu1_0.4_nu2_0.4_time_860.0.pdf}
+    \caption{$t= 860$}
+  \end{subfigure}\hfill
+  \begin{subfigure}[ht]{0.248\textwidth}
+    \includegraphics[width=\textwidth]{images/slice_nu1_0.4_nu2_0.4_time_960.0.pdf}
+    \caption{$t= 960$}
+  \end{subfigure}\hfill
+  \begin{subfigure}[ht]{0.248\textwidth}
+    \includegraphics[width=\textwidth]{images/slice_nu1_0.4_nu2_0.4_time_1080.0.pdf}
+    \caption{$t= 1080$}
+  \end{subfigure}\hfill
+  \caption{Different states of the solution with parameters $\nu_1=\nu_2=0.4$ containing heteroclinic bursts. On the top, there are the two \emph{transition} states between the two bursts, and as the numerical experiments suggest, they continually alternate one after the other. Both states have the same energy. On the bottom, there are a few of the different physical states that we can find in the solution. All of them of the same energy.}
+  \label{fig:slices_burst}
+\end{figure}
+
+It is intriguing that, despite extensive numerical computations, no pattern has emerged regarding the most long-lasting energy state. We conducted computations until $T=2000$, and the only regular pattern easily observable was the alternation between the two states depicted in \cref{fig:he_a,fig:he_b} for the short-lasting and slightly higher energy states. However, we should note that this is not a proof that there is no pattern in the physical states, but only that we have not been able to find it.
+
+Before proceeding to the final section of the study, we have concerned about how rapidly these burst solutions appear. In \cref{fig:burst_relative} we show the maximum relative change of the solution in the vicinity of a burst, that is, we show
+\begin{equation}
+  \max_{x,y\in [0,2\pi]} \frac{\abs{u(t,x,y)-u(t-h,x,y)}}{\abs{u(t,x,y)}}
+\end{equation}
+as a function of time for both homoclinic and heteroclinic bursts. Here, $h$ denotes the time step used in the computation. As regions that vanish or almost vanish in a region of the square $[0,2\pi]\times[0,2\pi]$ may produce inconsistencies on the computations, we have set a threshold of $10^{-5}$ to filter out all unwanted values. Choosing a threshold is not an arbitrary task, as we have to balance between filtering out the undesired values and not eliminating the desired ones. From a few numerical tries we found that $10^{-5}$ was a suitable value for the threshold.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[ht]{0.42\textwidth}
+    \includegraphics[width=\textwidth]{images/burst_nu1=0.45_nu2=0.45.pdf}
+    \caption{Homoclinic burst corresponding to parameters $\nu_1=\nu_2=0.45$.}
+  \end{subfigure}\hspace{0.053333\textwidth}
+  \begin{subfigure}[ht]{0.42\textwidth}
+    \includegraphics[width=\textwidth]{images/burst_nu1=0.40_nu2=0.40.pdf}
+    \caption{Heteroclinic burst corresponding to parameters $\nu_1=\nu_2=0.4$.}
+  \end{subfigure}
+  \caption{Plots showing the relative change $\max_{x,y\in [0,2\pi]} \frac{\abs{u(t,x,y)-u(t-h,x,y)}}{\abs{u(t,x,y)}}$ of the physical solution in the vicinity of a burst as a function of time for both homoclinic and heteroclinic bursts.}
+  \label{fig:burst_relative}
+\end{figure}
+
+From figures, we can clearly localize the peak of the bursts.  For the sake of simplicity, all the integration was done with a fixed mesh size of $N_x=N_y=64$, but as the spatial gradients are much more intense in the middle of the bursts than in the rest of the solution, we may suspect that a finer mesh size would be more appropriate for the computation of the bursts. However, we have not conducted any numerical experiment to confirm this hypothesis. It would be an interesting test to conduct for an extension of this work.
 \subsection{Quasi-periodicity and chaotic behaviour}\label{sec:chaotic}
 Last but not least, we will now expose some of the chaotic behaviours that we have found. It is worth noting that in order to compute with the same accuracy as before the chaotic solutions that appear for small $\nu_1$ and $\nu_2$, we had to decrease the time step to $h=0.001$ and increase the spatial resolution to $N_x=N_y=128$.
 
@@ -281,7 +345,7 @@ We start with the quasi-periodic solutions. In \cref{fig:qp} we show the phase s
   \begin{subfigure}[ht]{0.45\textwidth}
     \includegraphics[width=\textwidth]{images/qp_phase.pdf}
     \caption{Phase space $(E(t), \dot{E}(t))$}
-  \end{subfigure}\hfill
+  \end{subfigure}\hspace{0.033333\textwidth}
   \begin{subfigure}[ht]{0.45\textwidth}
     \includegraphics[width=\textwidth]{images/qp_return.pdf}
     \caption{Return map $(E_n,E_{n+1})$}
@@ -289,16 +353,15 @@ We start with the quasi-periodic solutions. In \cref{fig:qp} we show the phase s
   \caption{Quasi-periodic solution corresponding to parameters $\nu_1=0.25$ and $\nu_2=0.2$.}
   \label{fig:qp}
 \end{figure}
-From the images we can clearly observe the \emph{quasi} periodicity of the solution as the orbit in the phase space $(E(t), \dot{E}(t))$ does not exactly close into itself once it has completed a \emph{period}. From the experiments we can also conclude that quasi-periodic solutions come, among other cases, before bursts and after travelling waves. Thus, some of them still exhibit the property of having constant or almost constant energy.
 
-The following images show chaotic burst. We will not dive into the details of properties of these solutions, as they are relatively similar to the ones studied in \cref{sec:periodic_bursts}, but with more complex behaviour at the beginning of each burst whose accuracy is numerically difficult to control.
+From the images we can clearly observe the \emph{quasi} periodicity of the solution as the orbit in the phase space $(E(t), \dot{E}(t))$ does not exactly close into itself once it has completed a \emph{period}. We can confirm the behaviour of the return maps that was described in the introduction, as a dense set of points that form a continuous curve. Moreover, from the experiments we can also conclude that quasi-periodic solutions come, among other cases, between bursts and travelling waves. Thus, some of them still exhibit the property of having constant or quasi-constant energy.
 
 \begin{figure}[ht]
   \centering
   \begin{subfigure}[ht]{0.45\textwidth}
     \includegraphics[width=\textwidth]{images/homo_chaotic.pdf}
     \caption{Energy evolution of the chaotic homoclinic bursts corresponding to the solution with parameters $\nu_1=0.75$ and $\nu_2=0.1$.}
-  \end{subfigure}\hfill
+  \end{subfigure}\hspace{0.033333\textwidth}
   \begin{subfigure}[ht]{0.45\textwidth}
     \includegraphics[width=\textwidth]{images/hetero_chaotic.pdf}
     \caption{Energy evolution of the chaotic heteroclinic bursts corresponding to the solution with parameters $\nu_1=0.75$ and $\nu_2=0.15$.}
@@ -306,34 +369,43 @@ The following images show chaotic burst. We will not dive into the details of pr
   \caption{Chaotic bursts}
   \label{fig:chaotic_burst}
 \end{figure}
-We can easily observe the roughness of the peaks of the burst in \cref{fig:sec:chaotic_burst}.
 
-We finish this section and this report with displaying some completely chaotic solutions.
+\cref{fig:chaotic_burst} shows chaotic bursts. We will not dive into the details of properties of these solutions, as they are relatively similar to the ones studied in \cref{sec:periodic_bursts}, but with more complex behaviour at the beginning of each burst whose accuracy is numerically difficult to control. We can easily observe the roughness of the peaks of the burst in \cref{fig:chaotic_burst}, which is a sign that more accuracy should have been used in a neighbourhood of each burst, as discussed above.
+
+We will finish this section and this report displaying some completely chaotic solutions.
+
 \begin{figure}[ht]
   \centering
   \begin{subfigure}[ht]{0.45\textwidth}
     \includegraphics[width=\textwidth]{images/slice_nu1_0.008_nu2_0.008_time_5.0.pdf}
     \caption{Physical solution at $T=5$}
     \label{fig:chaotic_phys}
-  \end{subfigure}\hfill
+  \end{subfigure}\hspace{0.033333\textwidth}
   \begin{subfigure}[ht]{0.45\textwidth}
     \includegraphics[width=\textwidth]{images/c_return.pdf}
-    \caption{Return map $(E_n,E_{n+1})$ of the chaotic solution when intregating the equation in the range $t\in[0,20]$.}
+    \caption{Return map $(E_n,E_{n+1})$ of the chaotic solution when integrating the equation in the range $t\in[0,20]$.}
+    \label{fig:chaotic_b}
   \end{subfigure}
   \caption{Chaotic solution corresponding to parameters $\nu_1=\nu_2=0.008$}
   \label{fig:chaotic}
 \end{figure}
-Although from the \cref{fig:chaotic_phys} one may think that there are many large unstable Fourier modes in the solution, the reality is that all the frequencies $(k_x,k_y)$ are less than 12, that is, $k_x,k_y\in\{0,\dots,11\}$. This can be deduced from \cref{eq:linear_stability}, but it only gives the stability in the linear regime. To properly understand the contribution of the different modes, we have computed the amplitude ${k_x}^2+{k_y}^2$ of the Fourier modes and we have represented them in \cref{fig:chaotic_modes}.
+
+Although from the \cref{fig:chaotic_phys} one may think that there are many large unstable Fourier modes in the solution, the reality is that all the frequencies $(k_x,k_y)$ are less than 12, that is, $k_x,k_y\in\{0,\dots,11\}$. This can be deduced from \cref{eq:linear_stability}, but \cref{eq:linear_stability} only gives an estimation of the stability modes in the linear regime. To properly understand the contribution of the different modes, we have computed the amplitude ${k_x}^2+{k_y}^2$ of the Fourier modes, and we have represented them in \cref{fig:chaotic_modes}.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.5\textwidth]{images/slice_freq_nu1_0.008_nu2_0.008_time_5.0.pdf}
-  \caption{Normalized amplitude of the Fourier modes at $T=5$ of the chaotic solution corresponding to parameters $\nu_1=\nu_2=0.008$.}
+  \caption{Normalized amplitude of the Fourier modes at $T=5$ for the chaotic solution corresponding to parameters $\nu_1=\nu_2=0.008$.}
   \label{fig:chaotic_modes}
 \end{figure}
-Therefore, we confirm that modes does not go beyond 12 at time $T=5$.
-\section{Conclusions}
 
+Therefore, we confirm that modes does not go beyond 12 at time $T=5$. We also want to mention the random look of the return map $(E_n,E_{n+1})$ in \cref{fig:chaotic_b}.
+\section{Conclusions}
+In this report we conducted a numerical study of the 2D Kuramoto-Sivashinsky equation, inspired in the works \cite{Kalogirou2015,phdthesis_anna}. We have reproduced some results of \cite{Kalogirou2015} (see \cref{fig:classification_nu1_nu2}), and we have extended them for another initial condition. As we saw at the very end, linear stability gives a good approximation of the behaviour of the solution, at least when the nonlinear contribution $\frac{1}{2}\abs{\grad_\nu u}^2$ is small enough. This explains why the two diagrams in \cref{fig:classification_nu1_nu2} are so similar in the top right corner. But as soon as we decrease the value of the parameters, we observe different behaviours for the same parameters $\nu_1$ and $\nu_2$. Note that, from the definitions of these parameters in \cref{eq:2d_ks}, we can see that decreasing $\nu_1$ and $\nu_2$ is equivalent to increasing the domain of definition of the actual PDE, and thus, keeping the same mesh size is not appropriate for the computation, because doing this it increases the spatial steps and decreases the accuracy of the computation. This has been the only concern about having to increase the mesh size. Contrary to what we initially thought, the Fourier modes are relatively small in frequency and thus, the computation could have been done with a smaller mesh size, if that was the only problem. But as we just said, for small values of the parameters, we avoided from doing so to prevent loss of accuracy. Instead, we had to increase the mesh size for small values of the parameters.
+
+Regarding the periodic solutions, we observed that generally the period of the time periodic waves is smaller than the period of the travelling waves. Moreover, at the neighbourhood of a bifurcation between travelling waves and periodic burst, we have found quasi-periodic solutions emerging from the travelling waves and whose starting point of oscillation seemed to increase as we approached the bifurcation point.
+
+Finally, we have not studied in depth the chaotic homoclinic and heteroclinic bursts, but a similar behaviour as the non-chaotic versions regarding the abrupt relative change of the physical solution is expected.
 \phantomsection
 \addcontentsline{toc}{section}{References}
 \printbibliography

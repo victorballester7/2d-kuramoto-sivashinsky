@@ -26,6 +26,7 @@ using namespace std;
 #define WRITE_SOL() ((write_solution) && (numSteps % freq_anim_sol == 0))
 #define WRITE_FREQ() ((write_freq) && (numSteps % freq_anim_freq == 0))
 #define WRITE_E() ((write_energy) && (numSteps % freq_plot_e == 0))
+#define WRITE_GROWTH() ((growth_rate_u) && (t >= time_growth_0) && (t <= time_growth_1))
 
 #define IMEXEULER 1
 #define IMEXBDF2 2
@@ -293,6 +294,7 @@ int main(int argc, char *argv[]) {
   const string filename_solution = "data/solution.txt";              // name of the output file to write the solution
   const string filename_solution_slice = "data/solution_slice.txt";  // name of the output file to write the slice of the solution
   const string filename_freq_slice = "data/freq_slice.txt";          // name of the output file to write the slice of the frequency of the solution
+  const string filename_growth_rate_u = "data/growth_rate_u.txt";    // name of the output file to write the growth rate of the solution
   const string filename_energy = "data/energy.txt";                  // name of the output file to write the energy
   const string filename_energy_return = "data/energy_return.txt";    // name of the output file to write the return map of the energy
   const string filename_input = "data/input.txt";                    // name of the input file
@@ -309,6 +311,7 @@ int main(int argc, char *argv[]) {
   double cutoff_time;                                                                                                                               // time at which it starts the stationary regime
   double time_slice_sol;                                                                                                                            // time at which we want to write the slice of the solution
   double time_slice_freq;                                                                                                                           // time at which we want to write the slice of the frequency of the solution
+  double time_growth_0, time_growth_1;                                                                                                              // time between which we want to compute the growth rate of the solution
   // DO NOT DECREASE THE NU'S BELOW 0.2 BECAUSE THE SOLUTION WILL START TO EXPLODE
   bool averaged_solution;      // 1 if we want to average the solution, 0 otherwise
   bool write_solution;         // whether to write the solution to a file or not
@@ -318,6 +321,7 @@ int main(int argc, char *argv[]) {
   bool write_freq;             // whether to write the frequency of the energy to a file or not
   bool estimate_period;        // whether to estimate the period of the solution or not
   bool estimate_period_burst;  // whether to estimate the period of the solution or not in the burst regime
+  bool growth_rate_u;          // whether to compute the growth rate of the solution or not
   uint freq_anim_sol;          // frequency of the plot of the solution
   uint freq_plot_e;            // frequency of the plot of the energy
   uint freq_anim_freq;         // frequency of the plot of the frequency of the energy
@@ -343,11 +347,14 @@ int main(int argc, char *argv[]) {
     file_input >> tmp >> write_slice_sol;
     file_input >> tmp >> write_slice_freq;
     file_input >> tmp >> write_energy;
-    file_input >> tmp >> time_slice_sol;
-    file_input >> tmp >> time_slice_freq;
-    file_input >> tmp >> averaged_solution;
     file_input >> tmp >> estimate_period;
     file_input >> tmp >> estimate_period_burst;
+    file_input >> tmp >> growth_rate_u;
+    file_input >> tmp >> averaged_solution;
+    file_input >> tmp >> time_slice_sol;
+    file_input >> tmp >> time_slice_freq;
+    file_input >> tmp >> time_growth_0;
+    file_input >> tmp >> time_growth_1;
     file_input >> tmp >> freq_anim_sol;
     file_input >> tmp >> freq_anim_freq;
     file_input >> tmp >> freq_plot_e;
@@ -399,6 +406,8 @@ int main(int argc, char *argv[]) {
   cout << "Write slice of freq to file?    " << space << (write_slice_freq ? "yes" : "no") << endl;
   cout << "Write energy to file?           " << space << (write_energy ? "yes" : "no") << endl;
   cout << "Estimate period?                " << space << (estimate_period ? "yes" : "no") << endl;
+  cout << "Estimate period in burst regime?" << space << (estimate_period_burst ? "yes" : "no") << endl;
+  cout << "Compute growth rate of u?       " << space << (growth_rate_u ? "yes" : "no") << endl;
   cout << "Method:                         " << space << method_name << endl;
   END_TIMER();
   ADD_TIME_TO(total_write);
@@ -503,7 +512,7 @@ int main(int argc, char *argv[]) {
 
   // file handling
   START_TIMER();
-  ofstream file_sol, file_sol_slice, file_E, file_En, file_freq, file_freq_slice;  // output files
+  ofstream file_sol, file_sol_slice, file_E, file_En, file_freq, file_freq_slice, file_growth_rate_u;  // output files
   // if (averaged_solution && (WRITE_SOL() || WRITE_E())) {  // Fu[0], the fourier coefficient with k_1 = k_2 = 0, is the mean of the solution
   //   for (uint i = 0; i < dim; i++) u[i] -= Fu[0][0];
   // }
@@ -516,6 +525,9 @@ int main(int argc, char *argv[]) {
   }
   if (write_slice_freq) {
     file_freq_slice.open(filename_freq_slice);
+  }
+  if (growth_rate_u) {
+    file_growth_rate_u.open(filename_growth_rate_u);
   }
   if (WRITE_E()) {  // write the energy into the file
     file_E.open(filename_energy);
@@ -563,7 +575,8 @@ int main(int argc, char *argv[]) {
   //   }
   //   numSteps = 1;
   //   anterior = aux;
-  double max;
+  double growth = 0;
+  double threshold_growth = 1.e-5;
   do {
     memcpy(v, u, dim * sizeof(double));
     START_TIMER();
@@ -626,12 +639,14 @@ int main(int argc, char *argv[]) {
     // for (uint i = 0; i < dim; i++) {
     //   aux_x[i] = aux_x[i] * aux_x[i] + aux_y[i] * aux_y[i];
     // }
-    max = 0;
-    for (uint i = 0; i < dim; i++) {
-      aux_x[i] = abs((u[i] - v[i]) / u[i]);
-      if (aux_x[i] > max) max = aux_x[i];
+    if (WRITE_GROWTH()) {
+      growth = 0;
+      for (uint i = 0; i < dim; i++) {
+        if (u[i] < threshold_growth && u[i] > -threshold_growth) continue;
+        aux_x[i] = abs((u[i] - v[i]) / u[i]);
+        if (aux_x[i] > growth) growth = aux_x[i];
+      }
     }
-
     ADD_TIME_TO(total_other_computations);
 
     START_TIMER();
@@ -648,7 +663,9 @@ int main(int argc, char *argv[]) {
     }
     // we plot the energy En at each time independently of freq_plot_e
     if (write_energy && En_changed) file_En << tn << " " << En << endl;  // write the energy into the file
-
+    if (WRITE_GROWTH()) {
+      file_growth_rate_u << t << " " << growth << endl;
+    }
     if (WRITE_E()) {  // write the energy into the file
       // plot more digits of the energy at each time
       SET_MAX();
@@ -709,6 +726,11 @@ int main(int argc, char *argv[]) {
   if (write_slice_freq) {
     file_tmp.open("data/tmp_write_slice_freq.txt");
     file_tmp << nu1 << " " << nu2 << " " << time_slice_freq << endl;
+    file_tmp.close();
+  }
+  if (growth_rate_u) {
+    file_tmp.open("data/tmp_growth_rate_u.txt");
+    file_tmp << nu1 << " " << nu2 << " " << endl;
     file_tmp.close();
   }
   if (write_solution || write_freq) {

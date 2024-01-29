@@ -41,6 +41,8 @@ def plot_solution(filename: str, nu1: float, nu2: float,
     Z = read_data_solution(filename)
     Z_MIN = np.min(Z)
     Z_MAX = np.max(Z)
+    # Z_MAX = 7
+    # Z_MIN = -7
     color = cm['inferno']
     X_LABEL = 'x'
     Y_LABEL = 'y'
@@ -59,7 +61,7 @@ def plot_solution(filename: str, nu1: float, nu2: float,
     # change color lines to light gray
     plot_args = {'rstride': 1, 'cstride': 1, 'cmap': color, 'linewidth': 0.01,
                  'antialiased': True, 'shade': True, 'vmin': Z_MIN, 'vmax': Z_MAX}
-    num_levels = 20
+    num_levels = 14
     offset_rate = 2
     levels = np.linspace(Z_MIN, Z_MAX, num_levels)
     plot_args_extra = {'zdir': 'z', 'offset': offset_rate *

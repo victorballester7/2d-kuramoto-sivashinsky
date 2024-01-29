@@ -199,3 +199,17 @@ else
   fi
   echo -e "${GREEN}Estimating period for burst done!${RESET}"
 fi
+
+if [ ! -f "data/tmp_growth_rate_u.txt" ]; then
+  echo -e "${BLUE}Estimating growth rate skipped.${RESET}"
+else
+  args=$(cat data/tmp_growth_rate_u.txt)
+  rm data/tmp_growth_rate_u.txt # remove the tmp file
+  echo -e "${YELLOW}Estimating growth rate...${RESET}"
+  python src/plot_growth.py $args
+  if [ $? -ne 0 ]; then
+    echo -e "${RED}Estimating growth rate failed!${RESET}"
+    exit 1
+  fi
+  echo -e "${GREEN}Estimating growth rate done!${RESET}"
+fi

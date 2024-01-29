@@ -101,6 +101,55 @@
       \verb 10.1093/imanum/drv011
       \endverb
     \endentry
+    \entry{fft}{article}{}
+      \name{author}{2}{}{%
+        {{hash=9a5cfe59165ea73852bf47c17612fc90}{%
+           family={Cooley},
+           familyi={C\bibinitperiod},
+           given={James\bibnamedelima W.},
+           giveni={J\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=9edab5dbc1987bcb98d6de058f00fc47}{%
+           family={Tukey},
+           familyi={T\bibinitperiod},
+           given={John\bibnamedelima W.},
+           giveni={J\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {American Mathematical Society}%
+      }
+      \strng{namehash}{ee74374d9504fa6fb4aa57320b0e47fc}
+      \strng{fullhash}{ee74374d9504fa6fb4aa57320b0e47fc}
+      \strng{bibnamehash}{ee74374d9504fa6fb4aa57320b0e47fc}
+      \strng{authorbibnamehash}{ee74374d9504fa6fb4aa57320b0e47fc}
+      \strng{authornamehash}{ee74374d9504fa6fb4aa57320b0e47fc}
+      \strng{authorfullhash}{ee74374d9504fa6fb4aa57320b0e47fc}
+      \field{labelalpha}{CT65}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{00255718, 10886842}
+      \field{journaltitle}{Mathematics of Computation}
+      \field{number}{90}
+      \field{title}{An Algorithm for the Machine Calculation of Complex Fourier Series}
+      \field{urlday}{29}
+      \field{urlmonth}{1}
+      \field{urlyear}{2024}
+      \field{volume}{19}
+      \field{year}{1965}
+      \field{urldateera}{ce}
+      \field{pages}{297\bibrangedash 301}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1090/s0025-5718-1965-0178586-1
+      \endverb
+      \verb{urlraw}
+      \verb https://www.ams.org/journals/mcom/1965-19-090/S0025-5718-1965-0178586-1/S0025-5718-1965-0178586-1.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.ams.org/journals/mcom/1965-19-090/S0025-5718-1965-0178586-1/S0025-5718-1965-0178586-1.pdf
+      \endverb
+    \endentry
     \entry{1d-ks}{article}{}
       \name{author}{3}{}{%
         {{hash=59184e4eb912f3bf1cdecde08b6f14f9}{%
@@ -133,14 +182,21 @@
       \field{journaltitle}{SIAM Journal on Applied Dynamical Systems}
       \field{number}{1}
       \field{title}{On the State Space Geometry of the Kuramoto-Sivashinsky Flow in a Periodic Domain}
+      \field{urlday}{29}
+      \field{urlmonth}{1}
+      \field{urlyear}{2024}
       \field{volume}{9}
       \field{year}{2010}
+      \field{urldateera}{ce}
       \field{pages}{1\bibrangedash 33}
       \range{pages}{33}
       \verb{doi}
       \verb 10.1137/070705623
       \endverb
-      \verb{eprint}
+      \verb{urlraw}
+      \verb https://arxiv.org/pdf/0709.2944.pdf
+      \endverb
+      \verb{url}
       \verb https://arxiv.org/pdf/0709.2944.pdf
       \endverb
     \endentry
@@ -168,8 +224,11 @@
       \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{note}{Accessed: 27/01/2024}
       \field{title}{{FFTW}: {F}astest {F}ourier {T}ransform in the {W}est}
+      \field{urlday}{29}
+      \field{urlmonth}{1}
+      \field{urlyear}{2024}
+      \field{urldateera}{ce}
       \verb{urlraw}
       \verb http://www.fftw.org/
       \endverb
@@ -235,13 +294,17 @@
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{month}{10}
+      \field{note}{Accessed: 27/01/2024}
       \field{title}{Nonlinear dynamics of surfactant-laden multilayer shear flows and related systems}
       \field{type}{phdthesis}
       \field{year}{2014}
       \verb{doi}
       \verb 10.25560/25067
       \endverb
-      \verb{eprint}
+      \verb{urlraw}
+      \verb https://spiral.imperial.ac.uk/bitstream/10044/1/25067/1/Kalogirou-A-2013-PhD-Thesis.pdf
+      \endverb
+      \verb{url}
       \verb https://spiral.imperial.ac.uk/bitstream/10044/1/25067/1/Kalogirou-A-2013-PhD-Thesis.pdf
       \endverb
     \endentry
@@ -267,6 +330,7 @@
       \field{issn}{0375-9687}
       \field{journaltitle}{Progress of Theoretical Physics Supplement}
       \field{month}{02}
+      \field{note}{Accessed: 27/01/2024}
       \field{title}{Diffusion-induced chaos in reaction systems}
       \field{volume}{64}
       \field{year}{1978}
@@ -275,7 +339,10 @@
       \verb{doi}
       \verb 10.1143/PTPS.64.346
       \endverb
-      \verb{eprint}
+      \verb{urlraw}
+      \verb https://academic.oup.com/ptps/article-pdf/doi/10.1143/PTPS.64.346/5293041/64-346.pdf
+      \endverb
+      \verb{url}
       \verb https://academic.oup.com/ptps/article-pdf/doi/10.1143/PTPS.64.346/5293041/64-346.pdf
       \endverb
     \endentry
