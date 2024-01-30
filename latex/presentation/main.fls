@@ -2439,11 +2439,6 @@ INPUT ../images/nu1-nu2_presentation.pdf
 INPUT ../images/nu1-nu2_presentation.pdf
 INPUT ../images/nu1-nu2_presentation.pdf
 INPUT ../images/nu1-nu2_presentation.pdf
-INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
-INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
-INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
-INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
-INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
 INPUT /usr/share/texmf-dist/fonts/tfm/public/lm/rm-lmss9.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/lm/rm-lmssbx10.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/lm/rm-lmss8.tfm
@@ -2463,6 +2458,11 @@ INPUT /usr/share/texmf-dist/fonts/tfm/public/stmaryrd/stmary9.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/stmaryrd/stmary5.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/lm/rm-lmsso9.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/lm/rm-lmsso8.tfm
+INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
+INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
+INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
+INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
+INPUT ../images/slice_nu1_0.85_nu2_0.3_time_900.0.pdf
 INPUT ../images/tw_energy.pdf
 INPUT ../images/tw_energy.pdf
 INPUT ../images/tw_energy.pdf

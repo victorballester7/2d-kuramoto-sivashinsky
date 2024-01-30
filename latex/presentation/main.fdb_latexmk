@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber main"] 0 "main.bcf" "main.bbl" "main" 1706607872 -1
+["biber main"] 1706619060 "main.bcf" "main.bbl" "main" 1706619114 0
   "../references.bib" 1706542750 3488 624f03af0a8f9079bb2d13e53fc59bb0 ""
   "./references.bib" 1706542960 3488 624f03af0a8f9079bb2d13e53fc59bb0 ""
-  "main.bcf" 1706607872 107939 4fa8973c3d973c4bf3c17f564e156ffd "pdflatex"
+  "main.bcf" 1706619114 108007 7ba2281472b661ff0d7b1929d079beae "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1706607871 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/presentation/main.tex" "main.pdf" "main" 1706607872 0
+["pdflatex"] 1706619112 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/presentation/main.tex" "main.pdf" "main" 1706619114 0
   "../bibliography.sty" 1706441719 1079 9f5db41de94a1ec8f8eeff4fa2ba8442 ""
   "../images/arrow.pdf" 1706542312 1679 11a32404c92840d98029ec2a0db665cc ""
   "../images/burst_nu1=0.40_nu2=0.40.pdf" 1706519368 131669 566fa76c370c11f43c33b8aab0661479 ""
@@ -24,7 +24,7 @@
   "../images/tp_energy.pdf" 1706464251 72094 4e26387f2665f602731bbf1950379a0e ""
   "../images/tp_energy_phase.pdf" 1706464632 105141 0e79f6203c6e8762abc9a738d6cd56f8 ""
   "../images/tw_energy.pdf" 1706556101 68335 f0bd9c7d986c49fd0cd5bdceb0a275ad ""
-  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/presentation/main.tex" 1706607870 8730 0dbb19dbc618ee852f3cf226c1aadd36 ""
+  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/presentation/main.tex" 1706619112 8921 ed9197e840515c1c1c4e2fecef0b42de ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1704400182 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1704400182 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1704400182 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -448,12 +448,12 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1706286031 4483110 adb1e1d04498b9576f1f17c4219c5e03 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1706285990 6768052 a340e7d87d22cd9776ce5836fcb8ad77 ""
   "embed_video.tex" 1706550593 2058 cb83f728551253ecfb487b7b385355c3 ""
-  "main.aux" 1706607872 2726 10af79bb0e381d610b639c78ecf98380 "pdflatex"
-  "main.bbl" 1706543023 4073 2133f93ded776b57820305647df4d03a "biber main"
-  "main.nav" 1706607872 1108 c41729a9fe5f113cf01f0ff96714837e "pdflatex"
-  "main.out" 1706607872 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "main.run.xml" 1706607872 2413 47f22e562ceb93f4d846635323c7d07a "pdflatex"
-  "main.tex" 1706607870 8730 0dbb19dbc618ee852f3cf226c1aadd36 ""
+  "main.aux" 1706619114 2793 e27ee5d2fa5dbd91d6cf19d4b25a3680 "pdflatex"
+  "main.bbl" 1706619060 4073 2133f93ded776b57820305647df4d03a "biber main"
+  "main.nav" 1706619114 1108 c41729a9fe5f113cf01f0ff96714837e "pdflatex"
+  "main.out" 1706619113 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "main.run.xml" 1706619114 2413 47f22e562ceb93f4d846635323c7d07a "pdflatex"
+  "main.tex" 1706619112 8921 ed9197e840515c1c1c4e2fecef0b42de ""
   "preamble.sty" 1706547953 15481 f11a214606dd7c86941ceb338956e858 ""
   (generated)
   "main.aux"
