@@ -56,7 +56,7 @@ Université Paris-Dauphine, PSL}
   $$
 \end{frame}
 \begin{frame}{Numerical methods}
-  We have used a pseudo-spectral method
+  We have used a pseudo-spectral method.
   \begin{itemize}
     \item Fourier transform in space.
     \item Implicit-Explicit BDF2 in time \cite{Akriviskuramoto}.
@@ -113,7 +113,7 @@ Université Paris-Dauphine, PSL}
   \begin{minipage}{0.48\textwidth}
     \begin{itemize}
       \item Periodic in both space and time.
-      \item Energy constant.
+      \item Constant energy.
     \end{itemize}
 
     \vspace{1.5cm}
@@ -170,7 +170,7 @@ Université Paris-Dauphine, PSL}
     \end{figure}
     \begin{figure}[ht]
       \centering
-      \includegraphics[width=0.9\textwidth]{../images/burst_nu1=0.40_nu2=0.40.pdf}
+      \includegraphics[width=0.9\textwidth]{../images/burst_nu1=0.45_nu2=0.45.pdf}
       \caption{\scalebox{\scalecaption}{Relative error $\displaystyle\max_{x,y\in [0,2\pi]} \frac{\abs{u(t,x,y)-u(t-h,x,y)}}{\abs{u(t,x,y)}}$}}
     \end{figure}
   \end{minipage}
@@ -235,9 +235,13 @@ Université Paris-Dauphine, PSL}
 \end{frame}
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item Periods of time-periodic waves are generally much smaller than periods of travelling waves and these are much smaller than periods of periodic bursts.
+    \item Periods of time-periodic waves are generally much smaller than periods of travelling waves, which, in turn, are smaller than periods of periodic bursts.
     \item A finer mesh grid is needed in a vicinity of bursts, specially for chaotic homoclinic and heteroclinic bursts.
     \item Quasi-periodic seem to be a transition between travelling waves or time-periodic waves and periodic bursts.
+    \item For our purposes, the number of Fourier modes is relatively limited, but we cannot decrease the mesh size for small values of $\nu_1$ and $\nu_2$.
+          \begin{equation*}
+            \nu_1={\left(\frac{2\pi}{L_x}\right)}^2\qquad\nu_2={\left(\frac{2\pi}{L_y}\right)}^2
+          \end{equation*}
   \end{itemize}
 \end{frame}
 \begin{frame}[noframenumbering]{References}

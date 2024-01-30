@@ -1,19 +1,20 @@
 # Fdb version 4
-["biber main"] 0 "main.bcf" "main.bbl" "main" 1706556699 -1
+["biber main"] 0 "main.bcf" "main.bbl" "main" 1706607872 -1
   "../references.bib" 1706542750 3488 624f03af0a8f9079bb2d13e53fc59bb0 ""
   "./references.bib" 1706542960 3488 624f03af0a8f9079bb2d13e53fc59bb0 ""
-  "main.bcf" 1706556699 107939 4fa8973c3d973c4bf3c17f564e156ffd "pdflatex"
+  "main.bcf" 1706607872 107939 4fa8973c3d973c4bf3c17f564e156ffd "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1706556697 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/presentation/main.tex" "main.pdf" "main" 1706556699 0
+["pdflatex"] 1706607871 "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/presentation/main.tex" "main.pdf" "main" 1706607872 0
   "../bibliography.sty" 1706441719 1079 9f5db41de94a1ec8f8eeff4fa2ba8442 ""
   "../images/arrow.pdf" 1706542312 1679 11a32404c92840d98029ec2a0db665cc ""
   "../images/burst_nu1=0.40_nu2=0.40.pdf" 1706519368 131669 566fa76c370c11f43c33b8aab0661479 ""
+  "../images/burst_nu1=0.45_nu2=0.45.pdf" 1706519401 124746 f62a0424258fdadc12b83f93a0960191 ""
   "../images/hetero_burst.pdf" 1706470846 72526 f50784d9999a0b74bf593cda11be8488 ""
   "../images/homo_burst.pdf" 1706468714 69993 8d7760c74afefdcaafcfa5a8ca06dbfa ""
-  "../images/nu1-nu2_presentation.pdf" 1706539016 92302 af3afd5032217466bf83d87cc5f55ef3 ""
+  "../images/nu1-nu2_presentation.pdf" 1706558649 92302 4ae3f83cdab08f7884a9eb1c7c0728eb ""
   "../images/qp_phase.pdf" 1706478670 183888 b8369ba730acf8caa7b50c0df360cf0e ""
   "../images/qp_return.pdf" 1706479482 71118 0f0d9eeb896e92845760919ca5cfaab1 ""
   "../images/slice_freq_nu1_0.008_nu2_0.008_time_5.0.pdf" 1706530885 105994 7b8962e277423f3d77d478e64f43b33c ""
@@ -23,7 +24,7 @@
   "../images/tp_energy.pdf" 1706464251 72094 4e26387f2665f602731bbf1950379a0e ""
   "../images/tp_energy_phase.pdf" 1706464632 105141 0e79f6203c6e8762abc9a738d6cd56f8 ""
   "../images/tw_energy.pdf" 1706556101 68335 f0bd9c7d986c49fd0cd5bdceb0a275ad ""
-  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/presentation/main.tex" 1706556697 8419 309c68c4a976154a5007ec47d913cea6 ""
+  "/home/victor/Desktop/2d-kuramoto-sivashinsky/latex/presentation/main.tex" 1706607870 8730 0dbb19dbc618ee852f3cf226c1aadd36 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1704400182 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1704400182 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1704400182 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -447,12 +448,12 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1706286031 4483110 adb1e1d04498b9576f1f17c4219c5e03 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1706285990 6768052 a340e7d87d22cd9776ce5836fcb8ad77 ""
   "embed_video.tex" 1706550593 2058 cb83f728551253ecfb487b7b385355c3 ""
-  "main.aux" 1706556699 2726 10af79bb0e381d610b639c78ecf98380 "pdflatex"
+  "main.aux" 1706607872 2726 10af79bb0e381d610b639c78ecf98380 "pdflatex"
   "main.bbl" 1706543023 4073 2133f93ded776b57820305647df4d03a "biber main"
-  "main.nav" 1706556699 1108 c41729a9fe5f113cf01f0ff96714837e "pdflatex"
-  "main.out" 1706556698 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "main.run.xml" 1706556699 2413 47f22e562ceb93f4d846635323c7d07a "pdflatex"
-  "main.tex" 1706556697 8419 309c68c4a976154a5007ec47d913cea6 ""
+  "main.nav" 1706607872 1108 c41729a9fe5f113cf01f0ff96714837e "pdflatex"
+  "main.out" 1706607872 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "main.run.xml" 1706607872 2413 47f22e562ceb93f4d846635323c7d07a "pdflatex"
+  "main.tex" 1706607870 8730 0dbb19dbc618ee852f3cf226c1aadd36 ""
   "preamble.sty" 1706547953 15481 f11a214606dd7c86941ceb338956e858 ""
   (generated)
   "main.aux"
